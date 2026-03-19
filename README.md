@@ -1,3 +1,4 @@
+---
 ## Git Commands
  
 |---|---|
@@ -6,3 +7,4 @@
 | `git pull origin main` | Pull latest from main |
 | `git merge <branch>` | Merge branch into current |
 | `git branch -d <name>` | Delete a local branch |
+---
