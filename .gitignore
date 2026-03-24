@@ -1,0 +1,83 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+bld/
+
+## Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Rider / VS Code
+.idea/
+.vscode/
+
+## Logs
+*.log
+
+## NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## .NET Core / SDK
+*.runtimeconfig.json
+*.deps.json
+*.dll
+*.exe
+
+## ASP.NET
+wwwroot/
+appsettings.Development.json
+
+## Entity Framework
+*.db
+*.sqlite
+
+## Resharper
+_ReSharper*/
+*.DotSettings.user
+
+## Windows / OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+## MacOS
+.DS_Store
+
+## Environment files
+.env
+.env.*
+
+## Coverage / Test results
+TestResults/
+*.coverage
+*.coveragexml
+
+## Publish output
+publish/
+*.pubxml
+*.publishproj
+
+## Temporary files
+*.tmp
+*.temp
+
+## Backup & old files
+*.bak
+*.old
+
+## IIS Express
+iisexpress/
