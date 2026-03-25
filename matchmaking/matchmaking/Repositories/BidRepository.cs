@@ -69,13 +69,14 @@ namespace matchmaking.Repositories
             return null;
         }
 
-        public void Clear()
+        public void Clear(int newday)
         {
             const string query = @"DELETE FROM Bids";
             using SqlConnection connection = new SqlConnection(_connectionString);
             using SqlCommand command = new SqlCommand(query, connection);
             connection.Open();
             command.ExecuteNonQuery();
+            BidDay = newday;
         }
     }
 }
