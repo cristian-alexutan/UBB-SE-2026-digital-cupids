@@ -8,7 +8,7 @@ namespace matchmaking.Domain
 {
     internal class DatingAdmin
     {
-        private int UserId { get; set; }
+        public int UserId { get; set; }
 
         public DatingAdmin(int userId) {
             UserId = userId;

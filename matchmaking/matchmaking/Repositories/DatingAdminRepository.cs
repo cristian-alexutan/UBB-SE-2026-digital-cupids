@@ -1,5 +1,6 @@
 ﻿using matchmaking.Domain;
 using Microsoft.Data.SqlClient;
+using Microsoft.WindowsAppSDK.Runtime.Packages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,10 +47,12 @@ namespace matchmaking.Repositories
 
         public DatingAdmin FindById (int userId)
         {
-            const string query = @"SELECT userId FROM DatingAdmin;";
+            const string query = @"SELECT userId FROM DatingAdmin WHERE userId = @userId;";
 
             using SqlConnection connection = new SqlConnection(_connectionString);
             using SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@userId", userId);
 
             connection.Open();
             using SqlDataReader reader = command.ExecuteReader();
