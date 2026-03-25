@@ -15,6 +15,7 @@ namespace matchmaking.Repositories
         public InteractionRepository(string connectionString)
         {
             _connectionString = connectionString;
+
         }
 
         private Interaction MapInteraction(SqlDataReader reader)
