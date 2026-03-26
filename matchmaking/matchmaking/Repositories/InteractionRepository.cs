@@ -51,6 +51,25 @@ namespace matchmaking.Repositories
 
             return interactions;
         }
+
+        public Interaction? FindById(int interactionId)
+        {
+            const string query = @"
+                SELECT interactionId, fromProfileId, toProfileId, [type]
+                FROM Interactions
+                WHERE interactionId = @interactionId;";
+            using SqlConnection connection = new SqlConnection(_connectionString);
+            using SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@interactionId", interactionId);
+            connection.Open();
+            using SqlDataReader reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                return MapInteraction(reader);
+            }
+            return null;
+        }
+
         public void Add(Interaction interaction)
         {
             const string query = @"
