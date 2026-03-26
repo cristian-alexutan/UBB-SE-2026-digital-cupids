@@ -74,7 +74,8 @@ GO
 CREATE TABLE Photos (
     photoId INT IDENTITY(1, 1) PRIMARY KEY,
     userId INT FOREIGN KEY REFERENCES Profiles(userId),
-    [location] VARCHAR(200)
+    [location] VARCHAR(200),
+    profileOrderIndex INT
 );
 GO
 
@@ -156,19 +157,19 @@ INSERT INTO ProfilePreferences (userId, gender) VALUES
 
 -- Photos
 INSERT INTO Photos (userId, location) VALUES
-(1,  'https://cdn.matchmaking.app/photos/user1_photo1.jpg'),
-(1,  'https://cdn.matchmaking.app/photos/user1_photo2.jpg'),
-(2,  'https://cdn.matchmaking.app/photos/user2_photo1.jpg'),
-(3,  'https://cdn.matchmaking.app/photos/user3_photo1.jpg'),
-(3,  'https://cdn.matchmaking.app/photos/user3_photo2.jpg'),
-(4,  'https://cdn.matchmaking.app/photos/user4_photo1.jpg'),
-(5,  'https://cdn.matchmaking.app/photos/user5_photo1.jpg'),
-(6,  'https://cdn.matchmaking.app/photos/user6_photo1.jpg'),
-(6,  'https://cdn.matchmaking.app/photos/user6_photo2.jpg'),
-(7,  'https://cdn.matchmaking.app/photos/user7_photo1.jpg'),
-(8,  'https://cdn.matchmaking.app/photos/user8_photo1.jpg'),
-(9,  'https://cdn.matchmaking.app/photos/user9_photo1.jpg'),
-(10, 'https://cdn.matchmaking.app/photos/user10_photo1.jpg');
+(1,  'https://cdn.matchmaking.app/photos/user1_photo1.jpg', 1),
+(1,  'https://cdn.matchmaking.app/photos/user1_photo2.jpg', 2),
+(2,  'https://cdn.matchmaking.app/photos/user2_photo1.jpg', 1),
+(3,  'https://cdn.matchmaking.app/photos/user3_photo1.jpg', 1),
+(3,  'https://cdn.matchmaking.app/photos/user3_photo2.jpg', 2),
+(4,  'https://cdn.matchmaking.app/photos/user4_photo1.jpg', 1),
+(5,  'https://cdn.matchmaking.app/photos/user5_photo1.jpg', 1),
+(6,  'https://cdn.matchmaking.app/photos/user6_photo1.jpg', 1),
+(6,  'https://cdn.matchmaking.app/photos/user6_photo2.jpg', 2),
+(7,  'https://cdn.matchmaking.app/photos/user7_photo1.jpg', 1),
+(8,  'https://cdn.matchmaking.app/photos/user8_photo1.jpg', 1),
+(9,  'https://cdn.matchmaking.app/photos/user9_photo1.jpg', 1),
+(10, 'https://cdn.matchmaking.app/photos/user10_photo1.jpg', 1);
 
 INSERT INTO Interactions (fromProfileId, toProfileId, [type]) VALUES
 (1,  2,  'LIKE'),
