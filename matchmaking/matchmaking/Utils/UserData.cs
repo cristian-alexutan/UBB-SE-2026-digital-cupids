@@ -14,7 +14,7 @@ namespace matchmaking.Utils
         public string Phone { get; }
         public string AvatarUrl { get; }
         public string Bio { get;}
-        private DateTime Birthdate { get; }
+        public DateTime Birthdate { get; }
 
         public UserData(int id, string username, string email, string phone, string avatarUrl, string bio, DateTime birthdate)
         {

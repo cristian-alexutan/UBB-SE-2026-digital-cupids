@@ -44,8 +44,8 @@ namespace matchmaking.Domain
         public Gender Gender { get; set; }
         public List<Gender> PreferredGenders { get; set; }
         public string Location { get; set; }
-        public string Nationality { get; }
-        public int MaxDistance { get;  }
+        public string Nationality { get; set; }
+        public int MaxDistance { get; set; }
         public int Age { get;}
         public int MinPreferredAge { get; set; }
         public int MaxPreferredAge { get; set; }
@@ -66,6 +66,29 @@ namespace matchmaking.Domain
         {
             UserId = userId;
             Gender= gender;
+            PreferredGenders = preferredGenders;
+            Location = location;
+            Nationality = nationality;
+            MaxDistance = maxDistance;
+            Age = age;
+            MinPreferredAge = minPreferredAge;
+            MaxPreferredAge = maxPreferredAge;
+            Bio = bio;
+            DisplayStarSign = displayStarSign;
+            IsArchived = isArchived;
+            Photos = photos;
+            Interests = interests;
+            DateOfBirth = dateOfBirth;
+            LoverType = loverType;
+            IsHotSeat = isHotSeat;
+            IsBoosted = isBoosted;
+            BoostDay = boostDay;
+            HotSeatDay = hotSeatDay;
+        }
+        public DatingProfile( Gender gender, List<Gender> preferredGenders, string location, string nationality, int maxDistance, int age, int minPreferredAge, int maxPreferredAge, string bio, bool displayStarSign, bool isArchived, List<Photo> photos, List<string> interests, DateTime dateOfBirth, LoverType? loverType, bool isHotSeat, bool isBoosted, int boostDay, int hotSeatDay)
+
+        { 
+            Gender = gender;
             PreferredGenders = preferredGenders;
             Location = location;
             Nationality = nationality;

@@ -12,6 +12,8 @@ namespace matchmaking.Domain
         public Gender Gender { get; set; }
         public List<Gender> PreferredGenders { get; set; }
         public string Location { get; set; }
+        public string Nationality { get; set; }
+
         public int MaxDistance { get; set; }
         public int MinPreferredAge { get; set; }
         public int MaxPreferredAge { get; set; }
@@ -21,11 +23,12 @@ namespace matchmaking.Domain
         public List<String> Interests { get; set; }
         public LoverType? LoverType { get; set; }
 
-        public ProfileData(Gender gender, List<Gender> preferredGenders, string location, int maxDistance, int minPreferredAge, int maxPreferredAge, string bio, bool displayStarSign, List<Photo> photos, List<string> interests, LoverType? loverType)
+        public ProfileData(Gender gender, List<Gender> preferredGenders, string location,string nationality, int maxDistance, int minPreferredAge, int maxPreferredAge, string bio, bool displayStarSign, List<Photo> photos, List<string> interests, LoverType? loverType)
         {
             Gender = gender;
             PreferredGenders = preferredGenders;
             Location = location;
+            Nationality = nationality;
             MaxDistance = maxDistance;
             MinPreferredAge = minPreferredAge;
             MaxPreferredAge = maxPreferredAge;
