@@ -21,7 +21,7 @@ namespace matchmaking.Domain
        DEEP_THINKER,
        ADVENTURE_SEEKER,
        STABILITY_LOVER,
-       EMPATHETIC_CONNECTOR
+       EMPHATETIC_CONNECTOR
     }
     internal enum StarSign
     {
