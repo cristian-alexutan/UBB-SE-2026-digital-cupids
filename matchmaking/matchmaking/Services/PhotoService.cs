@@ -54,7 +54,7 @@ namespace matchmaking.Services
             File.Copy(photo.Location, destinationPath);
 
             photo.Location = destinationPath;
-            photo.ProfileOrderIndex = currentPhotos.Count + 1;
+            photo.ProfileOrderIndex = currentPhotos.Count;
 
             PhotoRepo.Add(photo);
         }
@@ -91,7 +91,7 @@ namespace matchmaking.Services
             List<Photo> remainingPhotos = GetPhotosByUserId(deletedPhoto.UserId);
             for (int i = 0; i < remainingPhotos.Count; ++i)
             {
-                remainingPhotos[i].ProfileOrderIndex = i + 1;
+                remainingPhotos[i].ProfileOrderIndex = i;
                 PhotoRepo.Update(remainingPhotos[i]);
             }
 
@@ -141,7 +141,7 @@ namespace matchmaking.Services
 
                 if (photo != null && photo.UserId == userId)
                 {
-                    photo.ProfileOrderIndex = i + 1;
+                    photo.ProfileOrderIndex = i;
                     PhotoRepo.Update(photo);
                 }
             }

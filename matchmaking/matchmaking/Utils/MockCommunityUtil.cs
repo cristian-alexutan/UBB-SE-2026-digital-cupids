@@ -6,7 +6,7 @@ namespace matchmaking.Utils
 {
     internal class MockCommunityUtil
     {
-        private Dictionary<int, List<String>> userCommunities = new Dictionary<int, List<string>>
+        private Dictionary<int, List<string>> userCommunities = new Dictionary<int, List<string>>
         {
             { 1, new List<string> { "Hiking", "Coffee Lovers", "Photography" } },
             { 2, new List<string> { "Books", "Cat Lovers", "Yoga" } },
@@ -20,7 +20,7 @@ namespace matchmaking.Utils
             { 10, new List<string> { "Cooking", "Food Blogging", "Travel" } }
         };
 
-        public List<String> GetUserCommunities(int userId)
+        public List<string>? GetUserCommunities(int userId)
         {
             if (userCommunities.ContainsKey(userId))
             {
@@ -29,12 +29,12 @@ namespace matchmaking.Utils
             return null;
         }
 
-        public List<String> GetSahredCommunities(int userId1, int userId2)
+        public List<string> GetSharedCommunities(int userId1, int userId2)
         {
-            List<String> commonCommunities = new List<string>();
+            List<string> commonCommunities = new List<string>();
             if (userCommunities.ContainsKey(userId1) && userCommunities.ContainsKey(userId2))
             {
-                foreach (String community in userCommunities[userId2])
+                foreach (string community in userCommunities[userId2])
                 {
                     if (userCommunities[userId1].Contains(community)){
                         commonCommunities.Add(community);

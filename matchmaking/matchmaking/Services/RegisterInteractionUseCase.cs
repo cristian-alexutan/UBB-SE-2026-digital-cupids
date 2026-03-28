@@ -25,7 +25,7 @@ namespace matchmaking.Services
             _profileRepository = profileRepository;
         }
 
-        public void RegisterInteraction(Interaction interaction)
+        public bool RegisterInteraction(Interaction interaction)
         {
             _interactionService.LogInteraction(interaction);
 
@@ -68,7 +68,10 @@ namespace matchmaking.Services
 
                 _notificationService.AddNotification(notificationForToUser);
                 _notificationService.AddNotification(notificationForFromUser);
+
+                return true;
             }
+            return false;
         }
 
         private bool DetectsMatch(Interaction interaction)

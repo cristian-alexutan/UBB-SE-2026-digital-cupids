@@ -40,7 +40,7 @@ namespace matchmaking.Utils
             int l2 = profile2.MinPreferredAge;
             int r2 = profile2.MaxPreferredAge;
 
-            int NC = communityUtil.GetSahredCommunities(profile1.UserId, profile2.UserId).Count();
+            int NC = communityUtil.GetSharedCommunities(profile1.UserId, profile2.UserId).Count();
             int NI = profile1.Interests.Intersect(profile2.Interests).Count();
 
             int b1 = profile1.IsBoosted ? 1 : 0;

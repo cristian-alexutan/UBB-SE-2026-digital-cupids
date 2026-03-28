@@ -26,7 +26,12 @@ namespace matchmaking.Services
         
         public List<DatingProfile> GetCandidates(int profileId)
         {
-            DatingProfile user = ProfileRepo.FindById(profileId);
+            DatingProfile? user = ProfileRepo.FindById(profileId);
+            if (user == null)
+            {
+                return new List<DatingProfile>();
+            }
+
             List<DatingProfile> allProfiles = ProfileRepo.GetAll();
             List<Interaction> interactions = InteractionRepo.GetAll();
 
@@ -43,13 +48,12 @@ namespace matchmaking.Services
                 .ToList();
 
             List<DatingProfile> result = new List<DatingProfile>();
-            DatingProfile hotSeatProfile = candidates.FirstOrDefault(p => p.IsHotSeat);
+            DatingProfile? hotSeatProfile = candidates.FirstOrDefault(p => p.IsHotSeat);
             if (hotSeatProfile != null)
             {
                 result.Add(hotSeatProfile);
                 candidates.Remove(hotSeatProfile);
             }
-
 
             List<DatingProfile> sorted = candidates
             .Select(p => new { Profile = p, Score = CompatibilityUtil.CalculateCompatibility(user, p) })
@@ -60,6 +64,11 @@ namespace matchmaking.Services
 
             result.AddRange(sorted);
             return result;
+        }
+
+        public List<string> GetSharedCommunities(int userId1, int userId2)
+        {
+            return CommunityUtil.GetSharedCommunities(userId1, userId2);
         }
     }
 }
