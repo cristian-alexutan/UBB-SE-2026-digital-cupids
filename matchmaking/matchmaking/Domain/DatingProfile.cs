@@ -41,6 +41,7 @@ namespace matchmaking.Domain
     internal class DatingProfile
     {
         public int UserId { get; }
+        public string Name { get; set; }
         public Gender Gender { get; set; }
         public List<Gender> PreferredGenders { get; set; }
         public string Location { get; set; }
@@ -61,10 +62,11 @@ namespace matchmaking.Domain
         public int BoostDay { get; set; }
         public int HotSeatDay { get; set; }
 
-        public DatingProfile(int userId, Gender gender, List<Gender> preferredGenders, string location, string nationality, int maxDistance, int age, int minPreferredAge, int maxPreferredAge, string bio, bool displayStarSign,bool isArchived, List<Photo> photos, List<string> interests, DateTime dateOfBirth, LoverType? loverType, bool isHotSeat, bool isBoosted, int boostDay, int hotSeatDay)
+        public DatingProfile(int userId, string name, Gender gender, List<Gender> preferredGenders, string location, string nationality, int maxDistance, int age, int minPreferredAge, int maxPreferredAge, string bio, bool displayStarSign,bool isArchived, List<Photo> photos, List<string> interests, DateTime dateOfBirth, LoverType? loverType, bool isHotSeat, bool isBoosted, int boostDay, int hotSeatDay)
 
         {
             UserId = userId;
+            Name = name;
             Gender= gender;
             PreferredGenders = preferredGenders;
             Location = location;
@@ -85,9 +87,10 @@ namespace matchmaking.Domain
             BoostDay = boostDay;
             HotSeatDay = hotSeatDay;
         }
-        public DatingProfile( Gender gender, List<Gender> preferredGenders, string location, string nationality, int maxDistance, int age, int minPreferredAge, int maxPreferredAge, string bio, bool displayStarSign, bool isArchived, List<Photo> photos, List<string> interests, DateTime dateOfBirth, LoverType? loverType, bool isHotSeat, bool isBoosted, int boostDay, int hotSeatDay)
+        public DatingProfile(string name, Gender gender, List<Gender> preferredGenders, string location, string nationality, int maxDistance, int age, int minPreferredAge, int maxPreferredAge, string bio, bool displayStarSign, bool isArchived, List<Photo> photos, List<string> interests, DateTime dateOfBirth, LoverType? loverType, bool isHotSeat, bool isBoosted, int boostDay, int hotSeatDay)
 
         { 
+            Name = name;
             Gender = gender;
             PreferredGenders = preferredGenders;
             Location = location;

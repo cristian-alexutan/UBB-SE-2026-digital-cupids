@@ -38,6 +38,7 @@ namespace matchmaking.Services
             UserData userData = UserUtil.GetUserData(Id);
             int age = CalculateAge(userData.Birthdate);
             DatingProfile newProfile = new DatingProfile(
+                userData.Username,
                 profileData.Gender,
                 profileData.PreferredGenders,
                 profileData.Location,

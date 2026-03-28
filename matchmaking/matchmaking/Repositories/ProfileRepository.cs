@@ -20,6 +20,7 @@ namespace matchmaking.Repositories
         private DatingProfile MapProfile(SqlDataReader reader)
         {
             int userId = (int)reader["userId"];
+            string name = reader["name"].ToString()!;
             Gender gender = Enum.Parse<Gender>(reader["gender"].ToString()!);
             string location = reader["location"].ToString()!;
             string nationality = reader["nationality"].ToString()!;
@@ -39,14 +40,14 @@ namespace matchmaking.Repositories
             int boostDay = reader["boostDay"] != DBNull.Value ? (int)reader["boostDay"] : 0;
             int hotSeatDay = reader["hotSeatDay"] != DBNull.Value ? (int)reader["hotSeatDay"] : 0;
 
-            return new DatingProfile(userId, gender, new List<Gender>(), location, nationality,
+            return new DatingProfile(userId, name, gender, new List<Gender>(), location, nationality,
                 maxDistance, age, minPrefAge, maxPrefAge, bio, displayStarSign, isArchived,
                 new List<Photo>(), new List<string>(), dateOfBirth, loverType, isHotSeat,
                 isBoosted, boostDay, hotSeatDay);
         }
         public List<DatingProfile> GetAll()
         {
-            const string query = @"SELECT userId, gender, location, nationality, maxDistance, age,minPrefAge, maxPrefAge,
+            const string query = @"SELECT userId, name, gender, location, nationality, maxDistance, age,minPrefAge, maxPrefAge,
                                    bio, displayStarSign, isArchived, dateOfBirth, loverType, isHotSeat, boost, boostDay, hotSeatDay
                                    FROM Profiles;";
 
@@ -68,14 +69,15 @@ namespace matchmaking.Repositories
         public void Add(DatingProfile profile)
         {
             const string query = @"
-                INSERT INTO Profiles (gender, location, nationality, maxDistance, age, minPrefAge, maxPrefAge, bio, displayStarSign, isArchived,
+                INSERT INTO Profiles (name, gender, location, nationality, maxDistance, age, minPrefAge, maxPrefAge, bio, displayStarSign, isArchived,
                     dateOfBirth, loverType, isHotSeat, boost, boostDay, hotSeatDay)
-                    VALUES (@gender, @location, @nationality, @maxDistance, @age,@minPrefAge, @maxPrefAge, @bio, @displayStarSign, @isArchived,
+                    VALUES (@name, @gender, @location, @nationality, @maxDistance, @age,@minPrefAge, @maxPrefAge, @bio, @displayStarSign, @isArchived,
                     @dateOfBirth, @loverType, @isHotSeat, @boost, @boostDay, @hotSeatDay);";
 
             using SqlConnection connection = new SqlConnection(_connectionString);
             using SqlCommand command = new SqlCommand(query, connection);
 
+            command.Parameters.AddWithValue("@name", profile.Name);
             command.Parameters.AddWithValue("@gender", profile.Gender.ToString());
             command.Parameters.AddWithValue("@location", profile.Location);
             command.Parameters.AddWithValue("@nationality", profile.Nationality);
@@ -100,7 +102,7 @@ namespace matchmaking.Repositories
         {
             const string query = @"
                 DELETE FROM Profiles
-                OUTPUT DELETED.userId, DELETED.gender, DELETED.location, DELETED.nationality,DELETED.maxDistance, DELETED.age, DELETED.minPrefAge, DELETED.maxPrefAge,
+                OUTPUT DELETED.userId, DELETED.name, DELETED.gender, DELETED.location, DELETED.nationality,DELETED.maxDistance, DELETED.age, DELETED.minPrefAge, DELETED.maxPrefAge,
                 ELETED.bio, DELETED.displayStarSign, DELETED.isArchived, DELETED.dateOfBirth,DELETED.loverType, DELETED.isHotSeat, DELETED.boost, DELETED.boostDay, DELETED.hotSeatDay
                 WHERE userId = @userId;";
 
@@ -121,7 +123,7 @@ namespace matchmaking.Repositories
         public DatingProfile? FindById(int id)
         {
             const string query = @"
-                SELECT userId, gender, location, nationality, maxDistance, age, minPrefAge, maxPrefAge, bio, displayStarSign, isArchived,
+                SELECT userId, name, gender, location, nationality, maxDistance, age, minPrefAge, maxPrefAge, bio, displayStarSign, isArchived,
                 dateOfBirth, loverType, isHotSeat, boost, boostDay, hotSeatDay
                 FROM Profiles
                 WHERE userId = @userId;";
@@ -143,7 +145,7 @@ namespace matchmaking.Repositories
         {
             const string query = @"
                 UPDATE Profiles
-                SET gender = @gender, location = @location, nationality = @nationality, maxDistance = @maxDistance, age = @age, minPrefAge = @minPrefAge,
+                SET name = @name, gender = @gender, location = @location, nationality = @nationality, maxDistance = @maxDistance, age = @age, minPrefAge = @minPrefAge,
                 maxPrefAge = @maxPrefAge, bio = @bio, displayStarSign = @displayStarSign, isArchived = @isArchived, dateOfBirth = @dateOfBirth, loverType = @loverType,
                 isHotSeat = @isHotSeat, boost = @boost, boostDay = @boostDay, hotSeatDay = @hotSeatDay
                 WHERE userId = @userId;";
@@ -152,6 +154,7 @@ namespace matchmaking.Repositories
             using SqlCommand command = new SqlCommand(query, connection);
 
             command.Parameters.AddWithValue("@userId", profile.UserId);
+            command.Parameters.AddWithValue("@name", profile.Name);
             command.Parameters.AddWithValue("@gender", profile.Gender.ToString());
             command.Parameters.AddWithValue("@location", profile.Location);
             command.Parameters.AddWithValue("@nationality", profile.Nationality);
