@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
+using System.Linq;
 using matchmaking.Domain;
 using matchmaking.Services;
 
 
 namespace matchmaking.ViewModels
 {
-    internal class DiscoverViewModel : INotifyPropertyChanged
+    public class DiscoverViewModel : INotifyPropertyChanged
     {
         private readonly int _userId;
 

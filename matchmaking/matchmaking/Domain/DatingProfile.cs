@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace matchmaking.Domain
 {
-    internal enum Gender
+    public enum Gender
     { 
         MALE,
         FEMALE,
         NON_BINARY,
         OTHER
     }
-    internal enum LoverType
+    public enum LoverType
     {
        SOCIAL_EXPLORER,
        DEEP_THINKER,
@@ -23,7 +23,7 @@ namespace matchmaking.Domain
        STABILITY_LOVER,
        EMPATHETIC_CONNECTOR
     }
-    internal enum StarSign
+    public enum StarSign
     {
         ARIES,
         TAURUS,
@@ -38,7 +38,7 @@ namespace matchmaking.Domain
         AQUARIUS,
         PISCES
     }
-    internal class DatingProfile
+    public class DatingProfile
     {
         public int UserId { get; }
         public string Name { get; set; }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace matchmaking.Services
 {
-    internal class DiscoverService
+    public class DiscoverService
     {
         private ProfileRepository ProfileRepo;
         private InteractionRepository InteractionRepo;
@@ -69,6 +69,11 @@ namespace matchmaking.Services
         public List<string> GetSharedCommunities(int userId1, int userId2)
         {
             return CommunityUtil.GetSharedCommunities(userId1, userId2);
+        }
+
+        public DatingProfile? GetProfile(int userId)
+        {
+            return ProfileRepo.FindById(userId);
         }
     }
 }

@@ -8,7 +8,7 @@ using matchmaking.Domain;
 
 namespace matchmaking.Repositories
 {
-    internal class InteractionRepository
+    public class InteractionRepository
     {
         private readonly string _connectionString;
 

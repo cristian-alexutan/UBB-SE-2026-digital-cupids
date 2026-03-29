@@ -6,7 +6,7 @@ using matchmaking.Domain;
 
 namespace matchmaking.Services
 {
-    internal class NotificationService
+    public class NotificationService
     {
         private readonly NotificationRepository _notificationRepository;
 

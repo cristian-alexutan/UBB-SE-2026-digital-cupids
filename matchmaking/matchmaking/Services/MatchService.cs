@@ -7,7 +7,7 @@ using Windows.ApplicationModel.Activation;
 
 namespace matchmaking.Services
 {
-    internal class MatchService
+    public class MatchService
     {
         private readonly MatchRepository _matchRepository;
 

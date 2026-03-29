@@ -8,7 +8,7 @@ using matchmaking.Domain;
 
 namespace matchmaking.Repositories
 {
-    internal class ProfileRepository
+    public class ProfileRepository
     {
         private readonly string _connectionString;
         private List<DatingProfile> Profiles;

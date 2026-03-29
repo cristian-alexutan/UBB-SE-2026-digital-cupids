@@ -4,7 +4,7 @@ using System.Text;
 
 namespace matchmaking.Utils
 {
-    internal class MockCommunityUtil
+    public class MockCommunityUtil
     {
         private Dictionary<int, List<string>> userCommunities = new Dictionary<int, List<string>>
         {

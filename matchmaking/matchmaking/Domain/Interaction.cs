@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace matchmaking.Domain
 {
-    internal enum InteractionType
+    public enum InteractionType
     {
         LIKE,
         SUPER_LIKE,
         PASS
     }
-    internal class Interaction
+    public class Interaction
     {
         public int InteractionId { get; }
         public int FromProfileId { get; }

@@ -6,7 +6,7 @@ using matchmaking.Repositories;
 
 namespace matchmaking.Services
 {
-    internal class InteractionService
+    public class InteractionService
     {
         private readonly InteractionRepository _interactionRepository;
 

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace matchmaking.Repositories
 {
-    internal class MatchRepository
+    public class MatchRepository
     {
         private readonly string _connectionString;
 

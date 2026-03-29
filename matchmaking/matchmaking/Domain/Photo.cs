@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace matchmaking.Domain
 {
-    internal class Photo
+    public class Photo
     {
         public int PhotoId { get; set; }
         public int UserId { get; set; }

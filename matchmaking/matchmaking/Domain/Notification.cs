@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace matchmaking.Domain
 {
-    internal enum NotificationType
+    public enum NotificationType
     {
         SUPER_LIKE,
         MATCH
     }
-    internal class Notification
+    public class Notification
     {
         public int NotificationId { get; }
         public int RecipientId { get; }
