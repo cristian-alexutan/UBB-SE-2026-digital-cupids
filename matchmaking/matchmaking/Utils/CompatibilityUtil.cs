@@ -28,8 +28,16 @@ namespace matchmaking.Utils
             int d1 = profile1.MaxDistance;
             int d2 = profile2.MaxDistance;
 
-            (float lat1, float lon1) = locationUtil.GetCoords(profile1.Location);
-            (float lat2, float lon2) = locationUtil.GetCoords(profile2.Location);
+            var coords1 = locationUtil.GetCoords(profile1.Location);
+            var coords2 = locationUtil.GetCoords(profile2.Location);
+
+            if (coords1 == null || coords2 == null)
+            {
+                return 0;
+            }
+
+            (float lat1, float lon1) = coords1;
+            (float lat2, float lon2) = coords2;
             float D = CalculateDistance(lat1, lon1, lat2, lon2);
 
             int a1 = profile1.Age;
