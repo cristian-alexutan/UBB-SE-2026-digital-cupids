@@ -15,7 +15,10 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Visibility="{x:Bind Vis(ViewModel.HasCandidates), Mode=OneWay}" Margin="40,20,40,20" CornerRadius="12" Background="#FF5A5F" BorderBrush="#FF5A5F" BorderThickness="2">
+        <Grid Grid.Row="0" Background="#eb3b59">
+        </Grid>
+
+        <Grid Grid.Row="0" Visibility="{x:Bind Vis(ViewModel.HasCandidates), Mode=OneWay}" Margin="40,20,40,20" CornerRadius="12" Background="#2B2B2B" BorderBrush="#2B2B2B" BorderThickness="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5*"/>
                 <ColumnDefinition Width="5*"/>
@@ -86,12 +89,12 @@
         <TextBlock Grid.Row="0" Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" 
                    Visibility="{x:Bind VisInverse(ViewModel.HasCandidates), Mode=OneWay}"
                    HorizontalAlignment="Center" VerticalAlignment="Center"
-                   FontSize="24" FontWeight="Bold" Foreground="Gray"/>
+                   FontSize="24" FontWeight="Bold" Foreground="White"/>
 
         <Grid Grid.Row="1" Margin="0,20,0,20">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="40" VerticalAlignment="Center">
-                <Button Click="{x:Bind ViewModel.PassCurrent}" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#FF5A5F" BorderThickness="4" IsEnabled="{x:Bind ViewModel.HasCandidates, Mode=OneWay}">
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;" Foreground="#FF5A5F" FontSize="44"/>
+                <Button Click="{x:Bind ViewModel.PassCurrent}" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#eb3b59" BorderThickness="4" IsEnabled="{x:Bind ViewModel.HasCandidates, Mode=OneWay}">
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;" Foreground="#eb3b59" FontSize="44"/>
                 </Button>
                 <Button Click="{x:Bind ViewModel.SuperLikeCurrent}" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#00A4FF" BorderThickness="4" IsEnabled="{x:Bind ViewModel.HasCandidates, Mode=OneWay}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE735;" Foreground="#00A4FF" FontSize="44"/>
@@ -119,8 +122,8 @@
                         <TextBlock Canvas.Left="-30" Canvas.Top="-50" Text="&#x2196;" FontSize="40" Foreground="White" />
                         <TextBlock Canvas.Left="-160" Canvas.Top="-120" Text="Skip if you are not interested in this profile" Width="150" TextWrapping="Wrap" TextAlignment="Right" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
 
-                        <Button Width="80" Height="80" CornerRadius="40" Background="Black" BorderBrush="#FF5A5F" BorderThickness="4" IsEnabled="False">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;" Foreground="#FF5A5F" FontSize="44"/>
+                        <Button Width="80" Height="80" CornerRadius="40" Background="Black" BorderBrush="#eb3b59" BorderThickness="4" IsEnabled="False">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;" Foreground="#eb3b59" FontSize="44"/>
                         </Button>
                     </Canvas>
 
