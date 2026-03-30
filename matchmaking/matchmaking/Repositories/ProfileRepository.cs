@@ -67,6 +67,16 @@ namespace matchmaking.Repositories
         }
         public void Add(DatingProfile profile)
         {
+            if (profile.Photos==null || profile.Photos.Count==0)
+                throw new Exception("Profile must have at least one photo.");
+
+            if (profile.PreferredGenders==null || profile.PreferredGenders.Count==0)
+                throw new Exception("Profile must have at least one preferred gender.");
+
+            if (profile.Interests==null || profile.Interests.Count==0)
+                throw new Exception("Profile must have at least one interest.");
+
+          
             const string query = @"
                 INSERT INTO Profiles (name, gender, location, nationality, maxDistance, age, minPrefAge, maxPrefAge, bio, displayStarSign, isArchived,
                     dateOfBirth, loverType, isHotSeat, boost, boostDay, hotSeatDay)
