@@ -8,36 +8,31 @@ namespace matchmaking.Utils
 {
     internal class CompatibilityUtil
     {
-
-        private LocationUtil locationUtil = new LocationUtil();
-        private MockCommunityUtil communityUtil = new MockCommunityUtil();
+        private readonly LocationUtil _locationUtil = new LocationUtil();
+        private readonly MockCommunityUtil _communityUtil = new MockCommunityUtil();
 
         public CompatibilityUtil() { }
 
         public float CalculateCompatibility(DatingProfile profile1, DatingProfile profile2)
         {
-            if (profile1 != null && profile2 != null)
+            if (profile1 == null || profile2 == null)
             {
-                if (!profile1.PreferredGenders.Contains(profile2.Gender) ||
-                   !profile2.PreferredGenders.Contains(profile1.Gender))
-                {
-                    return 0;
-                }
+                return 0;
             }
 
             int d1 = profile1.MaxDistance;
             int d2 = profile2.MaxDistance;
 
-            var coords1 = locationUtil.GetCoords(profile1.Location);
-            var coords2 = locationUtil.GetCoords(profile2.Location);
+            var coords1 = _locationUtil.GetCoords(profile1.Location);
+            var coords2 = _locationUtil.GetCoords(profile2.Location);
 
             if (coords1 == null || coords2 == null)
             {
                 return 0;
             }
 
-            (float lat1, float lon1) = coords1;
-            (float lat2, float lon2) = coords2;
+            (float lat1, float lon1) = coords1.Value;
+            (float lat2, float lon2) = coords2.Value;
             float D = CalculateDistance(lat1, lon1, lat2, lon2);
 
             int a1 = profile1.Age;
@@ -48,8 +43,11 @@ namespace matchmaking.Utils
             int l2 = profile2.MinPreferredAge;
             int r2 = profile2.MaxPreferredAge;
 
-            int NC = communityUtil.GetSharedCommunities(profile1.UserId, profile2.UserId).Count();
-            int NI = profile1.Interests.Intersect(profile2.Interests).Count();
+            int NC = _communityUtil.GetSharedCommunities(profile1.UserId, profile2.UserId).Count();
+
+            int NI = (profile1.Interests ?? new List<string>())
+                .Intersect(profile2.Interests ?? new List<string>())
+                .Count();
 
             int b1 = profile1.IsBoosted ? 1 : 0;
             int b2 = profile2.IsBoosted ? 1 : 0;

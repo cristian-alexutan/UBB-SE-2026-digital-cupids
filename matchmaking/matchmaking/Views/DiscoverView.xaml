@@ -46,6 +46,12 @@
                         <TextBlock Text="{x:Bind ViewModel.CurrentValidCandidate.Nationality, Mode=OneWay}" FontSize="18" Foreground="White"/>
                     </StackPanel>
 
+                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" 
+                               Visibility="{x:Bind ViewModel.CurrentCandidateStarSignVisibility, Mode=OneWay}">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE728;" Foreground="White" FontSize="18"/>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentCandidateStarSign, Mode=OneWay}" FontSize="18" Foreground="White"/>
+                    </StackPanel>
+
                     <MenuFlyoutSeparator Margin="0,10,0,10" Background="White" Opacity="0.5"/>
 
                     <TextBlock Text="Description" FontWeight="SemiBold" FontSize="20" Foreground="White"/>

@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
-using matchmaking.Domain;
+﻿using matchmaking.Domain;
 using matchmaking.Services;
+using Microsoft.UI.Xaml;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text;
 
 
 namespace matchmaking.ViewModels
@@ -139,6 +140,26 @@ namespace matchmaking.ViewModels
             }
         }
 
+        public string? CurrentCandidateStarSign
+        {
+            get
+            {
+                var candidate = CurrentValidCandidate;
+                if (candidate == null || !candidate.DisplayStarSign)
+                    return null;
+                return candidate.GetStarSign().ToString();
+            }
+        }
+
+        public Visibility CurrentCandidateStarSignVisibility
+        {
+            get
+            {
+                return string.IsNullOrEmpty(CurrentCandidateStarSign)
+                    ? Visibility.Collapsed
+                    : Visibility.Visible;
+            }
+        }
 
         public string StatusMessage
         {
@@ -393,6 +414,8 @@ namespace matchmaking.ViewModels
             OnPropertyChanged(nameof(HasCandidates));
             OnPropertyChanged(nameof(CurrentValidCandidate));
             OnPropertyChanged(nameof(CurrentPhoto));
+            OnPropertyChanged(nameof(CurrentCandidateStarSign));
+            OnPropertyChanged(nameof(CurrentCandidateStarSignVisibility));
             OnPropertyChanged(nameof(CurrentPhotoIndex));
         }
 
