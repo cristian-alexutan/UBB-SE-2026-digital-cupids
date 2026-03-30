@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="appsettings.Development.json" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
@@ -52,7 +51,9 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\" />
+    <Page Update="Views\NotificationsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!--
