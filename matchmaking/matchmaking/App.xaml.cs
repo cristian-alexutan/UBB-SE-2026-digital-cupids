@@ -1,6 +1,7 @@
 ﻿using matchmaking.Domain;
 using matchmaking.Repositories;
 using matchmaking.Views;
+using matchmaking.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.UI.Xaml;
@@ -34,6 +35,8 @@ namespace matchmaking
     {
         public Window? _window;
 
+        public static Window MainWindow { get; private set; }
+
         public static string ConnectionString { get; private set; }
 
         /// <summary>
@@ -56,6 +59,8 @@ namespace matchmaking
 
             ConnectionString = config.GetConnectionString("DefaultConnection") ?? string.Empty;
 
+            Debug.WriteLine($"Connection string loaded: {ConnectionString}");
+
             InitializeComponent();
         }
 
@@ -66,29 +71,7 @@ namespace matchmaking
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             _window = new MainWindow();
-            _window.Activate();
-
-            // get the frame from the window and navigate to your page
-            var rootFrame = new Frame();
-            _window.Content = rootFrame;
-
-            // build your dependencies
-            var connectionString = ConnectionString;
-            var profileRepo = new ProfileRepository(connectionString);
-            var photoRepo = new PhotoRepository(connectionString);
-            var userUtil = new Utils.MockUserUtil();
-            var profileService = new Services.ProfileService(profileRepo, userUtil);
-            var photoService = new Services.PhotoService(photoRepo);
-            var questionaireUtil = new Utils.QuestionaireUtil();
-            var interestUtil = new Utils.InterestUtil();
-
-            int testUserId = 10; // hardcode for now while testing
-
-            var viewModel = new ViewModels.EditProfileViewModel(
-                testUserId, profileService, photoService, questionaireUtil, interestUtil
-            );
-
-            rootFrame.Navigate(typeof(EditProfileView), viewModel);
+            MainWindow = _window;
         }
     }
 }

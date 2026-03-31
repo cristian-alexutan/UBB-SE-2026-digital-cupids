@@ -109,7 +109,7 @@ namespace matchmaking.ViewModels
             {
                 throw new InvalidOperationException("Can't advance past the 4th step!");
             }
-            _currentStep++;
+            CurrentStep++;
         }
 
         public void PreviousStep()
@@ -118,7 +118,7 @@ namespace matchmaking.ViewModels
             {
                 throw new InvalidOperationException("Can't go back before the 1st step!");
             }
-            _currentStep--;
+            CurrentStep--;
         }
 
         public void LoadUserData(int userId)

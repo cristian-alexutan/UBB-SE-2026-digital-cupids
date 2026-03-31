@@ -193,6 +193,8 @@ Padding="32" Margin="40,16,40,0">
                         Margin="40,24,40,0">
                 <Button Content="Save changes"
                         Click="SaveChanges_Click"/>
+                <Button Content="Discard changes"
+                        Click="DiscardChanges_Click"/>
                 <Button Content="Archive profile"
                         Click="ArchiveProfile_Click"
                         IsEnabled="{Binding IsNotArchived}"/>
@@ -201,7 +203,7 @@ Padding="32" Margin="40,16,40,0">
                         Click="UnarchiveProfile_Click"
                         IsEnabled="{Binding IsArchived}"/>
                 <Button Content="Delete profile" Click="DeleteProfile_Click"/>
-            </StackPanel> 
+            </StackPanel>
 
         </StackPanel>
     </ScrollViewer>

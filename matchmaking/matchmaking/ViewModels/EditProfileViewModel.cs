@@ -3,6 +3,7 @@ using matchmaking.Services;
 using matchmaking.Utils;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 
@@ -33,13 +34,13 @@ namespace matchmaking.ViewModels
         private bool _displayStarSign;
         private bool _isArchived;
         private List<Gender> _preferredGenders = new();
-        private List<Photo> _photos = new();
-        private List<string> _interests = new();
+        private ObservableCollection<Photo> _photos = new();
+        private ObservableCollection<string> _interests = new();
 
         private string _errorMessage = string.Empty;
 
-        private List<string> _shuffledQuestions = new();
-        private List<int> _answers = new();
+        private ObservableCollection<string> _shuffledQuestions = new();
+        private ObservableCollection<int> _answers = new();
 
         public string Bio
         {
@@ -142,14 +143,14 @@ namespace matchmaking.ViewModels
 
         public List<Photo> Photos
         {
-            get => _photos;
-            private set { if (_photos != value) { _photos = value; OnPropertyChanged(nameof(Photos)); } }
+            get => _photos.ToList();
+            private set { if (!_photos.SequenceEqual(value ?? new())) { _photos = new(value ?? new()); OnPropertyChanged(nameof(Photos)); } }
         }
 
         public List<string> Interests
         {
-            get => _interests;
-            private set { if (_interests != value) { _interests = value; OnPropertyChanged(nameof(Interests)); } }
+            get => _interests.ToList();
+            private set { if (!_interests.SequenceEqual(value ?? new())) { _interests = new(value ?? new()); OnPropertyChanged(nameof(Interests)); } }
         }
 
         public List<string> AllInterests => _interestUtil.GetAll();
@@ -176,14 +177,14 @@ namespace matchmaking.ViewModels
 
         public List<string> ShuffledQuestions
         {
-            get => _shuffledQuestions;
-            private set { if (_shuffledQuestions != value) { _shuffledQuestions = value; OnPropertyChanged(nameof(ShuffledQuestions)); } }
+            get => _shuffledQuestions.ToList();
+            private set { if (!_shuffledQuestions.SequenceEqual(value ?? new())) { _shuffledQuestions = new(value ?? new()); OnPropertyChanged(nameof(ShuffledQuestions)); } }
         }
 
         public List<int> Answers
         {
-            get => _answers;
-            private set { if (_answers != value) { _answers = value; OnPropertyChanged(nameof(Answers)); } }
+            get => _answers.ToList();
+            private set { if (!_answers.SequenceEqual(value ?? new())) { _answers = new(value ?? new()); OnPropertyChanged(nameof(Answers)); } }
         }
 
 
@@ -250,6 +251,11 @@ namespace matchmaking.ViewModels
             }
         }
 
+        public void DiscardChanges()
+        {
+            LoadProfile();
+        }
+
         public void ArchiveProfile()
         {
             DatingProfile profile = _profileService.GetProfileById(_userId);
@@ -276,7 +282,6 @@ namespace matchmaking.ViewModels
             {
                 _photoService.AddPhoto(photo);
                 _photos.Add(photo);
-                _profileService.UpdateProfile(_userId, BuildProfileData());
                 OnPropertyChanged(nameof(Photos));
                 ErrorMessage = string.Empty;
             }
@@ -290,10 +295,12 @@ namespace matchmaking.ViewModels
         {
             try
             {
+                if (_photos.Count <= 2)
+                    throw new Exception("You must have at least 2 photos!");
+
                 _photoService.DeleteById(photoId);
                 Photo? toRemove = _photos.FirstOrDefault(p => p.PhotoId == photoId);
                 if (toRemove != null) _photos.Remove(toRemove);
-                _profileService.UpdateProfile(_userId, BuildProfileData());
                 OnPropertyChanged(nameof(Photos));
                 ErrorMessage = string.Empty;
             }
@@ -303,16 +310,22 @@ namespace matchmaking.ViewModels
             }
         }
 
+        public bool CanRemovePhoto() => _photos.Count > 2;
+
         public void ReorderPhotos(List<int> newPhotoIdOrder)
         {
             try
             {
                 _photoService.ReorderPhotos(_userId, newPhotoIdOrder);
-                _photos = newPhotoIdOrder
+                var reorderedPhotos = newPhotoIdOrder
                     .Select(id => _photos.FirstOrDefault(p => p.PhotoId == id))
                     .Where(p => p != null)
                     .ToList()!;
-                _profileService.UpdateProfile(_userId, BuildProfileData());
+                _photos.Clear();
+                foreach (var photo in reorderedPhotos)
+                {
+                    _photos.Add(photo);
+                }
                 OnPropertyChanged(nameof(Photos));
                 ErrorMessage = string.Empty;
             }
@@ -329,8 +342,10 @@ namespace matchmaking.ViewModels
                 if (_interests.Count >= 15)
                     throw new Exception("You cannot have more than 15 interests!");
 
+                if (_interests.Contains(interest))
+                    throw new Exception("This interest is already added!");
+
                 _interests.Add(interest);
-                _profileService.UpdateProfile(_userId, BuildProfileData());
                 OnPropertyChanged(nameof(Interests));
                 ErrorMessage = string.Empty;
             }
@@ -348,7 +363,6 @@ namespace matchmaking.ViewModels
                     throw new Exception("You must have at least 3 interests!");
 
                 _interests.Remove(interest);
-                _profileService.UpdateProfile(_userId, BuildProfileData());
                 OnPropertyChanged(nameof(Interests));
                 ErrorMessage = string.Empty;
             }
@@ -357,6 +371,12 @@ namespace matchmaking.ViewModels
                 ErrorMessage = ex.Message;
             }
         }
+
+        public bool CanAddInterest() => _interests.Count < 15;
+
+        public bool CanRemoveInterest() => _interests.Count > 3;
+
+        public bool CanRemoveInterest(string interest) => _interests.Contains(interest) && _interests.Count > 3;
 
         public void PrepareQuestionnaire()
         {
@@ -395,7 +415,7 @@ namespace matchmaking.ViewModels
                 return;
             }
 
-            LoverType = _questionaireUtil.CalculateLoveType(_answers);
+            LoverType = _questionaireUtil.CalculateLoveType(_answers.ToList());
             _profileService.UpdateProfile(_userId, BuildProfileData());
 
             ShuffledQuestions = new List<string>();

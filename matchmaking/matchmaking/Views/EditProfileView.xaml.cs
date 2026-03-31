@@ -33,11 +33,14 @@ namespace matchmaking.Views
             this.DataContext = ViewModel;
 
             PhotosListView.Items.VectorChanged += PhotoItems_VectorChanged;
+            BioBox.TextChanged += BioBox_TextChanged;
+            BioBox.BeforeTextChanging += BioBox_BeforeTextChanging;
 
             RenderPhotos();
             RenderInterests();
             RenderPreferredGenders();
             UpdateInterestsHeader();
+            UpdateBioHeader();
             UpdateArchivedBanner();
             UpdateQuestionnaireButton(); 
         }
@@ -72,12 +75,16 @@ namespace matchmaking.Views
                 deleteBtn.HorizontalAlignment = HorizontalAlignment.Right;
                 deleteBtn.VerticalAlignment = VerticalAlignment.Top;
                 deleteBtn.Margin = new Thickness(0, -8, -8, 0);
+                deleteBtn.IsEnabled = ViewModel.CanRemovePhoto();
 
                 int photoId = photo.PhotoId;
                 deleteBtn.Click += (s, e) =>
                 {
-                    ViewModel.RemovePhoto(photoId);
-                    RenderPhotos();
+                    if (ViewModel.CanRemovePhoto())
+                    {
+                        ViewModel.RemovePhoto(photoId);
+                        RenderPhotos();
+                    }
                 };
 
                 slot.Children.Add(img);
@@ -217,18 +224,20 @@ namespace matchmaking.Views
                 {
                     btn.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Black);
                     btn.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.White);
+                    btn.IsEnabled = ViewModel.CanRemoveInterest();
                 }
                 else
                 {
                     btn.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
                     btn.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Black);
+                    btn.IsEnabled = ViewModel.CanAddInterest();
                 }
 
                 btn.Click += (s, e) =>
                 {
-                    if (isSelected)
+                    if (isSelected && ViewModel.CanRemoveInterest(interest))
                         ViewModel.RemoveInterest(interest);
-                    else
+                    else if (!isSelected && ViewModel.CanAddInterest())
                         ViewModel.AddInterest(interest);
 
                     UpdateInterestsHeader();
@@ -242,6 +251,25 @@ namespace matchmaking.Views
         {
             InterestsHeader.Text = $"Interests ({ViewModel.Interests.Count}/15)";
         }
+
+        private void UpdateBioHeader()
+        {
+            BioHeader.Text = $"Bio ({BioBox.Text.Length}/250)";
+        }
+
+        private void BioBox_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
+        {
+            if (sender.Text.Length >= 250)
+            {
+                args.Cancel = true;
+            }
+        }
+
+        private void BioBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateBioHeader();
+        }
+
         private async void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
             ContentDialog dialog = new ContentDialog();
@@ -256,6 +284,28 @@ namespace matchmaking.Views
             if (result == ContentDialogResult.Primary)
             {
                 ViewModel.SaveChanges();
+            }
+        }
+
+        private async void DiscardChanges_Click(object sender, RoutedEventArgs e)
+        {
+            ContentDialog dialog = new ContentDialog();
+            dialog.Title = "Discard Changes";
+            dialog.Content = "Are you sure you want to discard all changes? This cannot be undone.";
+            dialog.PrimaryButtonText = "Discard";
+            dialog.CloseButtonText = "Cancel";
+            dialog.XamlRoot = this.XamlRoot;
+
+            ContentDialogResult result = await dialog.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                ViewModel.DiscardChanges();
+                RenderPhotos();
+                RenderInterests();
+                RenderPreferredGenders();
+                UpdateInterestsHeader();
+                UpdateBioHeader();
             }
         }
 
