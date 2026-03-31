@@ -68,73 +68,27 @@ namespace matchmaking
             _window = new MainWindow();
             _window.Activate();
 
+            // get the frame from the window and navigate to your page
             var rootFrame = new Frame();
             _window.Content = rootFrame;
 
+            // build your dependencies
             var connectionString = ConnectionString;
             var profileRepo = new ProfileRepository(connectionString);
             var photoRepo = new PhotoRepository(connectionString);
-            var bidRepo = new Repositories.BidRepository(connectionString);
-            var interactionRepo = new Repositories.InteractionRepository(connectionString);
-            var matchRepo = new Repositories.MatchRepository(connectionString);
-            var notificationRepo = new Repositories.NotificationRepository(connectionString);
-
             var userUtil = new Utils.MockUserUtil();
             var profileService = new Services.ProfileService(profileRepo, userUtil);
-            var bidService = new Services.BidService(bidRepo);
-            var interactionService = new Services.InteractionService(interactionRepo);
-            var matchService = new Services.MatchService(matchRepo);
-            var notificationService = new Services.NotificationService(notificationRepo);
-            var registerInteractionUseCase = new Services.RegisterInteractionUseCase(
-                interactionService, matchService, notificationService, profileRepo
+            var photoService = new Services.PhotoService(photoRepo);
+            var questionaireUtil = new Utils.QuestionaireUtil();
+            var interestUtil = new Utils.InterestUtil();
+
+            int testUserId = 10; // hardcode for now while testing
+
+            var viewModel = new ViewModels.EditProfileViewModel(
+                testUserId, profileService, photoService, questionaireUtil, interestUtil
             );
 
-            int testUserId = 2;
-
-            try
-            {
-                var allProfiles = profileService.GetAllProfiles();
-                System.Diagnostics.Debug.WriteLine($"[HotSeat Init] Total profiles found: {allProfiles.Count}");
-
-                foreach (var p in allProfiles)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[HotSeat Init] Profile - UserId: {p.UserId}, Name: {p.Name}, IsArchived: {p.IsArchived}, IsHotSeat: {p.IsHotSeat}, PhotoCount: {p.Photos?.Count ?? 0}");
-                }
-
-                if (allProfiles.Count > 0)
-                {
-                    profileService.ResetHotSeat();
-                    System.Diagnostics.Debug.WriteLine("[HotSeat Init] Reset all hot seats");
-
-                    var profileToHotSeat = allProfiles.FirstOrDefault(p => !p.IsArchived && p.UserId != testUserId);
-                    if (profileToHotSeat != null)
-                    {
-                        profileService.SetHotSeat(profileToHotSeat.UserId);
-                        System.Diagnostics.Debug.WriteLine($"[HotSeat Init] Set HotSeat profile: UserId={profileToHotSeat.UserId}, Name={profileToHotSeat.Name}");
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine($"[HotSeat Init] No suitable profile found for HotSeat (all archived or testUserId match)");
-                    }
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine("[HotSeat Init] No profiles found in database");
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[HotSeat Init ERROR] {ex.GetType().Name}: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"[HotSeat Init ERROR] StackTrace: {ex.StackTrace}");
-            }
-
-            var view = new Views.HotSeatView();
-            var viewModel = new ViewModels.HotSeatViewModel(
-                testUserId, profileService, bidService, registerInteractionUseCase
-            );
-
-            view.SetViewModel(viewModel);
-            rootFrame.Content = view;
+            rootFrame.Navigate(typeof(EditProfileView), viewModel);
         }
     }
 }

@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Windows.Input;
 
 namespace matchmaking.ViewModels
 {
@@ -75,28 +74,12 @@ namespace matchmaking.ViewModels
             }
         }
 
-        public ICommand LoadHotSeatCommand { get; }
-        public ICommand PlaceBidCommand { get; }
-        public ICommand BoostProfileCommand { get; }
-        public ICommand LikeHotSeatCommand { get; }
-        public ICommand SuperLikeHotSeatCommand { get; }
-        public ICommand NextPhotoCommand { get; }
-        public ICommand PreviousPhotoCommand { get; }
-
         public HotSeatViewModel(int userId, ProfileService profileService, BidService bidService, RegisterInteractionUseCase registerInteractionUseCase)
         {
             _userId = userId;
             _profileService = profileService;
             _bidService = bidService;
             _registerInteractionUseCase = registerInteractionUseCase;
-
-            LoadHotSeatCommand = new RelayCommand(LoadHotSeat);
-            PlaceBidCommand = new RelayCommand(PlaceBid);
-            BoostProfileCommand = new RelayCommand(BoostProfile);
-            LikeHotSeatCommand = new RelayCommand(LikeHotSeat, () => HotSeatProfile != null && HotSeatProfile.UserId != _userId);
-            SuperLikeHotSeatCommand = new RelayCommand(SuperLikeHotSeat, () => HotSeatProfile != null && HotSeatProfile.UserId != _userId);
-            NextPhotoCommand = new RelayCommand(NextPhoto);
-            PreviousPhotoCommand = new RelayCommand(PreviousPhoto);
         }
 
         public void LoadHotSeat()
