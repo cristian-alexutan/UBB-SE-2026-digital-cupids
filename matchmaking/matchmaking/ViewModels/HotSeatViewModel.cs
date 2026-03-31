@@ -106,28 +106,39 @@ namespace matchmaking.ViewModels
 
             var allProfiles = _profileService.GetAllProfiles();
 
-            // DEBUG: Print all profiles to console
-            Console.WriteLine("=== ALL PROFILES IN DATABASE ===");
+            System.Diagnostics.Debug.WriteLine("=== ALL PROFILES IN DATABASE ===");
             foreach (var profile in allProfiles)
             {
-                Console.WriteLine($"UserId: {profile.UserId}, Name: {profile.Name}, IsHotSeat: {profile.IsHotSeat}, IsArchived: {profile.IsArchived}, PhotoCount: {profile.Photos.Count}");
+                System.Diagnostics.Debug.WriteLine($"[LoadHotSeat] UserId: {profile.UserId}, Name: {profile.Name}, IsHotSeat: {profile.IsHotSeat}, IsArchived: {profile.IsArchived}, PhotoCount: {profile.Photos?.Count ?? 0}");
             }
-            Console.WriteLine("=== END OF PROFILES ===");
+            System.Diagnostics.Debug.WriteLine("=== END OF PROFILES ===");
 
-            // HARDCODED FOR TESTING - Remove this after testing
+           
             HotSeatProfile = allProfiles.FirstOrDefault(p => p.IsHotSeat && !p.IsArchived);
-            // Normal behavior: HotSeatProfile = allProfiles.FirstOrDefault(p => p.IsHotSeat && !p.IsArchived);
 
             if (HotSeatProfile != null)
             {
-                Console.WriteLine($"=== LOADED HOT SEAT PROFILE ===");
-                Console.WriteLine($"UserId: {HotSeatProfile.UserId}, Name: {HotSeatProfile.Name}, PhotoCount: {HotSeatProfile.Photos.Count}");
-                Console.WriteLine($"Bio: {HotSeatProfile.Bio}");
-                Console.WriteLine($"=== END HOT SEAT PROFILE ===");
+                System.Diagnostics.Debug.WriteLine($"[LoadHotSeat]  FOUND HOT SEAT PROFILE");
+                System.Diagnostics.Debug.WriteLine($"[LoadHotSeat]   UserId: {HotSeatProfile.UserId}");
+                System.Diagnostics.Debug.WriteLine($"[LoadHotSeat]   Name: {HotSeatProfile.Name}");
+                System.Diagnostics.Debug.WriteLine($"[LoadHotSeat]   PhotoCount: {HotSeatProfile.Photos?.Count ?? 0}");
+                System.Diagnostics.Debug.WriteLine($"[LoadHotSeat]   Bio: {HotSeatProfile.Bio}");
+
+                if (HotSeatProfile.Photos == null || HotSeatProfile.Photos.Count == 0)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[LoadHotSeat]   WARNING: No photos for this profile!");
+                }
+                else
+                {
+                    foreach (var photo in HotSeatProfile.Photos)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[LoadHotSeat]   Photo: {photo.Location}");
+                    }
+                }
             }
             else
             {
-                Console.WriteLine("NO HOT SEAT PROFILE FOUND!");
+                System.Diagnostics.Debug.WriteLine("[LoadHotSeat]  NO HOT SEAT PROFILE FOUND!");
             }
 
             HighestBid = _bidService.getHighestBid();

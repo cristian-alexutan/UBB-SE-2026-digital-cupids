@@ -12,10 +12,8 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel Padding="40" Spacing="24">
 
-                <!-- HOT SEAT PROFILE CARD -->
-                <TextBlock Text="🔥 Hot Seat" FontSize="32" FontWeight="Bold"/>
+                <TextBlock Text="Hot Seat" FontSize="32" FontWeight="Bold"/>
 
-                <!-- No profile state -->
                 <TextBlock
                     Text="No one is in the Hot Seat today."
                     Visibility="{x:Bind VisInverse(ViewModel.HasHotSeatProfile), Mode=OneWay}"
@@ -24,7 +22,6 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"/>
 
-                <!-- Profile card -->
                 <Grid
                     Visibility="{x:Bind Vis(ViewModel.HasHotSeatProfile), Mode=OneWay}"
                     ColumnSpacing="24"
@@ -38,7 +35,6 @@
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- LEFT: Photo slideshow -->
                     <Grid Grid.Column="0" CornerRadius="12,0,0,12" Background="Black">
                         <Image
                             Source="{x:Bind ViewModel.CurrentPhoto, Mode=OneWay, TargetNullValue='ms-appx:///Assets/placeholder.png'}"
@@ -68,7 +64,6 @@
                             CornerRadius="25"/>
                     </Grid>
 
-                    <!-- RIGHT: Profile details -->
                     <ScrollViewer Grid.Column="1" Padding="30">
                         <StackPanel Spacing="15">
                             <TextBlock
@@ -132,7 +127,6 @@
                     </ScrollViewer>
                 </Grid>
 
-                <!-- Like / Super-Like buttons -->
                 <Grid
                     Visibility="{x:Bind Vis(ViewModel.ShowInteractionButtons), Mode=OneWay}"
                     Margin="0,20,0,20">
@@ -160,7 +154,6 @@
 
                 <MenuFlyoutSeparator Margin="0,10,0,10"/>
 
-                <!-- AUCTION SECTION -->
                 <TextBlock Text="Today's Auction" FontSize="24" FontWeight="Bold"/>
 
                 <TextBlock
@@ -203,7 +196,6 @@
 
                 <MenuFlyoutSeparator Margin="0,10,0,10"/>
 
-                <!-- BOOST SECTION -->
                 <TextBlock Text="Boost Your Profile" FontSize="24" FontWeight="Bold"/>
                 <TextBlock
                     Text="Boost your profile for 25 RON and increase your compatibility score by 40 — until 23:59 today."

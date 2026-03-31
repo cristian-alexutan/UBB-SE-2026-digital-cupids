@@ -112,20 +112,34 @@ namespace matchmaking.Repositories
 
             List<DatingProfile> profiles = new List<DatingProfile>();
 
-            using SqlConnection connection = new SqlConnection(_connectionString);
-            using SqlCommand command = new SqlCommand(query, connection);
-
-            connection.Open();
-            using SqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
+            try
             {
-                profiles.Add(MapProfile(reader));
+                using SqlConnection connection = new SqlConnection(_connectionString);
+                using SqlCommand command = new SqlCommand(query, connection);
+
+                connection.Open();
+                System.Diagnostics.Debug.WriteLine("[ProfileRepo] Database connection opened successfully");
+
+                using SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    profiles.Add(MapProfile(reader));
+                }
+                System.Diagnostics.Debug.WriteLine($"[ProfileRepo] Retrieved {profiles.Count} profiles from database");
+
+                reader.Close();
+                foreach (DatingProfile profile in profiles)
+                {
+                    PopulateLists(profile, connection);
+                }
+                System.Diagnostics.Debug.WriteLine($"[ProfileRepo] Populated lists for {profiles.Count} profiles");
             }
-            reader.Close();
-            foreach (DatingProfile profile in profiles)
+            catch (Exception ex)
             {
-                PopulateLists(profile, connection);
+                System.Diagnostics.Debug.WriteLine($"[ProfileRepo ERROR] Exception in GetAll: {ex.GetType().Name}: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[ProfileRepo ERROR] StackTrace: {ex.StackTrace}");
+                throw;
             }
 
             return profiles;
