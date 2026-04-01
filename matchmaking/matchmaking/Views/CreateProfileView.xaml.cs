@@ -78,35 +78,28 @@ namespace matchmaking.Views
         {
             if (ViewModel?.ProfileData == null) return;
 
-            int step = ViewModel.CurrentStep;
-
-            if (step == 1)
+            ViewModel.ProfileData.Location = LocationComboBox.SelectedItem as string ?? string.Empty;
+            ViewModel.ProfileData.Nationality = NationalityTextBox.Text;
+            ViewModel.ProfileData.Gender = GenderComboBox.SelectedIndex switch
             {
-                ViewModel.ProfileData.Location = LocationComboBox.SelectedItem as string ?? string.Empty;
-                ViewModel.ProfileData.Nationality = NationalityTextBox.Text;
-                ViewModel.ProfileData.Gender = GenderComboBox.SelectedIndex switch
-                {
-                    0 => Gender.MALE,
-                    1 => Gender.FEMALE,
-                    2 => Gender.NON_BINARY,
-                    _ => Gender.OTHER
-                };
+                0 => Gender.MALE,
+                1 => Gender.FEMALE,
+                2 => Gender.NON_BINARY,
+                _ => Gender.OTHER
+            };
 
-                ViewModel.ProfileData.PreferredGenders = new List<Gender>();
-                if (PrefMaleCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.MALE);
-                if (PrefFemaleCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.FEMALE);
-                if (PrefNonBinaryCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.NON_BINARY);
-                if (PrefOtherCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.OTHER);
+            ViewModel.ProfileData.PreferredGenders = new List<Gender>();
+            if (PrefMaleCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.MALE);
+            if (PrefFemaleCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.FEMALE);
+            if (PrefNonBinaryCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.NON_BINARY);
+            if (PrefOtherCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.OTHER);
 
-                ViewModel.ProfileData.MaxDistance = (int)MaxDistanceSlider.Value;
-                ViewModel.ProfileData.MinPreferredAge = (int)AgeRangeSelector.RangeStart;
-                ViewModel.ProfileData.MaxPreferredAge = (int)AgeRangeSelector.RangeEnd;
-                ViewModel.ProfileData.DisplayStarSign = DisplayStarSignToggle.IsOn;
-            }
-            else if (step == 3)
-            {
-                ViewModel.ProfileData.Bio = BioTextBox.Text;
-            }
+            ViewModel.ProfileData.MaxDistance = (int)MaxDistanceSlider.Value;
+            ViewModel.ProfileData.MinPreferredAge = (int)AgeRangeSelector.RangeStart;
+            ViewModel.ProfileData.MaxPreferredAge = (int)AgeRangeSelector.RangeEnd;
+            ViewModel.ProfileData.DisplayStarSign = DisplayStarSignToggle.IsOn;
+
+            ViewModel.ProfileData.Bio = BioTextBox.Text;
         }
 
         private void SyncViewModeltoUI()
