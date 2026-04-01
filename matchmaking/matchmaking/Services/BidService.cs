@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using matchmaking.Domain;
+using System.Diagnostics;
 namespace matchmaking.Services
 {
     internal class BidService
@@ -16,6 +17,7 @@ namespace matchmaking.Services
 
         public void AddBid(Bid bid)
         {
+            Debug.WriteLine($"BidService: reached addbid with UserId: {bid.UserId}, BidSum: {bid.BidSum}");
             int today = DateTime.Today.Day;
             if (BidRepo.BidDay != today)
             {
@@ -30,6 +32,7 @@ namespace matchmaking.Services
             {
                 throw new Exception($"Bid sum must be at least 10 higher than the current highest bid of {highestBidSum}.");
             }
+            Debug.WriteLine($"BidService: Adding bid with UserId: {bid.UserId}, BidSum: {bid.BidSum} to repository., calling repo function");
             BidRepo.Add(bid);
         }
 

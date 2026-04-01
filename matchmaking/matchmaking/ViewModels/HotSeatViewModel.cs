@@ -2,6 +2,7 @@
 using matchmaking.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 
@@ -173,6 +174,7 @@ namespace matchmaking.ViewModels
             try
             {
                 Bid newBid = new Bid(_userId, (int)BidInput);
+                Debug.WriteLine($"viewmodel: Placing bid with UserId: {newBid.UserId}, BidSum: {newBid.BidSum}");
                 _bidService.AddBid(newBid);
                 HighestBid = _bidService.getHighestBid();
             }
