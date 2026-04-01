@@ -45,6 +45,8 @@ namespace matchmaking
 
         public static string Password { get; private set; }
 
+        public static int UserID { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -62,7 +64,8 @@ namespace matchmaking
             //    "Email": {
             //        "Address": "[email address]",
             //        "Password": "[email password]"
-            //    }
+            //    },
+            //    "UserId": "[user id]"
             //}
 
             // apoi, click dreapta pe appsettings.Development.json, Properties, si setati "Copy to Output Directory" la "Copy if newer"
@@ -70,6 +73,7 @@ namespace matchmaking
             ConnectionString = config.GetConnectionString("DefaultConnection") ?? string.Empty;
             Email = config["Email:Address"] ?? string.Empty;
             Password = config["Email:Password"] ?? string.Empty;
+            UserID = int.Parse(config["UserId"] ?? "0");
 
             InitializeComponent();
         }

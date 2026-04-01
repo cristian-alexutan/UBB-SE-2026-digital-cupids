@@ -13,7 +13,7 @@ namespace matchmaking
 {
     public sealed partial class MainWindow : Window
     {
-        private const int UserId = 40;
+        private static readonly int UserId = App.UserID;
         private const string SecretCode = "DOUBT112";
         private string _typedBuffer = string.Empty;
 

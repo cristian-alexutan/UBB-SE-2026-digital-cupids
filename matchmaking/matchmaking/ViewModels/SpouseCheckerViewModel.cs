@@ -21,7 +21,10 @@ namespace matchmaking.ViewModels
             set
             {
                 if (SetProperty(ref _email, value))
+                {
                     _submitCommand.NotifyCanExecuteChanged();
+                    OnPropertyChanged(nameof(CanSubmitForm));
+                }
             }
         }
 
@@ -31,7 +34,10 @@ namespace matchmaking.ViewModels
             set
             {
                 if (SetProperty(ref _partnerName, value))
+                {
                     _submitCommand.NotifyCanExecuteChanged();
+                    OnPropertyChanged(nameof(CanSubmitForm));
+                }
             }
         }
 
@@ -41,7 +47,10 @@ namespace matchmaking.ViewModels
             set
             {
                 if (SetProperty(ref _marriageCertificatePath, value))
+                {
                     _submitCommand.NotifyCanExecuteChanged();
+                    OnPropertyChanged(nameof(CanSubmitForm));
+                }
             }
         }
 
@@ -51,7 +60,10 @@ namespace matchmaking.ViewModels
             set
             {
                 if (SetProperty(ref _partnerPhotoPath, value))
+                {
                     _submitCommand.NotifyCanExecuteChanged();
+                    OnPropertyChanged(nameof(CanSubmitForm));
+                }
             }
         }
 
@@ -60,6 +72,8 @@ namespace matchmaking.ViewModels
             get => _errorMessage;
             private set => SetProperty(ref _errorMessage, value);
         }
+
+        public bool CanSubmitForm => CanSubmit();
 
         private readonly RelayCommand _submitCommand;
         private readonly RelayCommand _cancelCommand;
@@ -105,6 +119,7 @@ namespace matchmaking.ViewModels
             PartnerName = string.Empty;
             MarriageCertificatePath = string.Empty;
             PartnerPhotoPath = string.Empty;
+            OnPropertyChanged(nameof(CanSubmitForm));
         }
     }
 }

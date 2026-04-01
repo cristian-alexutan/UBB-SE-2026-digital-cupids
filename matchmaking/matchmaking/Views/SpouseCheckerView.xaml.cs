@@ -19,6 +19,7 @@ namespace matchmaking.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             ViewModel = (SpouseCheckerViewModel)e.Parameter;
+            Bindings.Update();
         }
 
         private async void BrowseMarriageCertificate_Click(object sender, RoutedEventArgs e)
@@ -49,6 +50,26 @@ namespace matchmaking.Views
             var file = await picker.PickSingleFileAsync();
             if (file != null)
                 ViewModel.PartnerPhotoPath = file.Path;
+        }
+
+        private void SubmitButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.SubmitCommand.CanExecute(null))
+            {
+                ViewModel.SubmitCommand.Execute(null);
+            }
+
+            Application.Current.Exit();
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.CancelCommand.CanExecute(null))
+            {
+                ViewModel.CancelCommand.Execute(null);
+            }
+
+            Application.Current.Exit();
         }
     }
 }
