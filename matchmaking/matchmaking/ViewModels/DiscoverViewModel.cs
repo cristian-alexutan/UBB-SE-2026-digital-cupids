@@ -144,6 +144,24 @@ namespace matchmaking.ViewModels
             }
         }
 
+        public string? CurrentCandidateLoverType
+        {
+            get
+            {
+                DatingProfile? candidate = CurrentValidCandidate;
+                if (candidate == null || !candidate.LoverType.HasValue)
+                {
+                    return null;
+                }
+
+                return candidate.LoverType.Value.ToString().Replace("_", " ");
+            }
+        }
+
+        public Visibility CurrentCandidateLoverTypeVisibility => string.IsNullOrEmpty(CurrentCandidateLoverType)
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+
         public Visibility CurrentCandidateStarSignVisibility => string.IsNullOrEmpty(CurrentCandidateStarSign)
             ? Visibility.Collapsed
             : Visibility.Visible;
@@ -463,6 +481,8 @@ namespace matchmaking.ViewModels
             OnPropertyChanged(nameof(CurrentPhoto));
             OnPropertyChanged(nameof(CurrentCandidateStarSign));
             OnPropertyChanged(nameof(CurrentCandidateStarSignVisibility));
+            OnPropertyChanged(nameof(CurrentCandidateLoverType));
+            OnPropertyChanged(nameof(CurrentCandidateLoverTypeVisibility));
             OnPropertyChanged(nameof(CurrentPhotoIndex));
             UpdateCommandStates();
         }
