@@ -19,6 +19,8 @@ namespace matchmaking.ViewModels
         private int _userId;
         private string _username = string.Empty;
         private DateTime _birthDate;
+        private string _name = string.Empty;
+        
 
         public RelayCommand NextStepCommand { get; }
         public RelayCommand PreviousStepCommand { get; }
@@ -42,6 +44,12 @@ namespace matchmaking.ViewModels
             NextPhotoCommand = new RelayCommand(NextPhoto, () => _profileData?.Photos.Count > 0);
             PreviousPhotoCommand = new RelayCommand(PreviousPhoto, () => _profileData?.Photos.Count > 0);
             CreateProfileCommand = new RelayCommand(ExecuteCreateProfile, () => _termsAccepted);
+        }
+
+        public string Name
+        {
+            get => _name;
+            set => SetProperty(ref _name, value);
         }
 
         public int CurrentStep
@@ -104,7 +112,6 @@ namespace matchmaking.ViewModels
         public void LoadUserData(int userId)
         {
             UserData userData = _userUtil.GetUserData(userId);
-            _username = userData.Username;
             _birthDate = userData.Birthdate;
 
             _profileData = new ProfileData(
@@ -191,7 +198,7 @@ namespace matchmaking.ViewModels
 
             return new DatingProfile(
                 _userId,
-                _username,
+                _name,
                 _profileData.Gender,
                 _profileData.PreferredGenders,
                 _profileData.Location,
@@ -232,9 +239,9 @@ namespace matchmaking.ViewModels
         {
             if (!_termsAccepted)
                 throw new InvalidOperationException("You didn't accept the terms & conditions!");
+            _profileData.Name = _name;
             return _profileService.CreateProfile(_userId, _profileData);
         }
-
         private void ExecuteCreateProfile() => CreateDatingProfile();
     }
 }

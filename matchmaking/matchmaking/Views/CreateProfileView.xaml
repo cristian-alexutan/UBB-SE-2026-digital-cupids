@@ -68,8 +68,10 @@
                                    Foreground="#c0143c"/>
 
                         <StackPanel Spacing="6">
-                            <TextBlock Text="Username" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
-                            <TextBlock x:Name="UsernameText" Foreground="#555" FontSize="14"/>
+                            <TextBlock Text="Name" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
+                            <TextBox x:Name="NameTextBox"
+                                    PlaceholderText="Enter your display name"
+                                    TextChanged="HandleNameChanged"/>
                         </StackPanel>
 
                         <StackPanel Spacing="6">

@@ -36,7 +36,6 @@ namespace matchmaking.Views
                 ViewModel = viewModel;
                 ViewModel.PropertyChanged += OnViewModelPropertyChanged;
                 ViewModel.LoadUserData(ViewModel.UserId);
-                UsernameText.Text = GetUsername();
                 AgeText.Text = GetAge().ToString();
                 LoadLocations();
                 LoadInterests();
@@ -58,11 +57,11 @@ namespace matchmaking.Views
                     PreviewPhotoImage.Source = new BitmapImage(new Uri(photos[ViewModel.CurrentPhotoIndex].Location!));
             }
         }
-
-        private string GetUsername()
+        private void HandleNameChanged(object sender, TextChangedEventArgs e)
         {
-            MockUserUtil userUtil = new MockUserUtil();
-            return userUtil.GetUserData(ViewModel!.UserId).Username;
+            if (ViewModel == null) return;
+            ViewModel.Name = NameTextBox.Text;
+            UpdateNextButton();
         }
 
         private int GetAge()
@@ -78,6 +77,7 @@ namespace matchmaking.Views
         {
             if (ViewModel?.ProfileData == null) return;
 
+            ViewModel.Name = NameTextBox.Text;
             ViewModel.ProfileData.Location = LocationComboBox.SelectedItem as string ?? string.Empty;
             ViewModel.ProfileData.Nationality = NationalityTextBox.Text;
             ViewModel.ProfileData.Gender = GenderComboBox.SelectedIndex switch
@@ -110,6 +110,7 @@ namespace matchmaking.Views
 
             if (step == 1)
             {
+                NameTextBox.Text = ViewModel.Name;
                 LocationComboBox.SelectedItem = ViewModel.ProfileData.Location;
                 NationalityTextBox.Text = ViewModel.ProfileData.Nationality;
                 GenderComboBox.SelectedIndex = ViewModel.ProfileData.Gender switch
@@ -181,6 +182,7 @@ namespace matchmaking.Views
         }
 
         private bool IsStep1Valid() =>
+            !string.IsNullOrWhiteSpace(ViewModel!.Name) &&
             !string.IsNullOrWhiteSpace(ViewModel!.ProfileData!.Location) &&
             !string.IsNullOrWhiteSpace(ViewModel.ProfileData.Nationality) &&
             GenderComboBox.SelectedIndex >= 0 &&

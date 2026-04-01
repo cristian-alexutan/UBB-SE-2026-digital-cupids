@@ -65,7 +65,7 @@ namespace matchmaking.Services
 
             DatingProfile newProfile = new DatingProfile(
                 Id,
-                userData.Username,
+                profileData.Name,
                 profileData.Gender,
                 profileData.PreferredGenders,
                 profileData.Location,
