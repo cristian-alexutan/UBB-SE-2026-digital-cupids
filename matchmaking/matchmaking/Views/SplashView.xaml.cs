@@ -64,9 +64,6 @@ namespace matchmaking.Views
                 case Screen.CREATE:
                     Frame.Navigate(typeof(CreateProfileView), _createProfileViewModel);
                     break;
-                case Screen.ADMIN:
-                    Frame.Navigate(typeof(AdminView));
-                    break;
                 case Screen.DISCOVER:
                 default:
                     var mainViewModel = new MainViewModel(ViewModel!.UserId, App.ConnectionString);
