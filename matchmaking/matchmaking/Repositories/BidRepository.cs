@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using matchmaking.Domain;
 using Microsoft.Data.SqlClient;
@@ -13,6 +14,7 @@ namespace matchmaking.Repositories
         public BidRepository(string connectionString)
         {
             _connectionString = connectionString;
+            BidDay = DateTime.Today.Day;
         }
 
         private Bid MapBid(SqlDataReader reader)
@@ -47,8 +49,11 @@ namespace matchmaking.Repositories
             command.Parameters.AddWithValue("@userId", bid.UserId);
             command.Parameters.AddWithValue("@bidSum", bid.BidSum);
 
+            Debug.WriteLine($"repository: adding bid with userId={bid.UserId} and bidSum={bid.BidSum}");
+
             connection.Open();
-            command.ExecuteNonQuery();
+            int rows = command.ExecuteNonQuery();
+            Debug.WriteLine($"Rows affected: {rows}");
         }
 
         public Bid DeleteById(int bidId)
