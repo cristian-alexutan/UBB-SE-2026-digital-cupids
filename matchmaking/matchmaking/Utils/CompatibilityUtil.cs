@@ -29,6 +29,8 @@ namespace matchmaking.Utils
             var coords1 = _locationUtil.GetCoords(profile1.Location);
             var coords2 = _locationUtil.GetCoords(profile2.Location);
 
+            Debug.WriteLine($"location 1: {profile1.Location} {coords1}, location 2: {profile2.Location} {coords2}");
+
             if (coords1 == null || coords2 == null)
             {
                 return 0;
@@ -38,7 +40,7 @@ namespace matchmaking.Utils
             (float lat2, float lon2) = coords2.Value;
             float D = CalculateDistance(lat1, lon1, lat2, lon2);
 
-            Debug.WriteLine($"location 1: {profile1.Location} ({lat1}, {lon1}), location 2: {profile2.Location} ({lat2}, {lon2})");
+            
             Debug.WriteLine($"Distance between {profile1.Name} and {profile2.Name}: {D} km");
 
             int a1 = profile1.Age;

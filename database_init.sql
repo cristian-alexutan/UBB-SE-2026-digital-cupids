@@ -8,6 +8,8 @@ BEGIN
 END;
 GO
 
+USE matchmaking_db;
+
 DROP TABLE IF EXISTS Interactions
 DROP TABLE IF EXISTS Matches
 DROP TABLE IF EXISTS ProfilePreferences
@@ -20,7 +22,7 @@ DROP TABLE IF EXISTS DatingAdmin
 DROP TABLE IF EXISTS SupportTicket
 
 CREATE TABLE Profiles (
-    userId INT IDENTITY(1, 1) PRIMARY KEY,
+    userId INT PRIMARY KEY,
     [name] VARCHAR(50),
     gender VARCHAR(20),
     [location] VARCHAR(50),
@@ -113,18 +115,43 @@ GO
 
 -- Profiles (10 users)
 INSERT INTO Profiles 
-([name], gender, location, nationality, maxDistance, age, minPrefAge, maxPrefAge, bio, displayStarSign, isArchived, dateOfBirth, loverType, isHotSeat, boost, boostDay, hotSeatDay)
+(userId, [name], gender, location, nationality, maxDistance, age, minPrefAge, maxPrefAge, bio, displayStarSign, isArchived, dateOfBirth, loverType, isHotSeat, boost, boostDay, hotSeatDay)
 VALUES
-('Andrei Popescu',   'MALE',       'Cluj',  'Romanian',  100, 28, 22, 35, 'Software engineer who loves hiking and coffee.',         1, 0, '1996-03-15', 'DEEP_THINKER',          NULL, NULL, NULL, NULL),
-('Maria Ionescu',    'FEMALE',     'Bucuresti',    'Romanian',   50, 25, 23, 32, 'Artist and yoga instructor. Dog mom.',                   0, 0, '1999-07-22', 'SOCIAL_EXPLORER',        NULL, NULL, NULL, NULL),
-('Alex Dumitrescu',  'MALE',       'Timis',    'Romanian',  200, 31, 25, 38, 'Finance guy by day, amateur chef by night.',             1, 0, '1993-11-05', 'STABILITY_LOVER',        NULL, NULL, NULL, NULL),
-('Elena Marinescu',  'FEMALE',     'Iasi',         'Romanian',   75, 27, 25, 34, 'Journalist. Lover of wine, books, and bad puns.',        1, 0, '1997-04-18', 'EMPATHETIC_CONNECTOR',   NULL, NULL, NULL, NULL),
-('Radu Stan',        'MALE',       'Brasov',       'Romanian',  300, 33, 27, 40, 'Architect with a passion for travel and photography.',   0, 0, '1991-09-30', 'ADVENTURE_SEEKER',       NULL, NULL, NULL, NULL),
-('Ioana Petrescu',   'FEMALE',     'Constanta',    'Romanian',  150, 29, 24, 36, 'Marine biology student. Swims every weekend.',           1, 0, '1995-12-11', 'ADVENTURE_SEEKER',       NULL, NULL, NULL, NULL),
-('Sam Luca',         'NON_BINARY', 'Sibiu',        'Romanian',  500, 26, 22, 33, 'Music producer. Coffee shop regular.',                   0, 0, '1998-02-28', 'SOCIAL_EXPLORER',        NULL, NULL, NULL, NULL),
-('Ana Pop',          'FEMALE',     'Bihor',       'Romanian',   80, 30, 26, 37, 'UX designer who loves art and hiking.',                  1, 1, '1994-06-03', 'DEEP_THINKER',           NULL, NULL, NULL, NULL),
-('Mihai Georgescu',  'MALE',       'Dolj',      'Romanian',  250, 35, 28, 42, 'Chef and football fan. Looking for something real.',     0, 0, '1989-08-19', 'STABILITY_LOVER',        NULL, NULL, NULL, NULL),
-('Alex Morgan',      'OTHER',      'Cluj',  'Romanian',   60, 24, 18, 30, 'PhD student in literature. Pasta enthusiast.',           1, 0, '2000-01-07', NULL,                     NULL, NULL, NULL, NULL);
+(1, 'Andrei Popescu',   'MALE',       'Cluj-Napoca',       'Romanian', 100, 28, 22, 35, 'Software engineer who loves hiking and coffee.', 1, 0, '1996-03-15', 'DEEP_THINKER', NULL, NULL, NULL, NULL),
+(2, 'Maria Ionescu',    'FEMALE',     'Bucuresti',  'Romanian', 50, 25, 23, 32, 'Artist and yoga instructor. Dog mom.',          0, 0, '1999-07-22', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
+(3, 'Alex Dumitrescu',  'MALE',       'Timisoasa',      'Romanian', 200, 31, 25, 38, 'Finance guy by day, amateur chef by night.',    1, 0, '1993-11-05', 'STABILITY_LOVER', NULL, NULL, NULL, NULL),
+(4, 'Elena Marinescu',  'FEMALE',     'Iasi',       'Romanian', 75, 27, 25, 34, 'Journalist. Lover of wine, books, and bad puns.',1, 0, '1997-04-18', 'EMPATHETIC_CONNECTOR', NULL, NULL, NULL, NULL),
+(5, 'Radu Stan',        'MALE',       'Brasov',     'Romanian', 300, 33, 27, 40, 'Architect with a passion for travel and photography.',0, 0, '1991-09-30', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
+(6, 'Ioana Petrescu',   'FEMALE',     'Constanta',  'Romanian', 150, 29, 24, 36, 'Marine biology student. Swims every weekend.', 1, 0, '1995-12-11', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
+(7, 'Sam Luca',         'NON_BINARY', 'Sibiu',      'Romanian', 500, 26, 22, 33, 'Music producer. Coffee shop regular.',        0, 0, '1998-02-28', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
+(8, 'Ana Pop',          'FEMALE',     'Bihor',      'Romanian', 80, 30, 26, 37, 'UX designer who loves art and hiking.',        1, 1, '1994-06-03', 'DEEP_THINKER', NULL, NULL, NULL, NULL),
+(9, 'Mihai Georgescu',  'MALE',       'Craiova',       'Romanian', 250, 35, 28, 42, 'Chef and football fan. Looking for something real.',0, 0, '1989-08-19', 'STABILITY_LOVER', NULL, NULL, NULL, NULL),
+(10,'Alex Morgan',      'OTHER',      'Cluj-Napoca',       'Romanian', 60, 24, 18, 30, 'PhD student in literature. Pasta enthusiast.', 1, 0, '2000-01-07', NULL, NULL, NULL, NULL, NULL),
+
+(11,'Adrian Pop',        'MALE',       'Cluj-Napoca', 'Romanian', 120, 28, 23, 35, 'Gym enthusiast and coffee lover.', 1, 0, '1996-04-12', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
+(12,'Bianca Muresan',    'FEMALE',     'Cluj-Napoca', 'Romanian', 80, 25, 22, 32, 'Bookworm and yoga fan.', 0, 0, '1999-09-21', 'DEEP_THINKER', NULL, NULL, NULL, NULL),
+(13,'Cristian Radu',     'MALE',       'Cluj-Napoca', 'Romanian', 150, 31, 25, 38, 'Tech geek and gamer.', 1, 0, '1993-07-08', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
+(14,'Diana Moldovan',    'FEMALE',     'Cluj-Napoca', 'Romanian', 70, 24, 21, 30, 'Student who loves traveling.', 1, 0, '2000-02-17', 'EMPATHETIC_CONNECTOR', NULL, NULL, NULL, NULL),
+(15,'Eduard Toma',       'MALE',       'Cluj-Napoca', 'Romanian', 200, 33, 27, 40, 'Entrepreneur and foodie.', 0, 0, '1991-11-03', 'STABILITY_LOVER', NULL, NULL, NULL, NULL),
+(16,'Flavia Popescu',    'FEMALE',     'Cluj-Napoca', 'Romanian', 90, 27, 23, 34, 'Designer and plant lover.', 1, 0, '1997-06-25', 'DEEP_THINKER', NULL, NULL, NULL, NULL),
+(17,'George Stan',       'MALE',       'Cluj-Napoca', 'Romanian', 180, 35, 28, 42, 'Photographer and traveler.', 0, 0, '1989-01-14', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
+(18,'Horia Iancu',       'MALE',       'Cluj-Napoca', 'Romanian', 100, 29, 24, 36, 'Runner and coffee addict.', 1, 0, '1995-03-30', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
+(19,'Irina Petru',       'FEMALE',     'Cluj-Napoca', 'Romanian', 60, 26, 22, 33, 'Marketing specialist and dog lover.', 1, 0, '1998-10-09', 'EMPATHETIC_CONNECTOR', NULL, NULL, NULL, NULL),
+(20,'Ionut Badea',       'MALE',       'Cluj-Napoca', 'Romanian', 140, 32, 25, 39, 'Football fan and home chef.', 0, 0, '1992-05-19', 'STABILITY_LOVER', NULL, NULL, NULL, NULL),
+(21,'Julia Rusu',        'FEMALE',     'Cluj-Napoca', 'Romanian', 75, 24, 21, 30, 'Art student and dreamer.', 1, 0, '2000-08-11', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
+(22,'Klaus Wagner',      'MALE',       'Cluj-Napoca', 'Romanian', 130, 34, 27, 41, 'Engineer who loves hiking.', 0, 0, '1990-12-22', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
+(23,'Larisa Enache',     'FEMALE',     'Cluj-Napoca', 'Romanian', 85, 28, 24, 36, 'Teacher and reader.', 1, 0, '1996-01-27', 'DEEP_THINKER', NULL, NULL, NULL, NULL),
+(24,'Mihai Costin',      'MALE',       'Cluj-Napoca', 'Romanian', 160, 31, 25, 38, 'Startup enthusiast.', 0, 0, '1993-09-05', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
+(25,'Nicoleta Sandu',    'FEMALE',     'Cluj-Napoca', 'Romanian', 70, 25, 22, 32, 'Fitness and nutrition lover.', 1, 0, '1999-04-14', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
+(26,'Ovidiu Marin',      'MALE',       'Cluj-Napoca', 'Romanian', 120, 30, 24, 37, 'Cycling and photography.', 0, 0, '1994-02-02', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL),
+(27,'Paula Dobre',       'FEMALE',     'Cluj-Napoca', 'Romanian', 65, 26, 22, 33, 'Yoga instructor.', 1, 0, '1998-07-18', 'EMPATHETIC_CONNECTOR', NULL, NULL, NULL, NULL),
+(28,'Razvan Ilie',       'MALE',       'Cluj-Napoca', 'Romanian', 140, 33, 26, 40, 'Finance guy who loves cooking.', 0, 0, '1991-06-06', 'STABILITY_LOVER', NULL, NULL, NULL, NULL),
+(29,'Simona Luca',       'FEMALE',     'Cluj-Napoca', 'Romanian', 80, 27, 23, 34, 'Music and festivals.', 1, 0, '1997-03-12', 'SOCIAL_EXPLORER', NULL, NULL, NULL, NULL),
+(30,'Tudor Neagu',       'MALE',       'Cluj-Napoca', 'Romanian', 150, 35, 28, 42, 'Traveler and storyteller.', 0, 0, '1989-10-25', 'ADVENTURE_SEEKER', NULL, NULL, NULL, NULL);
+
+SELECT *
+FROM Profiles
+
 
 -- ProfileInterests
 INSERT INTO ProfileInterests (userId, interest) VALUES
@@ -171,31 +198,70 @@ INSERT INTO Photos (userId, location, profileOrderIndex) VALUES
 (9,  'https://cdn.matchmaking.app/photos/user9_photo1.jpg', 1),
 (10, 'https://cdn.matchmaking.app/photos/user10_photo1.jpg', 1);
 
-INSERT INTO Interactions (fromProfileId, toProfileId, [type]) VALUES
-(1,  2,  'LIKE'),
-(2,  1,  'LIKE'),
-(1,  4,  'SUPER_LIKE'),
-(4,  1,  'LIKE'),
-(3,  6,  'LIKE'),
-(6,  3,  'LIKE'),
-(5,  8,  'SUPER_LIKE'),
-(8,  5,  'LIKE'),
-(7,  10, 'LIKE'),
-(10, 7,  'LIKE'),
-(9,  2,  'LIKE'),
-(2,  9,  'PASS'),
-(3,  4,  'PASS'),
-(5,  6,  'LIKE'),
-(6,  5,  'PASS'),
-(7,  1,  'LIKE'),
-(1,  7,  'PASS'),
-(10, 3,  'SUPER_LIKE'),
-(3,  10, 'PASS');
+INSERT INTO ProfilePreferences (userId, gender) VALUES
+-- Adrian Pop (11)
+(11, 'FEMALE'),
 
--- Matches
-INSERT INTO Matches (user1Id, user2Id) VALUES
-(1, 2),
-(1, 4),
-(3, 6),
-(5, 8),
-(7, 10);
+-- Bianca Muresan (12)
+(12, 'MALE'),
+
+-- Cristian Radu (13)
+(13, 'FEMALE'),
+
+-- Diana Moldovan (14)
+(14, 'MALE'),
+
+-- Eduard Toma (15)
+(15, 'FEMALE'),
+
+-- Flavia Popescu (16)
+(16, 'MALE'),
+
+-- George Stan (17)
+(17, 'FEMALE'),
+
+-- Horia Iancu (18)
+(18, 'FEMALE'),
+
+-- Irina Petru (19)
+(19, 'MALE'),
+
+-- Ionut Badea (20)
+(20, 'FEMALE'),
+
+-- Julia Rusu (21)
+(21, 'MALE'),
+
+-- Klaus Wagner (22)
+(22, 'FEMALE'),
+
+-- Larisa Enache (23)
+(23, 'MALE'),
+
+-- Mihai Costin (24)
+(24, 'FEMALE'),
+
+-- Nicoleta Sandu (25)
+(25, 'MALE'),
+
+-- Ovidiu Marin (26)
+(26, 'FEMALE'),
+
+-- Paula Dobre (27)
+(27, 'MALE'),
+
+-- Razvan Ilie (28)
+(28, 'FEMALE'),
+
+-- Simona Luca (29)
+(29, 'MALE'),
+
+-- Tudor Neagu (30)
+(30, 'FEMALE'),
+
+-- Add a few more diverse preferences (optional realism)
+(18, 'NON_BINARY'),
+(21, 'NON_BINARY'),
+(24, 'NON_BINARY'),
+(27, 'FEMALE'),
+(30, 'NON_BINARY');

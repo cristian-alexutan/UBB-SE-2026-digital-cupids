@@ -149,10 +149,10 @@ namespace matchmaking.Repositories
          
 
             const string query = @"
-            INSERT INTO Profiles (gender, location, nationality, maxDistance, age,
+            INSERT INTO Profiles (userId, [name], gender, location, nationality, maxDistance, age,
                 minPrefAge, maxPrefAge, bio, displayStarSign, isArchived,
                 dateOfBirth, loverType, isHotSeat, boost, boostDay, hotSeatDay)
-            VALUES (@gender, @location, @nationality, @maxDistance, @age,
+            VALUES (@userId, @name, @gender, @location, @nationality, @maxDistance, @age,
                 @minPrefAge, @maxPrefAge, @bio, @displayStarSign, @isArchived,
                 @dateOfBirth, @loverType, @isHotSeat, @boost, @boostDay, @hotSeatDay);
             SELECT SCOPE_IDENTITY();";
@@ -161,6 +161,8 @@ namespace matchmaking.Repositories
             connection.Open();
 
             using SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@userId", profile.UserId);
+            command.Parameters.AddWithValue("@name", profile.Name);
             command.Parameters.AddWithValue("@gender", profile.Gender.ToString());
             command.Parameters.AddWithValue("@location", profile.Location);
             command.Parameters.AddWithValue("@nationality", profile.Nationality);

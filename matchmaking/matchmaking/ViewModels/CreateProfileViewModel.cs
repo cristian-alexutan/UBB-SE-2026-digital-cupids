@@ -190,6 +190,7 @@ namespace matchmaking.ViewModels
             if (DateTime.Now < _birthDate.AddYears(age)) age--;
 
             return new DatingProfile(
+                _userId,
                 _username,
                 _profileData.Gender,
                 _profileData.PreferredGenders,
