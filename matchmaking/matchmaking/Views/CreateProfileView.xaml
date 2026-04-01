@@ -6,6 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
 
     <Grid>
@@ -142,16 +143,17 @@
                                 <Run Text=" - "/>
                                 <Run x:Name="MaxAgeValueText" Text="99"/>
                             </TextBlock>
-                            <TextBlock Text="Minimum age" Foreground="#888" FontSize="12"/>
-                            <Slider x:Name="MinAgeSlider"
-                                    Minimum="18" Maximum="99" Value="18"
-                                    Foreground="#c0143c"
-                                    ValueChanged="HandleMinAgeChanged"/>
-                            <TextBlock Text="Maximum age" Foreground="#888" FontSize="12"/>
-                            <Slider x:Name="MaxAgeSlider"
-                                    Minimum="18" Maximum="99" Value="99"
-                                    Foreground="#c0143c"
-                                    ValueChanged="HandleMaxAgeChanged"/>
+                            <Border BorderBrush="#c0143c" BorderThickness="1" CornerRadius="4"
+                                    Background="#FFF5F5" Padding="16">
+                                <controls:RangeSelector
+                                    x:Name="AgeRangeSelector"
+                                    Minimum="18"
+                                    Maximum="99"
+                                    RangeStart="18"
+                                    RangeEnd="99"
+                                    StepFrequency="1"
+                                    ValueChanged="HandleAgeRangeChanged"/>
+                            </Border>
                         </StackPanel>
 
                         <Border BorderBrush="#c0143c" BorderThickness="1" CornerRadius="4"

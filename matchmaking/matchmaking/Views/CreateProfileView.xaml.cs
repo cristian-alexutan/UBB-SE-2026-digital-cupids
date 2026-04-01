@@ -120,8 +120,8 @@ namespace matchmaking.Views
                 }
 
                 ViewModel.ProfileData.MaxDistance = (int)MaxDistanceSlider.Value;
-                ViewModel.ProfileData.MinPreferredAge = (int)MinAgeSlider.Value;
-                ViewModel.ProfileData.MaxPreferredAge = (int)MaxAgeSlider.Value;
+                ViewModel.ProfileData.MinPreferredAge = (int)AgeRangeSelector.RangeStart;
+                ViewModel.ProfileData.MaxPreferredAge = (int)AgeRangeSelector.RangeEnd;
                 ViewModel.ProfileData.DisplayStarSign = DisplayStarSignToggle.IsOn;
             }
             else if (step == 3)
@@ -155,8 +155,8 @@ namespace matchmaking.Views
                 PrefNonBinaryCheckBox.IsChecked = ViewModel.ProfileData.PreferredGenders.Contains(Gender.NON_BINARY);
                 PrefOtherCheckBox.IsChecked = ViewModel.ProfileData.PreferredGenders.Contains(Gender.OTHER);
                 MaxDistanceSlider.Value = ViewModel.ProfileData.MaxDistance;
-                MinAgeSlider.Value = ViewModel.ProfileData.MinPreferredAge;
-                MaxAgeSlider.Value = ViewModel.ProfileData.MaxPreferredAge;
+                AgeRangeSelector.RangeStart = ViewModel.ProfileData.MinPreferredAge;
+                AgeRangeSelector.RangeEnd = ViewModel.ProfileData.MaxPreferredAge;
                 MaxDistanceValueText.Text = ViewModel.ProfileData.MaxDistance.ToString();
                 MinAgeValueText.Text = ViewModel.ProfileData.MinPreferredAge.ToString();
                 MaxAgeValueText.Text = ViewModel.ProfileData.MaxPreferredAge.ToString();
@@ -333,24 +333,16 @@ namespace matchmaking.Views
             MaxDistanceValueText.Text = ((int)MaxDistanceSlider.Value).ToString();
         }
 
-        private void HandleMinAgeChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        private void HandleAgeRangeChanged(object sender, object e)
         {
             if (ViewModel?.ProfileData == null)
             {
                 return;
             }
-            ViewModel.ProfileData.MinPreferredAge = (int)MinAgeSlider.Value;
-            MinAgeValueText.Text = ((int)MinAgeSlider.Value).ToString();
-        }
-
-        private void HandleMaxAgeChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
-        {
-            if (ViewModel?.ProfileData == null)
-            {
-                return;
-            }
-            ViewModel.ProfileData.MaxPreferredAge = (int)MaxAgeSlider.Value;
-            MaxAgeValueText.Text = ((int)MaxAgeSlider.Value).ToString();
+            ViewModel.ProfileData.MinPreferredAge = (int)AgeRangeSelector.RangeStart;
+            ViewModel.ProfileData.MaxPreferredAge = (int)AgeRangeSelector.RangeEnd;
+            MinAgeValueText.Text = ((int)AgeRangeSelector.RangeStart).ToString();
+            MaxAgeValueText.Text = ((int)AgeRangeSelector.RangeEnd).ToString();
         }
 
 
