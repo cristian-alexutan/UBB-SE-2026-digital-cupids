@@ -64,6 +64,7 @@ namespace matchmaking.Services
             CopyPhotosToStorage(profileData.Photos);
 
             DatingProfile newProfile = new DatingProfile(
+                Id,
                 userData.Username,
                 profileData.Gender,
                 profileData.PreferredGenders,

@@ -87,30 +87,6 @@ namespace matchmaking.Domain
             BoostDay = boostDay;
             HotSeatDay = hotSeatDay;
         }
-        public DatingProfile(string name, Gender gender, List<Gender> preferredGenders, string location, string nationality, int maxDistance, int age, int minPreferredAge, int maxPreferredAge, string bio, bool displayStarSign, bool isArchived, List<Photo> photos, List<string> interests, DateTime dateOfBirth, LoverType? loverType, bool isHotSeat, bool isBoosted, int boostDay, int hotSeatDay)
-
-        { 
-            Name = name;
-            Gender = gender;
-            PreferredGenders = preferredGenders;
-            Location = location;
-            Nationality = nationality;
-            MaxDistance = maxDistance;
-            Age = age;
-            MinPreferredAge = minPreferredAge;
-            MaxPreferredAge = maxPreferredAge;
-            Bio = bio;
-            DisplayStarSign = displayStarSign;
-            IsArchived = isArchived;
-            Photos = photos;
-            Interests = interests;
-            DateOfBirth = dateOfBirth;
-            LoverType = loverType;
-            IsHotSeat = isHotSeat;
-            IsBoosted = isBoosted;
-            BoostDay = boostDay;
-            HotSeatDay = hotSeatDay;
-        }
         public StarSign GetStarSign()
         {
             int month = DateOfBirth.Month;
