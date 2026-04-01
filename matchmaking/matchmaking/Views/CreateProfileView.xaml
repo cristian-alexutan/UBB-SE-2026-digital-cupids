@@ -265,23 +265,17 @@
                                     <Button x:Name="PrevPhotoButton"
                                             Content="&#xE76B;"
                                             FontFamily="Segoe MDL2 Assets"
-                                            Click="HandlePreviousPhotoClick"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Background="#AA000000"
-                                            Foreground="White"
-                                            Height="50" Width="50"
-                                            CornerRadius="25" Margin="10,0,0,0"/>
+                                            Command="{x:Bind ViewModel.PreviousPhotoCommand, Mode=OneWay}"
+                                            HorizontalAlignment="Left" VerticalAlignment="Center"
+                                            Background="#AA000000" Foreground="White"
+                                            Height="50" Width="50" CornerRadius="25" Margin="10,0,0,0"/>
                                     <Button x:Name="NextPhotoButton"
                                             Content="&#xE76C;"
                                             FontFamily="Segoe MDL2 Assets"
-                                            Click="HandleNextPhotoClick"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center"
-                                            Background="#AA000000"
-                                            Foreground="White"
-                                            Height="50" Width="50"
-                                            CornerRadius="25" Margin="0,0,10,0"/>
+                                            Command="{x:Bind ViewModel.NextPhotoCommand, Mode=OneWay}"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                                            Background="#AA000000" Foreground="White"
+                                            Height="50" Width="50" CornerRadius="25" Margin="0,0,10,0"/>
                                 </Grid>
 
                                 <ScrollViewer Grid.Column="1" Padding="30">
@@ -372,15 +366,13 @@
                         HorizontalAlignment="Center" Spacing="20">
                 <Button x:Name="PreviousStepButton"
                         Content="Previous"
-                        Click="HandlePreviousStepClick"
-                        IsEnabled="False"
+                        Command="{x:Bind ViewModel.PreviousStepCommand, Mode=OneWay}"
                         Background="White" Foreground="#eb3b59"
                         FontSize="16" FontWeight="Bold"
                         Padding="40,12" CornerRadius="30"/>
                 <Button x:Name="NextStepButton"
                         Content="Next"
-                        Click="HandleNextStepClick"
-                        IsEnabled="False"
+                        Command="{x:Bind ViewModel.NextStepCommand, Mode=OneWay}"
                         Background="White" Foreground="#eb3b59"
                         FontSize="16" FontWeight="Bold"
                         Padding="40,12" CornerRadius="30"/>
