@@ -113,6 +113,12 @@ CREATE TABLE SupportTicket (
 );
 GO
 
+INSERT INTO DatingAdmin (userId) VALUES
+(45);
+
+SELECT *
+FROM DatingAdmin
+
 -- Profiles (10 users)
 INSERT INTO Profiles 
 (userId, [name], gender, location, nationality, maxDistance, age, minPrefAge, maxPrefAge, bio, displayStarSign, isArchived, dateOfBirth, loverType, isHotSeat, boost, boostDay, hotSeatDay)
@@ -283,3 +289,6 @@ BEGIN
     DELETE FROM Profiles           WHERE userId = @id;
 END;
 GO
+
+SELECT *
+FROM Profiles
