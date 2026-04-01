@@ -35,8 +35,8 @@
         <TextBlock Text="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}" Foreground="Red"/>
 
         <StackPanel Orientation="Horizontal" Spacing="8">
-            <Button Content="Submit" Click="Submit_Click"/>
-            <Button Content="Cancel" Click="Cancel_Click"/>
+            <Button Content="Submit" Command="{x:Bind ViewModel.SubmitCommand}"/>
+            <Button Content="Cancel" Command="{x:Bind ViewModel.CancelCommand}"/>
         </StackPanel>
 
     </StackPanel>

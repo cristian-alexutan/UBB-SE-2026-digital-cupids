@@ -1,6 +1,7 @@
 using matchmaking.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using Windows.Storage.Pickers;
 
@@ -15,24 +16,9 @@ namespace matchmaking.Views
             InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             ViewModel = (SpouseCheckerViewModel)e.Parameter;
-        }
-
-        private void Submit_Click(object sender, RoutedEventArgs e)
-        {
-            if (ViewModel.CanSubmit())
-            {
-                ViewModel.Submit();
-                Frame.GoBack();
-            }
-        }
-
-        private void Cancel_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.Cancel();
-            Frame.GoBack();
         }
 
         private async void BrowseMarriageCertificate_Click(object sender, RoutedEventArgs e)

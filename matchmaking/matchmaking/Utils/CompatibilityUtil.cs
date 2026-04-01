@@ -1,6 +1,7 @@
 ﻿using matchmaking.Domain;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -15,6 +16,8 @@ namespace matchmaking.Utils
 
         public float CalculateCompatibility(DatingProfile profile1, DatingProfile profile2)
         {
+            Debug.WriteLine($"Compatibility score between {profile1.Name} and {profile2.Name}");
+
             if (profile1 == null || profile2 == null)
             {
                 return 0;
@@ -26,6 +29,8 @@ namespace matchmaking.Utils
             var coords1 = _locationUtil.GetCoords(profile1.Location);
             var coords2 = _locationUtil.GetCoords(profile2.Location);
 
+            Debug.WriteLine($"location 1: {profile1.Location} {coords1}, location 2: {profile2.Location} {coords2}");
+
             if (coords1 == null || coords2 == null)
             {
                 return 0;
@@ -34,6 +39,9 @@ namespace matchmaking.Utils
             (float lat1, float lon1) = coords1.Value;
             (float lat2, float lon2) = coords2.Value;
             float D = CalculateDistance(lat1, lon1, lat2, lon2);
+
+            
+            Debug.WriteLine($"Distance between {profile1.Name} and {profile2.Name}: {D} km");
 
             int a1 = profile1.Age;
             int a2 = profile2.Age;
@@ -59,6 +67,8 @@ namespace matchmaking.Utils
                 return 0;
 
             float score = b1 * 40 + b2 * 40 + 50 + NC * 7 + NI * 5 - (float)Math.Pow(Math.Floor(D / 10.0), 1.7);
+
+            Debug.WriteLine($"final score {score}");
             return score <= 0 ? 0 : score;
         }
 

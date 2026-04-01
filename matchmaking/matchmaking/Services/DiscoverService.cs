@@ -3,6 +3,7 @@ using matchmaking.Repositories;
 using matchmaking.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +36,12 @@ namespace matchmaking.Services
             List<DatingProfile> allProfiles = ProfileRepo.GetAll();
             List<Interaction> interactions = InteractionRepo.GetAll();
 
+            Debug.WriteLine("All profiles:");
+            foreach(var profile in allProfiles)
+            {
+                Debug.WriteLine($"profile: {profile.UserId}, name: {profile.Name}");
+            }
+
             HashSet<int> seenProfiles = interactions
                 .Where(i => i.FromProfileId == profileId)
                 .Select(i => i.ToProfileId)
@@ -47,9 +54,16 @@ namespace matchmaking.Services
                 )
                 .ToList();
 
+            foreach(var profile in candidates)
+            {
+                Debug.WriteLine($"candidate: {profile.UserId}, name: {profile.Name}");
+            }
+
             //TODO: Check if it still remains as the first show profile!!!!
             List<DatingProfile> result = new List<DatingProfile>();
             DatingProfile? hotSeatProfile = candidates.FirstOrDefault(p => p.IsHotSeat);
+
+            Debug.WriteLine($"hot seat profile: {(hotSeatProfile != null ? hotSeatProfile.UserId.ToString() : "null")}, name: {(hotSeatProfile != null ? hotSeatProfile.Name : "null")}");
             if (hotSeatProfile != null)
             {
                 result.Add(hotSeatProfile);
@@ -64,6 +78,12 @@ namespace matchmaking.Services
             .ToList();
 
             result.AddRange(sorted);
+
+            Debug.WriteLine("final list:");
+            foreach(var profile in result)
+            {
+                Debug.WriteLine($"final candidate: {profile.UserId}, name: {profile.Name}");
+            }
             return result;
         }
 

@@ -20,18 +20,20 @@ namespace matchmaking.Repositories
         private DatingProfile MapProfile(SqlDataReader reader)
         {
             int userId = (int)reader["userId"];
-            string name = reader["name"].ToString()!;
-            Gender gender = Enum.Parse<Gender>(reader["gender"].ToString()!);
+            string name = reader["name"] == DBNull.Value ? string.Empty : reader["name"].ToString()!;
+            Gender gender = reader["gender"] == DBNull.Value
+                ? Gender.OTHER
+                : Enum.Parse<Gender>(reader["gender"].ToString()!);
             string location = reader["location"].ToString()!;
             string nationality = reader["nationality"].ToString()!;
-            int maxDistance = (int)reader["maxDistance"];
-            int age = (int)reader["age"];
-            int minPrefAge = (int)reader["minPrefAge"];
-            int maxPrefAge = (int)reader["maxPrefAge"];
+            int maxDistance = reader["maxDistance"] == DBNull.Value ? 0 : (int)reader["maxDistance"];
+            int age = reader["age"] == DBNull.Value ? 0 : (int)reader["age"];
+            int minPrefAge = reader["minPrefAge"] == DBNull.Value ? 18 : (int)reader["minPrefAge"];
+            int maxPrefAge = reader["maxPrefAge"] == DBNull.Value ? 99 : (int)reader["maxPrefAge"];
             string bio = reader["bio"].ToString()!;
-            bool displayStarSign = (bool)reader["displayStarSign"];
+            bool displayStarSign = reader["displayStarSign"] != DBNull.Value && (bool)reader["displayStarSign"];
             bool isArchived = reader["isArchived"] != DBNull.Value && (bool)reader["isArchived"];
-            DateTime dateOfBirth = (DateTime)reader["dateOfBirth"];
+            DateTime dateOfBirth = reader["dateOfBirth"] == DBNull.Value ? DateTime.Today : (DateTime)reader["dateOfBirth"];
             LoverType? loverType = reader["loverType"] != DBNull.Value
                 ? Enum.Parse<LoverType>(reader["loverType"].ToString()!)
                 : null;
@@ -150,18 +152,19 @@ namespace matchmaking.Repositories
          
 
             const string query = @"
-            INSERT INTO Profiles (gender, location, nationality, maxDistance, age,
+            INSERT INTO Profiles (userId, [name], gender, location, nationality, maxDistance, age,
                 minPrefAge, maxPrefAge, bio, displayStarSign, isArchived,
                 dateOfBirth, loverType, isHotSeat, boost, boostDay, hotSeatDay)
-            VALUES (@gender, @location, @nationality, @maxDistance, @age,
+            VALUES (@userId, @name, @gender, @location, @nationality, @maxDistance, @age,
                 @minPrefAge, @maxPrefAge, @bio, @displayStarSign, @isArchived,
-                @dateOfBirth, @loverType, @isHotSeat, @boost, @boostDay, @hotSeatDay);
-            SELECT SCOPE_IDENTITY();";
+                @dateOfBirth, @loverType, @isHotSeat, @boost, @boostDay, @hotSeatDay);";
 
             using SqlConnection connection = new SqlConnection(_connectionString);
             connection.Open();
 
             using SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@userId", profile.UserId);
+            command.Parameters.AddWithValue("@name", profile.Name);
             command.Parameters.AddWithValue("@gender", profile.Gender.ToString());
             command.Parameters.AddWithValue("@location", profile.Location);
             command.Parameters.AddWithValue("@nationality", profile.Nationality);
@@ -179,7 +182,8 @@ namespace matchmaking.Repositories
             command.Parameters.AddWithValue("@boostDay", profile.BoostDay);
             command.Parameters.AddWithValue("@hotSeatDay", profile.HotSeatDay);
 
-            int newUserId = Convert.ToInt32(command.ExecuteScalar());
+            command.ExecuteNonQuery();
+            int newUserId = profile.UserId;
 
             foreach (Gender gender in profile.PreferredGenders)
             {

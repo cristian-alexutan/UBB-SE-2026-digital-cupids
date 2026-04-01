@@ -438,6 +438,7 @@
                                    Foreground="{StaticResource TextPrimaryBrush}"/>
                         <Button Name="QuestionnaireButton"
                                 Content="Take Personality Questionnaire"
+                                Command="{Binding PrepareQuestionnaireCommand}"
                                 Click="QuestionnaireButton_Click"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 HorizontalAlignment="Left"/>
@@ -459,13 +460,13 @@
                         Style="{StaticResource SecondaryButtonStyle}"/>
 
                 <Button Content="Archive profile"
+                        Command="{Binding ArchiveProfileCommand}"
                         Click="ArchiveProfile_Click"
-                        IsEnabled="{Binding IsNotArchived}"
                         Style="{StaticResource SecondaryButtonStyle}"/>
 
                 <Button Content="Unarchive profile"
+                        Command="{Binding UnarchiveProfileCommand}"
                         Click="UnarchiveProfile_Click"
-                        IsEnabled="{Binding IsArchived}"
                         Style="{StaticResource SecondaryButtonStyle}"/>
 
                 <Button Content="Delete profile"

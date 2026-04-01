@@ -18,7 +18,7 @@
         <Grid Grid.Row="0" Background="#eb3b59">
         </Grid>
 
-        <Grid Grid.Row="0" Visibility="{x:Bind Vis(ViewModel.HasCandidates), Mode=OneWay}" Margin="40,20,40,20" CornerRadius="12" Background="#2B2B2B" BorderBrush="#2B2B2B" BorderThickness="2">
+        <Grid Grid.Row="0" Visibility="{x:Bind ViewModel.CandidatesVisibility, Mode=OneWay}" Margin="40,20,40,20" CornerRadius="12" Background="#2B2B2B" BorderBrush="#2B2B2B" BorderThickness="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5*"/>
                 <ColumnDefinition Width="5*"/>
@@ -26,8 +26,8 @@
 
             <Grid Grid.Column="0" CornerRadius="12,0,0,12" Background="Black">
                 <Image Source="{x:Bind ViewModel.CurrentPhoto.Location, Mode=OneWay, TargetNullValue='ms-appx:///Assets/placeholder.png'}" Stretch="UniformToFill"/>
-                <Button Click="{x:Bind ViewModel.PreviousPhoto}" Content="&#xE76B;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#AA000000" Foreground="White" Margin="10" Height="50" Width="50" CornerRadius="25"/>
-                <Button Click="{x:Bind ViewModel.NextPhoto}" Content="&#xE76C;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#AA000000" Foreground="White" Margin="10" Height="50" Width="50" CornerRadius="25"/>
+                <Button Click="PreviousPhotoButton_Click" Content="&#xE76B;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#AA000000" Foreground="White" Margin="10" Height="50" Width="50" CornerRadius="25"/>
+                <Button Click="NextPhotoButton_Click" Content="&#xE76C;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#AA000000" Foreground="White" Margin="10" Height="50" Width="50" CornerRadius="25"/>
             </Grid>
 
             <ScrollViewer Grid.Column="1" Padding="30">
@@ -55,6 +55,12 @@
                         <TextBlock Text="{x:Bind ViewModel.CurrentCandidateStarSign, Mode=OneWay}" FontSize="18" Foreground="White"/>
                     </StackPanel>
 
+                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center"
+                               Visibility="{x:Bind ViewModel.CurrentCandidateLoverTypeVisibility, Mode=OneWay}">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB51;" Foreground="White" FontSize="18"/>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentCandidateLoverType, Mode=OneWay}" FontSize="18" Foreground="White"/>
+                    </StackPanel>
+
                     <MenuFlyoutSeparator Margin="0,10,0,10" Background="White" Opacity="0.5"/>
 
                     <TextBlock Text="Description" FontWeight="SemiBold" FontSize="20" Foreground="White"/>
@@ -80,26 +86,28 @@
 
                     <MenuFlyoutSeparator Margin="0,10,0,10" Background="White" Opacity="0.5"/>
 
-                    <TextBlock Text="Communities" FontWeight="SemiBold" FontSize="20" Foreground="White"/>
-                    <TextBlock Text="{x:Bind ViewModel.CommonCommunitiesText, Mode=OneWay}" TextWrapping="Wrap" FontStyle="Italic" FontSize="16" Foreground="White"/>
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Common communities" FontWeight="SemiBold" FontSize="20" Foreground="White"/>
+                        <TextBlock Text="{x:Bind ViewModel.CommonCommunitiesText, Mode=OneWay}" TextWrapping="Wrap" FontStyle="Italic" FontSize="16" Foreground="White"/>
+                    </StackPanel>
                 </StackPanel>
             </ScrollViewer>
         </Grid>
 
         <TextBlock Grid.Row="0" Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" 
-                   Visibility="{x:Bind VisInverse(ViewModel.HasCandidates), Mode=OneWay}"
+                   Visibility="{x:Bind ViewModel.NoCandidatesVisibility, Mode=OneWay}"
                    HorizontalAlignment="Center" VerticalAlignment="Center"
                    FontSize="24" FontWeight="Bold" Foreground="White"/>
 
         <Grid Grid.Row="1" Margin="0,20,0,20">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="40" VerticalAlignment="Center">
-                <Button Click="{x:Bind ViewModel.PassCurrent}" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#eb3b59" BorderThickness="4" IsEnabled="{x:Bind ViewModel.HasCandidates, Mode=OneWay}">
+                <Button Click="PassButton_Click" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#eb3b59" BorderThickness="4" IsEnabled="{x:Bind ViewModel.HasCandidates, Mode=OneWay}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;" Foreground="#eb3b59" FontSize="44"/>
                 </Button>
-                <Button Click="{x:Bind ViewModel.SuperLikeCurrent}" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#00A4FF" BorderThickness="4" IsEnabled="{x:Bind ViewModel.HasCandidates, Mode=OneWay}">
+                <Button Click="SuperLikeButton_Click" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#00A4FF" BorderThickness="4" IsEnabled="{x:Bind ViewModel.HasCandidates, Mode=OneWay}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE735;" Foreground="#00A4FF" FontSize="44"/>
                 </Button>
-                <Button Click="{x:Bind ViewModel.LikeCurrent}" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#1CEE91" BorderThickness="4" IsEnabled="{x:Bind ViewModel.HasCandidates, Mode=OneWay}">
+                <Button Click="LikeButton_Click" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#1CEE91" BorderThickness="4" IsEnabled="{x:Bind ViewModel.HasCandidates, Mode=OneWay}">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB51;" Foreground="#1CEE91" FontSize="44"/>
                 </Button>
             </StackPanel>
@@ -108,7 +116,7 @@
             </Button>
         </Grid>
 
-        <Grid Visibility="{x:Bind Vis(ViewModel.IsGuideVisible), Mode=OneWay}" Background="#DD000000" Grid.RowSpan="2" Canvas.ZIndex="100" Tapped="Guide_Tapped">
+        <Grid Visibility="{x:Bind ViewModel.GuideVisibility, Mode=OneWay}" Background="#DD000000" Grid.RowSpan="2" Canvas.ZIndex="100" Tapped="Guide_Tapped">
 
             <TextBlock Text="Tutorial for Discover" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,120,0,0"/>
 
@@ -151,11 +159,16 @@
             </Grid>
         </Grid>
 
-        <Grid Visibility="{x:Bind Vis(ViewModel.IsMatchPopupVisible), Mode=OneWay}" Background="#CC000000" Grid.RowSpan="2" Canvas.ZIndex="200">
+        <Grid Visibility="{x:Bind ViewModel.MatchPopupVisibility, Mode=OneWay}" Background="#CC000000" Grid.RowSpan="2" Canvas.ZIndex="200">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="50" CornerRadius="15" Spacing="25" BorderBrush="HotPink" BorderThickness="2">
                 <TextBlock Text="IT'S A MATCH!" FontSize="36" FontWeight="Bold" Foreground="HotPink" HorizontalAlignment="Center"/>
-                <TextBlock Text="{x:Bind ViewModel.MatchPopupMessage, Mode=OneWay}" FontSize="20" TextWrapping="Wrap" MaxWidth="350" HorizontalAlignment="Center" TextAlignment="Center"/>
-                <Button Content="Keep Swiping" Click="{x:Bind ViewModel.CloseMatchPopup}" HorizontalAlignment="Center" Background="HotPink" Foreground="White" FontSize="18" Padding="20,10"/>
+
+                <Grid Width="420" Height="240" HorizontalAlignment="Center">
+                    <FontIcon Glyph="&#xEB51;" FontFamily="Segoe MDL2 Assets" FontSize="220" Foreground="HotPink" Opacity="0.25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text="{x:Bind ViewModel.MatchPopupMessage, Mode=OneWay}" FontSize="22" FontWeight="SemiBold" TextWrapping="WrapWholeWords" MaxWidth="320" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
+                </Grid>
+
+                <Button Content="Keep Swiping" Click="CloseMatchPopupButton_Click" HorizontalAlignment="Center" Background="HotPink" Foreground="White" FontSize="18" Padding="20,10"/>
             </StackPanel>
         </Grid>
     </Grid>

@@ -78,7 +78,7 @@
                 <TextBox PlaceholderText="Search by name..."
                  Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay}"
                  Width="240"/>
-                <Button Content="Search" Click="Search_Click"/>
+                <Button Content="Search" Command="{x:Bind ViewModel.SearchCommand}"/>
             </StackPanel>
 
             <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">

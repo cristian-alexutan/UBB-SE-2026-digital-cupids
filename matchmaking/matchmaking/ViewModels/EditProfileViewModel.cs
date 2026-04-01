@@ -4,26 +4,23 @@ using matchmaking.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
+using System.Windows.Input;
 
 namespace matchmaking.ViewModels
 {
-    internal class EditProfileViewModel : INotifyPropertyChanged
+    internal class EditProfileViewModel : ObservableObject
     {
-        public int _userId { get;  }
+        public int _userId { get; }
         private readonly ProfileService _profileService;
         private readonly PhotoService _photoService;
         private readonly QuestionaireUtil _questionaireUtil;
         private readonly InterestUtil _interestUtil;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public string Name { get; private set; } = string.Empty;
-        public int Age { get; private set; }
-        public StarSign StarSign { get; private set; }
-        public LoverType? LoverType { get; private set; }
-
-
+        private string _name = string.Empty;
+        private int _age;
+        private StarSign _starSign;
+        private LoverType? _loverType;
         private string _bio = string.Empty;
         private string _location = string.Empty;
         private string _nationality = string.Empty;
@@ -36,56 +33,89 @@ namespace matchmaking.ViewModels
         private List<Gender> _preferredGenders = new();
         private ObservableCollection<Photo> _photos = new();
         private ObservableCollection<string> _interests = new();
-
         private ObservableCollection<string> _shuffledQuestions = new();
         private ObservableCollection<int> _answers = new();
 
-        private int _currentInterestCount = 0;
-        private int _currentPhotoCount = 0;
+        public string Name
+        {
+            get => _name;
+            private set => SetProperty(ref _name, value);
+        }
+
+        public int Age
+        {
+            get => _age;
+            private set => SetProperty(ref _age, value);
+        }
+
+        public StarSign StarSign
+        {
+            get => _starSign;
+            private set => SetProperty(ref _starSign, value);
+        }
+
+        public LoverType? LoverType
+        {
+            get => _loverType;
+            private set
+            {
+                if (SetProperty(ref _loverType, value))
+                {
+                    OnPropertyChanged(nameof(HasLoverType));
+                    OnPropertyChanged(nameof(LoverTypeResultText));
+                }
+            }
+        }
 
         public string Bio
         {
             get => _bio;
-            set { if (_bio != value) { _bio = value; OnPropertyChanged(nameof(Bio)); } }
+            set => SetProperty(ref _bio, value);
         }
 
         public string Location
         {
             get => _location;
-            set { if (_location != value) { _location = value; OnPropertyChanged(nameof(Location)); } }
+            set => SetProperty(ref _location, value);
         }
 
         public string Nationality
         {
             get => _nationality;
-            set { if (_nationality != value) { _nationality = value; OnPropertyChanged(nameof(Nationality)); } }
+            set => SetProperty(ref _nationality, value);
         }
 
         public int MaxDistance
         {
             get => _maxDistance;
-            set { if (_maxDistance != value) { _maxDistance = value; OnPropertyChanged(nameof(MaxDistance)); } }
+            set => SetProperty(ref _maxDistance, value);
         }
 
         public int MinPreferredAge
         {
             get => _minPreferredAge;
-            set { if (_minPreferredAge != value) { _minPreferredAge = value; OnPropertyChanged(nameof(MinPreferredAge)); } }
+            set => SetProperty(ref _minPreferredAge, value);
         }
 
         public int MaxPreferredAge
         {
             get => _maxPreferredAge;
-            set { if (_maxPreferredAge != value) { _maxPreferredAge = value; OnPropertyChanged(nameof(MaxPreferredAge)); } }
+            set => SetProperty(ref _maxPreferredAge, value);
         }
 
         public Gender Gender
         {
             get => _gender;
-            set { if (_gender != value) { _gender = value; OnPropertyChanged(nameof(Gender)); } }
+            set
+            {
+                if (SetProperty(ref _gender, value))
+                {
+                    OnPropertyChanged(nameof(SelectedGender));
+                }
+            }
         }
-        public List<string> GenderOptions { get; } = new List<string>{"Male", "Female", "Non-Binary", "Other"};
 
+        public List<string> GenderOptions { get; } = new List<string> { "Male", "Female", "Non-Binary", "Other" };
 
         public string SelectedGender
         {
@@ -114,23 +144,24 @@ namespace matchmaking.ViewModels
                 }
             }
         }
+
         public bool DisplayStarSign
         {
             get => _displayStarSign;
-            set { if (_displayStarSign != value) { _displayStarSign = value; OnPropertyChanged(nameof(DisplayStarSign)); } }
+            set => SetProperty(ref _displayStarSign, value);
         }
 
         public bool IsArchived
         {
             get => _isArchived;
-            set 
-            { 
-                if (_isArchived != value) 
-                { 
-                    _isArchived = value; 
-                    OnPropertyChanged(nameof(IsArchived)); 
-                    OnPropertyChanged(nameof(IsNotArchived)); 
-                } 
+            set
+            {
+                if (SetProperty(ref _isArchived, value))
+                {
+                    OnPropertyChanged(nameof(IsNotArchived));
+                    ArchiveProfileCommand.NotifyCanExecuteChanged();
+                    UnarchiveProfileCommand.NotifyCanExecuteChanged();
+                }
             }
         }
 
@@ -139,35 +170,44 @@ namespace matchmaking.ViewModels
         public List<Gender> PreferredGenders
         {
             get => _preferredGenders;
-            set { if (_preferredGenders != value) { _preferredGenders = value; OnPropertyChanged(nameof(PreferredGenders)); } }
+            set => SetProperty(ref _preferredGenders, value);
         }
 
         public List<Photo> Photos
         {
             get => _photos.ToList();
-            private set { if (!_photos.SequenceEqual(value ?? new())) { _photos = new(value ?? new()); OnPropertyChanged(nameof(Photos)); } }
+            private set
+            {
+                if (!_photos.SequenceEqual(value ?? new()))
+                {
+                    _photos = new(value ?? new());
+                    OnPropertyChanged(nameof(Photos));
+                    OnPropertyChanged(nameof(CurrentPhotoCount));
+                }
+            }
         }
 
         public List<string> Interests
         {
             get => _interests.ToList();
-            private set { if (!_interests.SequenceEqual(value ?? new())) { _interests = new(value ?? new()); OnPropertyChanged(nameof(Interests)); } }
+            private set
+            {
+                if (!_interests.SequenceEqual(value ?? new()))
+                {
+                    _interests = new(value ?? new());
+                    OnPropertyChanged(nameof(Interests));
+                    OnPropertyChanged(nameof(CurrentInterestCount));
+                }
+            }
         }
 
         public List<string> AllInterests => _interestUtil.GetAll();
 
         public bool HasLoverType => LoverType != null;
 
-        public int CurrentInterestCount
-        {
-            get => _interests.Count;
-        }
+        public int CurrentInterestCount => _interests.Count;
 
-        public int CurrentPhotoCount
-        {
-            get => _photos.Count;
-        }
-
+        public int CurrentPhotoCount => _photos.Count;
 
         public string LoverTypeResultText => LoverType switch
         {
@@ -182,15 +222,37 @@ namespace matchmaking.ViewModels
         public List<string> ShuffledQuestions
         {
             get => _shuffledQuestions.ToList();
-            private set { if (!_shuffledQuestions.SequenceEqual(value ?? new())) { _shuffledQuestions = new(value ?? new()); OnPropertyChanged(nameof(ShuffledQuestions)); } }
+            private set
+            {
+                if (!_shuffledQuestions.SequenceEqual(value ?? new()))
+                {
+                    _shuffledQuestions = new(value ?? new());
+                    OnPropertyChanged(nameof(ShuffledQuestions));
+                }
+            }
         }
 
         public List<int> Answers
         {
             get => _answers.ToList();
-            private set { if (!_answers.SequenceEqual(value ?? new())) { _answers = new(value ?? new()); OnPropertyChanged(nameof(Answers)); } }
+            private set
+            {
+                if (!_answers.SequenceEqual(value ?? new()))
+                {
+                    _answers = new(value ?? new());
+                    OnPropertyChanged(nameof(Answers));
+                }
+            }
         }
 
+        public RelayCommand SaveChangesCommand { get; }
+        public RelayCommand DiscardChangesCommand { get; }
+        public RelayCommand ArchiveProfileCommand { get; }
+        public RelayCommand UnarchiveProfileCommand { get; }
+        public RelayCommand DeleteProfileCommand { get; }
+        public RelayCommand PrepareQuestionnaireCommand { get; }
+        public RelayCommand SubmitQuestionnaireCommand { get; }
+        public RelayCommand CancelQuestionnaireCommand { get; }
 
         public EditProfileViewModel(int userId, ProfileService profileService, PhotoService photoService,
             QuestionaireUtil questionaireUtil, InterestUtil interestUtil)
@@ -201,9 +263,17 @@ namespace matchmaking.ViewModels
             _questionaireUtil = questionaireUtil;
             _interestUtil = interestUtil;
 
+            SaveChangesCommand = new RelayCommand(SaveChanges);
+            DiscardChangesCommand = new RelayCommand(DiscardChanges);
+            ArchiveProfileCommand = new RelayCommand(ArchiveProfile, () => !IsArchived);
+            UnarchiveProfileCommand = new RelayCommand(UnarchiveProfile, () => IsArchived);
+            DeleteProfileCommand = new RelayCommand(DeleteProfile);
+            PrepareQuestionnaireCommand = new RelayCommand(PrepareQuestionnaire);
+            SubmitQuestionnaireCommand = new RelayCommand(SubmitQuestionnaire, CanSubmitQuestionnaire);
+            CancelQuestionnaireCommand = new RelayCommand(CancelQuestionnaire);
+
             LoadProfile();
         }
-
 
         private void PopulateFromProfile(DatingProfile profile)
         {
@@ -233,7 +303,6 @@ namespace matchmaking.ViewModels
             new List<string>(Interests),
             LoverType
         );
-
 
         public void LoadProfile()
         {
@@ -339,6 +408,7 @@ namespace matchmaking.ViewModels
         {
             ShuffledQuestions = _questionaireUtil.GetQuestions();
             Answers = Enumerable.Repeat(0, ShuffledQuestions.Count).ToList();
+            SubmitQuestionnaireCommand.NotifyCanExecuteChanged();
         }
 
         public void SetAnswer(int questionIndex, int value)
@@ -347,6 +417,7 @@ namespace matchmaking.ViewModels
             if (value < 1 || value > 5) return;
             _answers[questionIndex] = value;
             OnPropertyChanged(nameof(Answers));
+            SubmitQuestionnaireCommand.NotifyCanExecuteChanged();
         }
 
         public int GetAnswer(int questionIndex)
@@ -362,6 +433,7 @@ namespace matchmaking.ViewModels
         {
             ShuffledQuestions = new List<string>();
             Answers = new List<int>();
+            SubmitQuestionnaireCommand.NotifyCanExecuteChanged();
         }
 
         public void SubmitQuestionnaire()
@@ -375,14 +447,7 @@ namespace matchmaking.ViewModels
             ShuffledQuestions = new List<string>();
             Answers = new List<int>();
 
-            OnPropertyChanged(nameof(LoverType));
-            OnPropertyChanged(nameof(LoverTypeResultText));
-            OnPropertyChanged(nameof(HasLoverType));
-        }
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            SubmitQuestionnaireCommand.NotifyCanExecuteChanged();
         }
     }
 }

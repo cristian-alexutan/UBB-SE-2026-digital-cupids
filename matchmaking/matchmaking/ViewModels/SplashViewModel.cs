@@ -2,23 +2,25 @@
 using matchmaking.Services;
 using matchmaking.Utils;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace matchmaking.ViewModels
 {
-    internal class SplashViewModel : INotifyPropertyChanged
+    internal class SplashViewModel : ObservableObject
     {
-
         private readonly int _userId;
         private readonly MockUserUtil _mockUserUtil;
         private readonly ProfileService _profileService;
         private readonly DatingAdminService _datingAdminService;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public RelayCommand NavigateCommand { get; }
 
+        private Screen _nextScreen;
+        public Screen NextScreen
+        {
+            get => _nextScreen;
+            private set => SetProperty(ref _nextScreen, value);
+        }
 
         public SplashViewModel(int userId, MockUserUtil mockUserUtil, ProfileService profileService, DatingAdminService datingAdminService)
         {
@@ -26,7 +28,18 @@ namespace matchmaking.ViewModels
             _mockUserUtil = mockUserUtil;
             _profileService = profileService;
             _datingAdminService = datingAdminService;
+
+            NavigateCommand = new RelayCommand(ExecuteNavigation, CanNavigate);
         }
+
+        private bool CanNavigate() => true;
+
+        private void ExecuteNavigation()
+        {
+            NextScreen = DecideNextScreen();
+        }
+
+        public int UserId => _userId;
 
         public bool IsUserAdult()
         {
@@ -36,12 +49,11 @@ namespace matchmaking.ViewModels
             int age = today.Year - userData.Birthdate.Year;
 
             if (userData.Birthdate.Date > today.AddYears(-age))
-            {
                 age--;
-            }
 
             return age >= 18;
         }
+
         public bool HasProfile()
         {
             try
@@ -62,28 +74,11 @@ namespace matchmaking.ViewModels
 
         public Screen DecideNextScreen()
         {
-            if (!IsUserAdult())
-            {
-                return Screen.AGE_BLOCK;
-            }
-
-            if (IsAdmin())
-            {
-                return Screen.ADMIN;
-            }
-
-            if (!HasProfile())
-            {
-                return Screen.CREATE;
-            }
+            if (!IsUserAdult()) return Screen.AGE_BLOCK;
+            if (IsAdmin()) return Screen.ADMIN;
+            if (!HasProfile()) return Screen.CREATE;
 
             return Screen.DISCOVER;
         }
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using System;
+using System.Linq;
 
 namespace matchmaking.Views
 {
@@ -39,6 +40,15 @@ namespace matchmaking.Views
             }
         }
 
+        private string GetTimeText(DateTime createdAt)
+        {
+            TimeSpan diff = DateTime.UtcNow - createdAt;
+            if (diff.TotalMinutes < 1) return "Just now";
+            if (diff.TotalHours < 1) return $"{(int)diff.TotalMinutes} minutes ago";
+            if (diff.TotalHours < 24) return $"{(int)diff.TotalHours} hours ago";
+            return createdAt.ToString("dd/MM/yyyy HH:mm");
+        }
+
         private Border CreateNotificationBanner(Notification notification)
         {
             string glyph = notification.Type == NotificationType.MATCH ? "\uEB51" : "\uE735";
@@ -50,16 +60,7 @@ namespace matchmaking.Views
                 ? new SolidColorBrush(Colors.Transparent)
                 : new SolidColorBrush(ColorHelper.FromArgb(30, 255, 90, 95));
 
-            TimeSpan diff = DateTime.UtcNow - notification.CreatedAt;
-            string timeText;
-            if (diff.TotalMinutes < 1)
-                timeText = "Just now";
-            else if (diff.TotalHours < 1)
-                timeText = $"{(int)diff.TotalMinutes} minutes ago";
-            else if (diff.TotalHours < 24)
-                timeText = $"{(int)diff.TotalHours} hours ago";
-            else
-                timeText = notification.CreatedAt.ToString("dd/MM/yyyy HH:mm");
+            string timeText = GetTimeText(notification.CreatedAt);
 
             Grid grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
@@ -127,10 +128,44 @@ namespace matchmaking.Views
             Border border = (Border)sender;
             int notificationId = (int)border.Tag;
 
+            Notification notification = ViewModel!.Notifications
+                .First(n => n.NotificationId == notificationId);
+
+            string glyph = notification.Type == NotificationType.MATCH ? "\uEB51" : "\uE735";
+            string timeText = GetTimeText(notification.CreatedAt);
+
+            StackPanel content = new StackPanel { Spacing = 12 };
+            content.Children.Add(new FontIcon
+            {
+                FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                Glyph = glyph,
+                FontSize = 40,
+                Foreground = notification.Type == NotificationType.MATCH
+                    ? new SolidColorBrush(ColorHelper.FromArgb(255, 255, 105, 180))
+                    : new SolidColorBrush(ColorHelper.FromArgb(255, 0, 164, 255)),
+                HorizontalAlignment = HorizontalAlignment.Center
+            });
+            content.Children.Add(new TextBlock
+            {
+                Text = notification.Description,
+                TextWrapping = TextWrapping.Wrap,
+                FontSize = 14,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                TextAlignment = TextAlignment.Center
+            });
+            content.Children.Add(new TextBlock
+            {
+                Text = timeText,
+                FontSize = 12,
+                Foreground = new SolidColorBrush(Colors.Gray),
+                HorizontalAlignment = HorizontalAlignment.Center
+            });
+
             ContentDialog dialog = new ContentDialog
             {
-                Title = "Notification options",
-                PrimaryButtonText = "Mark as read",
+                Title = notification.Title,
+                Content = content,
+                PrimaryButtonText = notification.IsRead ? null : "Mark as read",
                 SecondaryButtonText = "Delete",
                 CloseButtonText = "Cancel",
                 XamlRoot = this.XamlRoot

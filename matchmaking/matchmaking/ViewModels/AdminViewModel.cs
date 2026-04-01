@@ -2,12 +2,11 @@
 using matchmaking.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
 namespace matchmaking.ViewModels
 {
-    internal class AdminViewModel : INotifyPropertyChanged
+    internal class AdminViewModel : ObservableObject
     {
         private readonly SupportTicketService _supportTicketService;
         private readonly ProfileService _profileService;
@@ -18,16 +17,32 @@ namespace matchmaking.ViewModels
         private string _searchQuery = string.Empty;
         private string _errorMessage = string.Empty;
 
+        private readonly RelayCommand _searchCommand;
+        private readonly RelayCommand _resolveFoundCommand;
+        private readonly RelayCommand _resolveNotFoundCommand;
+
+        public ICommand SearchCommand => _searchCommand;
+        public ICommand ResolveFoundCommand => _resolveFoundCommand;
+        public ICommand ResolveNotFoundCommand => _resolveNotFoundCommand;
+
         public List<SupportTicket> UnresolvedTickets
         {
             get => _unresolvedTickets;
-            private set { if (_unresolvedTickets != value) { _unresolvedTickets = value; OnPropertyChanged(); } }
+            private set => SetProperty(ref _unresolvedTickets, value);
         }
 
         public SupportTicket SelectedTicket
         {
             get => _selectedTicket;
-            set { if (_selectedTicket != value) { _selectedTicket = value; OnPropertyChanged(); OnPropertyChanged(nameof(HasSelectedTicket)); } }
+            set
+            {
+                if (SetProperty(ref _selectedTicket, value))
+                {
+                    OnPropertyChanged(nameof(HasSelectedTicket));
+                    _resolveFoundCommand.NotifyCanExecuteChanged();
+                    _resolveNotFoundCommand.NotifyCanExecuteChanged();
+                }
+            }
         }
 
         public bool HasSelectedTicket => SelectedTicket != null;
@@ -35,25 +50,29 @@ namespace matchmaking.ViewModels
         public List<DatingProfile> SearchResults
         {
             get => _searchResults;
-            private set { if (_searchResults != value) { _searchResults = value; OnPropertyChanged(); } }
+            private set => SetProperty(ref _searchResults, value);
         }
 
         public string SearchQuery
         {
             get => _searchQuery;
-            set { if (_searchQuery != value) { _searchQuery = value; OnPropertyChanged(); } }
+            set => SetProperty(ref _searchQuery, value);
         }
 
         public string ErrorMessage
         {
             get => _errorMessage;
-            private set { if (_errorMessage != value) { _errorMessage = value; OnPropertyChanged(); } }
+            private set => SetProperty(ref _errorMessage, value);
         }
 
         public AdminViewModel(SupportTicketService supportTicketService, ProfileService profileService)
         {
             _supportTicketService = supportTicketService;
             _profileService = profileService;
+
+            _searchCommand = new RelayCommand(Search);
+            _resolveFoundCommand = new RelayCommand(ResolveFound, CanResolve);
+            _resolveNotFoundCommand = new RelayCommand(ResolveNotFound, CanResolve);
 
             LoadUnresolvedTickets();
         }
@@ -71,12 +90,7 @@ namespace matchmaking.ViewModels
             }
         }
 
-        public void SelectTicket(SupportTicket ticket)
-        {
-            SelectedTicket = ticket;
-        }
-
-        public void Search()
+        private void Search()
         {
             try
             {
@@ -95,7 +109,7 @@ namespace matchmaking.ViewModels
             }
         }
 
-        public void ResolveFound()
+        private void ResolveFound()
         {
             if (SelectedTicket == null) return;
             try
@@ -111,7 +125,7 @@ namespace matchmaking.ViewModels
             }
         }
 
-        public void ResolveNotFound()
+        private void ResolveNotFound()
         {
             if (SelectedTicket == null) return;
             try
@@ -127,10 +141,6 @@ namespace matchmaking.ViewModels
             }
         }
 
-        public bool CanResolve() => SelectedTicket != null;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string name = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        private bool CanResolve() => SelectedTicket != null;
     }
 }

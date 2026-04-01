@@ -1,12 +1,11 @@
 ﻿using matchmaking.Domain;
 using matchmaking.Services;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
 namespace matchmaking.ViewModels
 {
-    internal class SpouseCheckerViewModel : INotifyPropertyChanged
+    internal class SpouseCheckerViewModel : ObservableObject
     {
         private readonly SupportTicketService _supportTicketService;
 
@@ -19,45 +18,69 @@ namespace matchmaking.ViewModels
         public string Email
         {
             get => _email;
-            set { if (_email != value) { _email = value; OnPropertyChanged(); } }
+            set
+            {
+                if (SetProperty(ref _email, value))
+                    _submitCommand.NotifyCanExecuteChanged();
+            }
         }
 
         public string PartnerName
         {
             get => _partnerName;
-            set { if (_partnerName != value) { _partnerName = value; OnPropertyChanged(); } }
+            set
+            {
+                if (SetProperty(ref _partnerName, value))
+                    _submitCommand.NotifyCanExecuteChanged();
+            }
         }
 
         public string MarriageCertificatePath
         {
             get => _marriageCertificatePath;
-            set { if (_marriageCertificatePath != value) { _marriageCertificatePath = value; OnPropertyChanged(); } }
+            set
+            {
+                if (SetProperty(ref _marriageCertificatePath, value))
+                    _submitCommand.NotifyCanExecuteChanged();
+            }
         }
 
         public string PartnerPhotoPath
         {
             get => _partnerPhotoPath;
-            set { if (_partnerPhotoPath != value) { _partnerPhotoPath = value; OnPropertyChanged(); } }
+            set
+            {
+                if (SetProperty(ref _partnerPhotoPath, value))
+                    _submitCommand.NotifyCanExecuteChanged();
+            }
         }
 
         public string ErrorMessage
         {
             get => _errorMessage;
-            private set { if (_errorMessage != value) { _errorMessage = value; OnPropertyChanged(); } }
+            private set => SetProperty(ref _errorMessage, value);
         }
+
+        private readonly RelayCommand _submitCommand;
+        private readonly RelayCommand _cancelCommand;
+
+        public ICommand SubmitCommand => _submitCommand;
+        public ICommand CancelCommand => _cancelCommand;
 
         public SpouseCheckerViewModel(SupportTicketService supportTicketService)
         {
             _supportTicketService = supportTicketService;
+            _submitCommand = new RelayCommand(Submit, CanSubmit);
+            _cancelCommand = new RelayCommand(Cancel);
         }
 
-        public bool CanSubmit() =>
+        private bool CanSubmit() =>
             !string.IsNullOrWhiteSpace(Email) &&
             !string.IsNullOrWhiteSpace(PartnerName) &&
             !string.IsNullOrWhiteSpace(MarriageCertificatePath) &&
             !string.IsNullOrWhiteSpace(PartnerPhotoPath);
 
-        public void Submit()
+        private void Submit()
         {
             try
             {
@@ -74,7 +97,7 @@ namespace matchmaking.ViewModels
             }
         }
 
-        public void Cancel() => ClearForm();
+        private void Cancel() => ClearForm();
 
         private void ClearForm()
         {
@@ -83,9 +106,5 @@ namespace matchmaking.ViewModels
             MarriageCertificatePath = string.Empty;
             PartnerPhotoPath = string.Empty;
         }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string name = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

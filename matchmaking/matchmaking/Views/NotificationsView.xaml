@@ -23,9 +23,11 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Mark all as read" Click="HandleMarkAllAsReadClick"
+            <Button Grid.Column="0" Content="Mark all as read"
+                    Click="HandleMarkAllAsReadClick"
                     Background="Transparent" BorderBrush="#FF5A5F" BorderThickness="2" Foreground="#FF5A5F"/>
-            <Button Grid.Column="2" Content="Delete all" Click="HandleDeleteAllClick"
+            <Button Grid.Column="2" Content="Delete all"
+                    Click="HandleDeleteAllClick"
                     Background="Transparent" BorderBrush="#FF5A5F" BorderThickness="2" Foreground="#FF5A5F"/>
         </Grid>
 
