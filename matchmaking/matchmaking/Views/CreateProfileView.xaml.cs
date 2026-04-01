@@ -2,13 +2,18 @@ using matchmaking.Domain;
 using matchmaking.Services;
 using matchmaking.Utils;
 using matchmaking.ViewModels;
+using Microsoft.UI;
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 
 namespace matchmaking.Views
@@ -40,20 +45,22 @@ namespace matchmaking.Views
 
         private string GetUsername()
         {
-            var userUtil = new MockUserUtil();
+            MockUserUtil userUtil = new MockUserUtil();
             return userUtil.GetUserData(ViewModel!.UserId).Username;
         }
 
         private int GetAge()
         {
-            var userUtil = new MockUserUtil();
-            var birthDate = userUtil.GetUserData(ViewModel!.UserId).Birthdate;
+            MockUserUtil userUtil = new MockUserUtil();
+            DateTime birthDate = userUtil.GetUserData(ViewModel!.UserId).Birthdate;
             int age = DateTime.Now.Year - birthDate.Year;
-            if (DateTime.Now < birthDate.AddYears(age)) age--;
+
+            if (DateTime.Now < birthDate.AddYears(age))
+            {
+                age--;
+            }
             return age;
         }
-
-        // ── Step navigation ───────────────────────────────────────────────────
 
         private void HandleNextStepClick(object sender, RoutedEventArgs e)
         {
@@ -71,7 +78,11 @@ namespace matchmaking.Views
 
         private void SyncUItoViewModel()
         {
-            if (ViewModel?.ProfileData == null) return;
+            if (ViewModel?.ProfileData == null)
+            {
+                return;
+            }
+
             int step = ViewModel.CurrentStep;
 
             if (step == 1)
@@ -85,11 +96,29 @@ namespace matchmaking.Views
                     2 => Gender.NON_BINARY,
                     _ => Gender.OTHER
                 };
+
                 ViewModel.ProfileData.PreferredGenders = new List<Gender>();
-                if (PrefMaleCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.MALE);
-                if (PrefFemaleCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.FEMALE);
-                if (PrefNonBinaryCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.NON_BINARY);
-                if (PrefOtherCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.OTHER);
+
+                if (PrefMaleCheckBox.IsChecked == true)
+                {
+                    ViewModel.ProfileData.PreferredGenders.Add(Gender.MALE);
+                }
+
+                if (PrefFemaleCheckBox.IsChecked == true)
+                {
+                    ViewModel.ProfileData.PreferredGenders.Add(Gender.FEMALE);
+                }
+
+                if (PrefNonBinaryCheckBox.IsChecked == true)
+                {
+                    ViewModel.ProfileData.PreferredGenders.Add(Gender.NON_BINARY);
+                }
+
+                if (PrefOtherCheckBox.IsChecked == true)
+                {
+                    ViewModel.ProfileData.PreferredGenders.Add(Gender.OTHER);
+                }
+
                 ViewModel.ProfileData.MaxDistance = (int)MaxDistanceSlider.Value;
                 ViewModel.ProfileData.MinPreferredAge = (int)MinAgeSlider.Value;
                 ViewModel.ProfileData.MaxPreferredAge = (int)MaxAgeSlider.Value;
@@ -103,7 +132,11 @@ namespace matchmaking.Views
 
         private void SyncViewModeltoUI()
         {
-            if (ViewModel?.ProfileData == null) return;
+            if (ViewModel?.ProfileData == null)
+            {
+                return;
+            }
+
             int step = ViewModel.CurrentStep;
 
             if (step == 1)
@@ -169,11 +202,13 @@ namespace matchmaking.Views
             UpdateNextButton();
         }
 
-        // ── Validation ────────────────────────────────────────────────────────
-
         private void UpdateNextButton()
         {
-            if (ViewModel?.ProfileData == null) return;
+            if (ViewModel?.ProfileData == null)
+            {
+                return;
+            }
+
             int step = ViewModel.CurrentStep;
 
             NextStepButton.IsEnabled = step switch
@@ -208,33 +243,49 @@ namespace matchmaking.Views
                    ViewModel.ProfileData.Interests.Count >= 3;
         }
 
-        // ── Step 1 handlers ───────────────────────────────────────────────────
-
         private void LoadLocations()
         {
-            var locationUtil = new LocationUtil();
-            var locations = locationUtil.GetAllLocations();
+            LocationUtil locationUtil = new LocationUtil();
+            List<string> locations = locationUtil.GetAllLocations();
             foreach (string location in locations)
+            {
                 LocationComboBox.Items.Add(location);
+            }   
         }
 
         private void HandleLocationChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ViewModel?.ProfileData == null) return;
-            ViewModel.ProfileData.Location = LocationComboBox.SelectedItem as string ?? string.Empty;
+            if (ViewModel?.ProfileData == null)
+            {
+                return;
+            }
+            if (LocationComboBox.SelectedItem != null)
+            {
+                ViewModel.ProfileData.Location = LocationComboBox.SelectedItem as string;
+            }
+            else
+            {
+                ViewModel.ProfileData.Location = string.Empty;
+            }
             UpdateNextButton();
         }
 
         private void HandleNationalityChanged(object sender, TextChangedEventArgs e)
         {
-            if (ViewModel?.ProfileData == null) return;
+            if (ViewModel?.ProfileData == null)
+            {
+                return;
+            }
             ViewModel.ProfileData.Nationality = NationalityTextBox.Text;
             UpdateNextButton();
         }
 
         private void HandleGenderChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ViewModel?.ProfileData == null) return;
+            if (ViewModel?.ProfileData == null)
+            {
+                return;
+            }
             ViewModel.ProfileData.Gender = GenderComboBox.SelectedIndex switch
             {
                 0 => Gender.MALE,
@@ -247,58 +298,85 @@ namespace matchmaking.Views
 
         private void HandlePreferredGenderChanged(object sender, RoutedEventArgs e)
         {
-            if (ViewModel?.ProfileData == null) return;
+            if (ViewModel?.ProfileData == null)
+            {
+                return;
+            }
             ViewModel.ProfileData.PreferredGenders = new List<Gender>();
-            if (PrefMaleCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.MALE);
-            if (PrefFemaleCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.FEMALE);
-            if (PrefNonBinaryCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.NON_BINARY);
-            if (PrefOtherCheckBox.IsChecked == true) ViewModel.ProfileData.PreferredGenders.Add(Gender.OTHER);
+
+            if (PrefMaleCheckBox.IsChecked == true)
+            {
+                ViewModel.ProfileData.PreferredGenders.Add(Gender.MALE);
+            }
+            if (PrefFemaleCheckBox.IsChecked == true)
+            {
+                ViewModel.ProfileData.PreferredGenders.Add(Gender.FEMALE);
+            }
+            if (PrefNonBinaryCheckBox.IsChecked == true)
+            {
+                ViewModel.ProfileData.PreferredGenders.Add(Gender.NON_BINARY);
+            }
+            if (PrefOtherCheckBox.IsChecked == true)
+            {
+                ViewModel.ProfileData.PreferredGenders.Add(Gender.OTHER);
+            }
             UpdateNextButton();
         }
 
         private void HandleMaxDistanceChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
-            if (ViewModel?.ProfileData == null) return;
+            if (ViewModel?.ProfileData == null)
+            {
+                return;
+            }
             ViewModel.ProfileData.MaxDistance = (int)MaxDistanceSlider.Value;
             MaxDistanceValueText.Text = ((int)MaxDistanceSlider.Value).ToString();
         }
 
         private void HandleMinAgeChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
-            if (ViewModel?.ProfileData == null) return;
+            if (ViewModel?.ProfileData == null)
+            {
+                return;
+            }
             ViewModel.ProfileData.MinPreferredAge = (int)MinAgeSlider.Value;
             MinAgeValueText.Text = ((int)MinAgeSlider.Value).ToString();
         }
 
         private void HandleMaxAgeChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
-            if (ViewModel?.ProfileData == null) return;
+            if (ViewModel?.ProfileData == null)
+            {
+                return;
+            }
             ViewModel.ProfileData.MaxPreferredAge = (int)MaxAgeSlider.Value;
             MaxAgeValueText.Text = ((int)MaxAgeSlider.Value).ToString();
         }
 
-        // ── Step 2 handlers ───────────────────────────────────────────────────
 
         private async void HandleAddPhotoClick(object sender, RoutedEventArgs e)
         {
             int slotIndex = int.Parse((sender as Button)!.Tag.ToString()!);
 
-            var picker = new FileOpenPicker();
+            FileOpenPicker picker = new FileOpenPicker();
             picker.FileTypeFilter.Add(".jpg");
             picker.FileTypeFilter.Add(".jpeg");
             picker.FileTypeFilter.Add(".png");
 
-            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(
+            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(
                 (Application.Current as App)!._window);
             WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
 
             StorageFile file = await picker.PickSingleFileAsync();
-            if (file == null) return;
+            if (file == null)
+            {
+                return;
+            }
 
-            var properties = await file.GetBasicPropertiesAsync();
+            BasicProperties properties = await file.GetBasicPropertiesAsync();
             if (properties.Size > 10 * 1024 * 1024)
             {
-                var sizeDialog = new ContentDialog
+                ContentDialog sizeDialog = new ContentDialog
                 {
                     Title = "File Too Large",
                     Content = "The selected file exceeds the 10MB limit.",
@@ -319,14 +397,14 @@ namespace matchmaking.Views
             }
             catch (Exception ex)
             {
-                var dialog = new ContentDialog
+                ContentDialog errorDialog = new ContentDialog
                 {
                     Title = "Error",
                     Content = ex.Message,
                     CloseButtonText = "OK",
                     XamlRoot = XamlRoot
                 };
-                await dialog.ShowAsync();
+                await errorDialog.ShowAsync();
             }
         }
 
@@ -341,7 +419,7 @@ namespace matchmaking.Views
             }
             catch (Exception ex)
             {
-                var dialog = new ContentDialog
+                ContentDialog dialog = new ContentDialog
                 {
                     Title = "Error",
                     Content = ex.Message,
@@ -354,16 +432,22 @@ namespace matchmaking.Views
 
         private void UpdatePhotoSlots()
         {
-            var slots = new[] { PhotoSlot0, PhotoSlot1, PhotoSlot2, PhotoSlot3, PhotoSlot4, PhotoSlot5 };
-            var photos = ViewModel!.ProfileData!.Photos;
+            Border[] slots = new Border[] { PhotoSlot0, PhotoSlot1, PhotoSlot2, PhotoSlot3, PhotoSlot4, PhotoSlot5 };
+            List<Photo> photos = ViewModel!.ProfileData!.Photos;
             bool canRemove = photos.Count > 2;
             bool canAdd = photos.Count < 6;
+
+            SolidColorBrush transparentBrush = new SolidColorBrush(Colors.Transparent);
+            SolidColorBrush whiteBrush = new SolidColorBrush(Colors.White);
+            SolidColorBrush removeBtnBackground = new SolidColorBrush(ColorHelper.FromArgb(180, 0, 0, 0));
+            SolidColorBrush addBtnBorder = new SolidColorBrush(ColorHelper.FromArgb(255, 200, 200, 200));
+            SolidColorBrush addBtnIcon = new SolidColorBrush(ColorHelper.FromArgb(255, 180, 180, 180));
 
             for (int i = 0; i < slots.Length; i++)
             {
                 slots[i].Child = null;
                 slots[i].AllowDrop = true;
-                slots[i].Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+                slots[i].Background = transparentBrush;
                 slots[i].DragOver -= HandleSlotDragOver;
                 slots[i].Drop -= HandleSlotDrop;
                 slots[i].DragOver += HandleSlotDragOver;
@@ -371,10 +455,12 @@ namespace matchmaking.Views
 
                 if (i < photos.Count)
                 {
-                    var grid = new Grid();
-                    var dragGrid = new Grid();
-                    dragGrid.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent);
+                    Grid grid = new Grid();
+
+                    Grid dragGrid = new Grid();
+                    dragGrid.Background = transparentBrush;
                     dragGrid.CanDrag = true;
+
                     int slotIndex = i;
                     dragGrid.DragStarting += (s, args) =>
                     {
@@ -382,22 +468,21 @@ namespace matchmaking.Views
                         args.Data.RequestedOperation = DataPackageOperation.Move;
                     };
 
-                    var img = new Image
+                    Image img = new Image
                     {
-                        Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri(photos[i].Location!)),
-                        Stretch = Microsoft.UI.Xaml.Media.Stretch.UniformToFill
+                        Source = new BitmapImage(new Uri(photos[i].Location!)),
+                        Stretch = Stretch.UniformToFill
                     };
                     dragGrid.Children.Add(img);
 
-                    var removeBtn = new Button
+                    Button removeBtn = new Button
                     {
                         Content = new FontIcon { Glyph = "\uE894", FontSize = 16 },
                         Tag = photos[i].PhotoId,
                         HorizontalAlignment = HorizontalAlignment.Right,
                         VerticalAlignment = VerticalAlignment.Top,
-                        Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                            Microsoft.UI.ColorHelper.FromArgb(180, 0, 0, 0)),
-                        Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.White),
+                        Background = removeBtnBackground,
+                        Foreground = whiteBrush,
                         Width = 32,
                         Height = 32,
                         CornerRadius = new CornerRadius(16),
@@ -405,27 +490,26 @@ namespace matchmaking.Views
                         IsEnabled = canRemove
                     };
                     removeBtn.Click += HandleRemovePhotoClick;
+
                     grid.Children.Add(dragGrid);
                     grid.Children.Add(removeBtn);
                     slots[i].Child = grid;
                 }
                 else
                 {
-                    var addBtn = new Button
+                    Button addBtn = new Button
                     {
                         Tag = i.ToString(),
                         HorizontalAlignment = HorizontalAlignment.Stretch,
                         VerticalAlignment = VerticalAlignment.Stretch,
-                        Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Transparent),
-                        BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                            Microsoft.UI.ColorHelper.FromArgb(255, 200, 200, 200)),
+                        Background = transparentBrush,
+                        BorderBrush = addBtnBorder,
                         BorderThickness = new Thickness(2),
                         Content = new FontIcon
                         {
                             Glyph = "\uE710",
                             FontSize = 32,
-                            Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                                Microsoft.UI.ColorHelper.FromArgb(255, 180, 180, 180))
+                            Foreground = addBtnIcon
                         },
                         IsEnabled = canAdd
                     };
@@ -442,24 +526,33 @@ namespace matchmaking.Views
 
         private void HandleSlotDrop(object sender, DragEventArgs e)
         {
-            int targetSlot = Array.IndexOf(new[] { PhotoSlot0, PhotoSlot1, PhotoSlot2, PhotoSlot3, PhotoSlot4, PhotoSlot5 }, sender as Border);
+            Border[] slots = new Border[] { PhotoSlot0, PhotoSlot1, PhotoSlot2, PhotoSlot3, PhotoSlot4, PhotoSlot5 };
+            int targetSlot = Array.IndexOf(slots, sender as Border);
+
             string? sourceText = e.DataView.GetTextAsync().GetAwaiter().GetResult();
             if (string.IsNullOrEmpty(sourceText) || !int.TryParse(sourceText, out int sourceSlot))
+            {
                 return;
+            }
 
-            if (sourceSlot != targetSlot && sourceSlot >= 0 && targetSlot >= 0 &&
-                sourceSlot < ViewModel!.ProfileData!.Photos.Count && targetSlot < ViewModel.ProfileData.Photos.Count)
+            int photoCount = ViewModel!.ProfileData!.Photos.Count;
+            bool slotsAreDifferent = sourceSlot != targetSlot;
+            bool slotsAreValid = sourceSlot >= 0 && targetSlot >= 0;
+            bool slotsAreWithinBounds = sourceSlot < photoCount && targetSlot < photoCount;
+
+            if (slotsAreDifferent && slotsAreValid && slotsAreWithinBounds)
             {
                 ViewModel.SwapPhotos(sourceSlot, targetSlot);
                 UpdatePhotoSlots();
             }
         }
 
-        // ── Step 3 handlers ───────────────────────────────────────────────────
-
         private void HandleBioTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (ViewModel?.ProfileData == null) return;
+            if (ViewModel?.ProfileData == null)
+            {
+                return;
+            }
             ViewModel.ProfileData.Bio = BioTextBox.Text;
             BioLengthText.Text = BioTextBox.Text.Length.ToString();
             UpdateNextButton();
@@ -467,26 +560,26 @@ namespace matchmaking.Views
 
         private void LoadInterests()
         {
-            var interestUtil = new InterestUtil();
-            var allInterests = interestUtil.GetAll();
-            var buttons = new List<Button>();
+            InterestUtil interestUtil = new InterestUtil();
+            List<string> allInterests = interestUtil.GetAll();
+            List<Button> buttons = new List<Button>();
+
+            SolidColorBrush accentBrush = new SolidColorBrush(ColorHelper.FromArgb(255, 235, 59, 89));
+            SolidColorBrush whiteBrush = new SolidColorBrush(ColorHelper.FromArgb(255, 255, 255, 255));
 
             foreach (string interest in allInterests)
             {
-                var btn = new Button
+                Button btn = new Button
                 {
                     Content = interest,
                     Tag = interest,
                     CornerRadius = new CornerRadius(20),
                     Padding = new Thickness(16, 8, 16, 8),
                     BorderThickness = new Thickness(2),
-                    BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                        Microsoft.UI.ColorHelper.FromArgb(255, 235, 59, 89)),
-                    Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                        Microsoft.UI.ColorHelper.FromArgb(255, 255, 255, 255)),
-                    Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                        Microsoft.UI.ColorHelper.FromArgb(255, 235, 59, 89)),
-                    FontWeight = Microsoft.UI.Text.FontWeights.SemiBold
+                    BorderBrush = accentBrush,
+                    Background = whiteBrush,
+                    Foreground = accentBrush,
+                    FontWeight = FontWeights.SemiBold
                 };
                 btn.Click += HandleInterestClick;
                 buttons.Add(btn);
@@ -497,31 +590,29 @@ namespace matchmaking.Views
 
         private async void HandleInterestClick(object sender, RoutedEventArgs e)
         {
-            var btn = (Button)sender;
+            Button btn = (Button)sender;
             string interest = (string)btn.Tag;
-            bool isSelected = btn.Background is Microsoft.UI.Xaml.Media.SolidColorBrush brush
-                              && brush.Color == Microsoft.UI.ColorHelper.FromArgb(255, 235, 59, 89);
+            bool isSelected = btn.Background is SolidColorBrush brush
+                              && brush.Color == ColorHelper.FromArgb(255, 235, 59, 89);
+
+            SolidColorBrush accentBrush = new SolidColorBrush(ColorHelper.FromArgb(255, 235, 59, 89));
+            SolidColorBrush whiteBrush = new SolidColorBrush(Colors.White);
 
             try
             {
                 if (isSelected)
                 {
                     ViewModel!.RemoveInterest(interest);
-                    btn.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                        Microsoft.UI.ColorHelper.FromArgb(255, 255, 255, 255));
-                    btn.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                        Microsoft.UI.ColorHelper.FromArgb(255, 235, 59, 89));
-                    btn.BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                        Microsoft.UI.ColorHelper.FromArgb(255, 235, 59, 89));
+                    btn.Background = whiteBrush;
+                    btn.Foreground = accentBrush;
+                    btn.BorderBrush = accentBrush;
                 }
                 else
                 {
                     ViewModel!.AddInterest(interest);
-                    btn.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                        Microsoft.UI.ColorHelper.FromArgb(255, 235, 59, 89));
-                    btn.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.White);
-                    btn.BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(
-                        Microsoft.UI.ColorHelper.FromArgb(255, 235, 59, 89));
+                    btn.Background = accentBrush;
+                    btn.Foreground = whiteBrush;
+                    btn.BorderBrush = accentBrush;
                 }
 
                 InterestCountText.Text = ViewModel!.ProfileData!.Interests.Count.ToString();
@@ -529,18 +620,16 @@ namespace matchmaking.Views
             }
             catch (Exception ex)
             {
-                var dialog = new ContentDialog
+                ContentDialog errorDialog = new ContentDialog
                 {
                     Title = "Error",
                     Content = ex.Message,
                     CloseButtonText = "OK",
                     XamlRoot = XamlRoot
                 };
-                await dialog.ShowAsync();
+                await errorDialog.ShowAsync();
             }
         }
-
-        // ── Step 4 handlers ───────────────────────────────────────────────────
 
         private void UpdatePreview()
         {
@@ -551,44 +640,55 @@ namespace matchmaking.Views
             PreviewGender.Text = preview.Gender.ToString();
             PreviewLocation.Text = preview.Location;
             PreviewNationality.Text = preview.Nationality;
-            PreviewStarSignPanel.Visibility = preview.DisplayStarSign ? Visibility.Visible : Visibility.Collapsed;
-            if (preview.DisplayStarSign)
-                PreviewStarSign.Text = preview.GetStarSign().ToString();
             PreviewBio.Text = preview.Bio;
             PreviewInterestsControl.ItemsSource = preview.Interests;
 
+            if (preview.DisplayStarSign)
+            {
+                PreviewStarSignPanel.Visibility = Visibility.Visible;
+                PreviewStarSign.Text = preview.GetStarSign().ToString();
+            }
+            else
+            {
+                PreviewStarSignPanel.Visibility = Visibility.Collapsed;
+            }
+
             if (preview.Photos.Count > 0)
             {
-                PreviewPhotoImage.Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(
-                    new Uri(preview.Photos[0].Location!));
+                PreviewPhotoImage.Source = new BitmapImage(new Uri(preview.Photos[0].Location!));
             }
         }
 
         private void HandleNextPhotoClick(object sender, RoutedEventArgs e)
         {
             ViewModel!.NextPhoto();
-            var photos = ViewModel.ProfileData!.Photos;
+            List<Photo> photos = ViewModel.ProfileData!.Photos;
             if (photos.Count > 0)
             {
-                PreviewPhotoImage.Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(
-                    new Uri(photos[ViewModel.CurrentPhotoIndex].Location!));
+                PreviewPhotoImage.Source = new BitmapImage(new Uri(photos[ViewModel.CurrentPhotoIndex].Location!));
             }
         }
 
         private void HandlePreviousPhotoClick(object sender, RoutedEventArgs e)
         {
             ViewModel!.PreviousPhoto();
-            var photos = ViewModel.ProfileData!.Photos;
+            List<Photo> photos = ViewModel.ProfileData!.Photos;
             if (photos.Count > 0)
             {
-                PreviewPhotoImage.Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(
-                    new Uri(photos[ViewModel.CurrentPhotoIndex].Location!));
+                PreviewPhotoImage.Source = new BitmapImage(new Uri(photos[ViewModel.CurrentPhotoIndex].Location!));
             }
         }
 
         private void HandleTermsConditionsChecked(object sender, RoutedEventArgs e)
         {
-            ViewModel!.TermsAccepted = TermsCheckBox.IsChecked == true;
+            if (TermsCheckBox.IsChecked == true)
+            {
+                ViewModel!.TermsAccepted = true;
+            }
+            else
+            {
+                ViewModel!.TermsAccepted = false;
+            }
             CreateProfileButton.IsEnabled = ViewModel.TermsAccepted;
         }
 
@@ -601,7 +701,7 @@ namespace matchmaking.Views
             }
             catch (Exception ex)
             {
-                var dialog = new ContentDialog
+                ContentDialog dialog = new ContentDialog
                 {
                     Title = "Error",
                     Content = ex.Message,

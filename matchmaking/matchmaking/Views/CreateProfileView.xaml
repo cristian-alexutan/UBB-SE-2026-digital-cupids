@@ -43,7 +43,6 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Title -->
             <TextBlock Grid.Row="0"
                        Text="Create Your Profile"
                        FontSize="36" FontWeight="Bold"
@@ -51,7 +50,6 @@
                        HorizontalAlignment="Center"
                        CharacterSpacing="200"/>
 
-            <!-- Step indicator -->
             <StackPanel Grid.Row="1" Orientation="Horizontal"
                         HorizontalAlignment="Center" Spacing="12">
                 <Ellipse x:Name="Step1Dot" Width="14" Height="14" Fill="White"/>
@@ -60,29 +58,24 @@
                 <Ellipse x:Name="Step4Dot" Width="14" Height="14" Fill="#80FFFFFF"/>
             </StackPanel>
 
-            <!-- Step content -->
             <Grid Grid.Row="2" Background="White" CornerRadius="20">
 
-                <!-- Step 1: Details & Preferences -->
                 <ScrollViewer x:Name="Step1Panel" Padding="40" VerticalScrollBarVisibility="Auto">
                     <StackPanel Spacing="20">
                         <TextBlock Text="Details &amp; Preferences"
                                    FontSize="24" FontWeight="Bold"
                                    Foreground="#c0143c"/>
 
-                        <!-- Username (read-only) -->
                         <StackPanel Spacing="6">
                             <TextBlock Text="Username" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
                             <TextBlock x:Name="UsernameText" Foreground="#555" FontSize="14"/>
                         </StackPanel>
 
-                        <!-- Age (read-only) -->
                         <StackPanel Spacing="6">
                             <TextBlock Text="Age" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
                             <TextBlock x:Name="AgeText" Foreground="#555" FontSize="14"/>
                         </StackPanel>
 
-                        <!-- Location -->
                         <StackPanel Spacing="6">
                             <TextBlock Text="Location (city)" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
                             <ComboBox x:Name="LocationComboBox"
@@ -90,7 +83,6 @@
                                       SelectionChanged="HandleLocationChanged"/>
                         </StackPanel>
 
-                        <!-- Nationality -->
                         <StackPanel Spacing="6">
                             <TextBlock Text="Nationality" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
                             <TextBox x:Name="NationalityTextBox"
@@ -98,7 +90,6 @@
                                      TextChanged="HandleNationalityChanged"/>
                         </StackPanel>
 
-                        <!-- Gender -->
                         <StackPanel Spacing="6">
                             <TextBlock Text="Gender" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
                             <ComboBox x:Name="GenderComboBox"
@@ -111,7 +102,6 @@
                             </ComboBox>
                         </StackPanel>
 
-                        <!-- Preferred Genders -->
                         <StackPanel Spacing="6">
                             <TextBlock Text="Preferred Genders" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
                             <Border BorderBrush="#c0143c" BorderThickness="1" CornerRadius="4"
@@ -133,7 +123,6 @@
                             </Border>
                         </StackPanel>
 
-                        <!-- Maximum Distance -->
                         <StackPanel Spacing="6">
                             <TextBlock Foreground="#333" FontSize="14" FontWeight="SemiBold">
                                 <Run Text="Maximum Distance: "/>
@@ -146,7 +135,6 @@
                                     ValueChanged="HandleMaxDistanceChanged"/>
                         </StackPanel>
 
-                        <!-- Preferred Age Range -->
                         <StackPanel Spacing="6">
                             <TextBlock Foreground="#333" FontSize="14" FontWeight="SemiBold">
                                 <Run Text="Preferred Age Range: "/>
@@ -166,7 +154,6 @@
                                     ValueChanged="HandleMaxAgeChanged"/>
                         </StackPanel>
 
-                        <!-- Display Star Sign -->
                         <Border BorderBrush="#c0143c" BorderThickness="1" CornerRadius="4"
                                 Background="#FFF5F5" Padding="12,8">
                             <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
@@ -180,7 +167,6 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <!-- Step 2: Photos -->
                 <ScrollViewer x:Name="Step2Panel" Padding="40" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
                     <StackPanel Spacing="20">
                         <TextBlock Text="Photos"
@@ -222,7 +208,6 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <!-- Step 3: About You -->
                 <ScrollViewer x:Name="Step3Panel" Padding="40" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
                     <StackPanel Spacing="20">
                         <TextBlock Text="About You"
@@ -259,14 +244,12 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <!-- Step 4: Preview -->
                 <ScrollViewer x:Name="Step4Panel" Padding="40" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
                     <StackPanel Spacing="20">
                         <TextBlock Text="Preview"
                                    FontSize="24" FontWeight="Bold"
                                    Foreground="#c0143c"/>
 
-                        <!-- Profile card preview (matches DiscoverView style) -->
                         <Border CornerRadius="12" Background="#2B2B2B" BorderBrush="#2B2B2B" BorderThickness="2">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -274,7 +257,6 @@
                                     <ColumnDefinition Width="5*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Left: Photo slideshow -->
                                 <Grid Grid.Column="0" CornerRadius="12,0,0,12" Background="Black">
                                     <Image x:Name="PreviewPhotoImage"
                                            Stretch="UniformToFill"/>
@@ -300,7 +282,6 @@
                                             CornerRadius="25" Margin="0,0,10,0"/>
                                 </Grid>
 
-                                <!-- Right: Details -->
                                 <ScrollViewer Grid.Column="1" Padding="30">
                                     <StackPanel Spacing="15">
                                         <TextBlock x:Name="PreviewNameAge"
@@ -368,7 +349,6 @@
                             </Grid>
                         </Border>
 
-                        <!-- Terms and conditions -->
                         <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <CheckBox x:Name="TermsCheckBox"
                                       VerticalAlignment="Center"
@@ -386,7 +366,6 @@
 
             </Grid>
 
-            <!-- Navigation buttons -->
             <StackPanel Grid.Row="3" Orientation="Horizontal"
                         HorizontalAlignment="Center" Spacing="20">
                 <Button x:Name="PreviousStepButton"

@@ -47,9 +47,6 @@ namespace matchmaking.Views
                 case Screen.AGE_BLOCK:
                     Frame.Navigate(typeof(AgeBlockView), ViewModel);
                     break;
-                //case Screen.ADMIN:
-                //    Frame.Navigate(typeof(AdminView));
-                //    break;
                 case Screen.CREATE:
                     Frame.Navigate(typeof(CreateProfileView), _createProfileViewModel);
                     break;

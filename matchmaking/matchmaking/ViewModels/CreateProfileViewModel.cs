@@ -37,7 +37,10 @@ namespace matchmaking.ViewModels
 
         public int CurrentStep
         {
-            get => _currentStep;
+            get
+            {
+                return _currentStep;
+            }
             private set
             {
                 if (_currentStep != value)
@@ -50,7 +53,10 @@ namespace matchmaking.ViewModels
 
         public ProfileData? ProfileData
         {
-            get => _profileData;
+            get
+            {
+                return _profileData;
+            }
             private set
             {
                 if (_profileData != value)
@@ -63,7 +69,10 @@ namespace matchmaking.ViewModels
 
         public bool TermsAccepted
         {
-            get => _termsAccepted;
+            get
+            {
+                return _termsAccepted;
+            }
             set
             {
                 if (_termsAccepted != value)
@@ -76,7 +85,10 @@ namespace matchmaking.ViewModels
 
         public int CurrentPhotoIndex
         {
-            get => _currentPhotoIndex;
+            get
+            {
+                return _currentPhotoIndex;
+            }
             private set
             {
                 if (_currentPhotoIndex != value)
@@ -89,7 +101,10 @@ namespace matchmaking.ViewModels
 
         public int UserId
         {
-            get => _userId;
+            get
+            {
+                return _userId;
+            }
             private set
             {
                 if (_userId != value)
@@ -153,15 +168,17 @@ namespace matchmaking.ViewModels
 
         public void RemovePhoto(int photoId)
         {
+            var photo = _profileData.Photos.FirstOrDefault(p => p.PhotoId == photoId);
+            if (photo == null)
+            {
+                return;
+            }
             if (_profileData.Photos.Count <= 2)
             {
                 throw new InvalidOperationException("You must have at least 2 photos!");
-            }
-            var photo = _profileData.Photos.FirstOrDefault(p => p.PhotoId == photoId);
-            if (photo != null)
-            {
-                _profileData.Photos.Remove(photo);
-            }
+            }     
+            _profileData.Photos.Remove(photo);
+            
             for (int i = 0; i < _profileData.Photos.Count; i++)
             {
                 _profileData.Photos[i].ProfileOrderIndex = i;
@@ -171,14 +188,17 @@ namespace matchmaking.ViewModels
 
         public void SwapPhotos(int fromIndex, int toIndex)
         {
-            if (fromIndex < 0 || fromIndex >= _profileData.Photos.Count ||
-                toIndex < 0 || toIndex >= _profileData.Photos.Count)
+            bool fromOutOfBounds = fromIndex < 0 || fromIndex >= _profileData.Photos.Count;
+            bool toOutOfBounds = toIndex < 0 || toIndex >= _profileData.Photos.Count;
+            if (fromOutOfBounds || toOutOfBounds)
             {
                 return;
             }
-            var temp = _profileData.Photos[fromIndex];
+
+            Photo temp = _profileData.Photos[fromIndex];
             _profileData.Photos[fromIndex] = _profileData.Photos[toIndex];
             _profileData.Photos[toIndex] = temp;
+
             for (int i = 0; i < _profileData.Photos.Count; i++)
             {
                 _profileData.Photos[i].ProfileOrderIndex = i;
@@ -244,16 +264,28 @@ namespace matchmaking.ViewModels
 
         public void NextPhoto()
         {
-            if (_profileData.Photos.Count == 0) return;
+            if (_profileData.Photos.Count == 0)
+            {
+                return;
+            }
             CurrentPhotoIndex = (_currentPhotoIndex + 1) % _profileData.Photos.Count;
         }
 
         public void PreviousPhoto()
         {
-            if (_profileData.Photos.Count == 0) return;
-            CurrentPhotoIndex = _currentPhotoIndex == 0
-                ? _profileData.Photos.Count - 1
-                : _currentPhotoIndex - 1;
+            if (_profileData.Photos.Count == 0)
+            {
+                return;
+            }
+
+            if (_currentPhotoIndex == 0)
+            {
+                CurrentPhotoIndex = _profileData.Photos.Count - 1;
+            }
+            else
+            {
+                CurrentPhotoIndex = _currentPhotoIndex - 1;
+            }
         }
 
         public DatingProfile CreateDatingProfile()
