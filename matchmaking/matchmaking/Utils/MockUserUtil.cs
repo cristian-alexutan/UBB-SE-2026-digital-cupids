@@ -12,6 +12,7 @@ namespace matchmaking.Utils
     {
         private List<UserData> users = new List<UserData>
         {
+            new UserData(0, "florina_d", "florina.d@example.com", "+40721000006", "https://example.com/avatars/6.jpg", "Yoga and meditation fan.", new DateTime(1999, 4, 14)),
             new UserData(1, "alex_m", "alex.m@example.com", "+40721000001", "https://example.com/avatars/1.jpg", "Love hiking and coffee.", new DateTime(1995, 3, 12)),
             new UserData(2, "bianca_p", "bianca.p@example.com", "+40721000002", "https://example.com/avatars/2.jpg", "Bookworm and cat lover.", new DateTime(1998, 7, 24)),
             new UserData(3, "chris_t", "chris.t@example.com", "+40721000003", "https://example.com/avatars/3.jpg", "Gym enthusiast and cook.", new DateTime(1993, 11, 5)),

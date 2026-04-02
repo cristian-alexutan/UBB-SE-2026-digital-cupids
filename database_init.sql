@@ -292,3 +292,9 @@ GO
 
 SELECT *
 FROM Profiles
+
+update Profiles
+set isHotSeat=0
+where userId=1
+
+select * from Bids

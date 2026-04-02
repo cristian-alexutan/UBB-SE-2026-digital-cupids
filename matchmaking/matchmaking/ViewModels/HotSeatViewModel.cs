@@ -17,6 +17,7 @@ namespace matchmaking.ViewModels
         private int _userId;
         private DatingProfile _hotSeatProfile;
         private int _highestBid;
+        private string _highestBidderName = string.Empty;
         private string _errorMessage = string.Empty;
         private double _bidInput;
         private int _currentPhotoIndex;
@@ -47,6 +48,8 @@ namespace matchmaking.ViewModels
         public bool ShowStarSign => HotSeatProfile != null && HotSeatProfile.DisplayStarSign;
         public bool HasHotSeatProfile => HotSeatProfile != null;
         public bool NoHotSeatProfile => HotSeatProfile == null;
+
+        public bool UserIsArchived => _profileService.GetProfileById(_userId)?.IsArchived == true;
         public bool HasNoBid => HighestBid == 0;
         public bool HasBid => HighestBid > 0;
         public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
@@ -84,6 +87,12 @@ namespace matchmaking.ViewModels
                 OnPropertyChanged(nameof(HasBid));
                 OnPropertyChanged(nameof(HighestBidDisplay));
             }
+        }
+
+        public string HighestBidderName
+        {
+            get => _highestBidderName;
+            private set => SetProperty(ref _highestBidderName, value);
         }
 
         public string ErrorMessage
@@ -136,6 +145,15 @@ namespace matchmaking.ViewModels
             PreviousPhotoCommand = new RelayCommand(PreviousPhoto);
         }
 
+        private void RefreshHighestBid()
+        {
+            HighestBid = _bidService.getHighestBid();
+            int highestBidderId = _bidService.getHighestBidderId();
+            HighestBidderName = highestBidderId != 0
+                ? _profileService.GetProfileById(highestBidderId)?.Name ?? string.Empty
+                : string.Empty;
+        }
+
         public void LoadHotSeat()
         {
             ErrorMessage = string.Empty;
@@ -165,7 +183,7 @@ namespace matchmaking.ViewModels
                 System.Diagnostics.Debug.WriteLine("[LoadHotSeat] NO HOT SEAT PROFILE FOUND!");
             }
 
-            HighestBid = _bidService.getHighestBid();
+            RefreshHighestBid();
         }
 
         public void PlaceBid()
@@ -176,7 +194,7 @@ namespace matchmaking.ViewModels
                 Bid newBid = new Bid(_userId, (int)BidInput);
                 Debug.WriteLine($"viewmodel: Placing bid with UserId: {newBid.UserId}, BidSum: {newBid.BidSum}");
                 _bidService.AddBid(newBid);
-                HighestBid = _bidService.getHighestBid();
+                RefreshHighestBid();
             }
             catch (Exception ex)
             {

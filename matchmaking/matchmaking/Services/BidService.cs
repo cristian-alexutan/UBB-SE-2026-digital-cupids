@@ -28,7 +28,7 @@ namespace matchmaking.Services
                 throw new Exception("Bid sum must be at least 50.");
             }
             int highestBidSum = getHighestBid();
-            if(bid.BidSum < highestBidSum + 10)
+            if (bid.BidSum < highestBidSum + 10)
             {
                 throw new Exception($"Bid sum must be at least 10 higher than the current highest bid of {highestBidSum}.");
             }
@@ -45,13 +45,35 @@ namespace matchmaking.Services
             }
             List<Bid> bids = BidRepo.GetAll();
             int highestBidSum = 0;
-            foreach(var b in bids) {
+            foreach (var b in bids)
+            {
                 if (b.BidSum > highestBidSum)
                 {
                     highestBidSum = b.BidSum;
                 }
             }
             return highestBidSum;
+        }
+
+        public int getHighestBidderId()
+        {
+            int today = DateTime.Today.Day;
+            if (BidRepo.BidDay != today)
+            {
+                BidRepo.Clear(today);
+            }
+            List<Bid> bids = BidRepo.GetAll();
+            int highestBidSum = 0;
+            int highestBidderId = 0;
+            foreach (var b in bids)
+            {
+                if (b.BidSum > highestBidSum)
+                {
+                    highestBidSum = b.BidSum;
+                    highestBidderId = b.UserId;
+                }
+            }
+            return highestBidderId;
         }
     }
 }
