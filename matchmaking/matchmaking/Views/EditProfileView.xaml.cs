@@ -289,7 +289,7 @@ namespace matchmaking.Views
 
         private void UpdateBioHeader()
         {
-            BioHeader.Text = $"Bio ({BioBox.Text.Length}/250)";
+            BioHeader.Text = $"Bio ({ViewModel.Bio.Length}/250)";
         }
 
         private void UpdateDistanceHeader()

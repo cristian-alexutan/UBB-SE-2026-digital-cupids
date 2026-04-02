@@ -1,6 +1,7 @@
 ﻿using matchmaking.Domain;
 using Microsoft.Data.SqlClient;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -215,23 +216,35 @@ namespace matchmaking.Repositories
         }
         public DatingProfile? DeleteById(int id)
         {
-            DatingProfile profile = FindById(id);
-            const string query = @"DELETE FROM Profiles WHERE userId = @userId";
-
+            const string query1 = "DELETE FROM Interactions WHERE fromProfileId = @userId or toProfileId = @userId";
+            const string query2 = "DELETE FROM Matches WHERE user1Id = @userId or user2Id = @userId";
+            const string query3 = "DELETE FROM Profiles " +
+                "OUTPUT DELETED.userId, DELETED.[name],DELETED.gender, DELETED.[location],DELETED.nationality,DELETED.maxDistance," +
+                " DELETED.age, DELETED.minPrefAge, DELETED.maxPrefAge, DELETED.bio, DELETED.displayStarSign," +
+                "DELETED.isArchived, DELETED.dateOfBirth, DELETED.loverType, DELETED.isHotSeat, DELETED.boost, " +
+                "DELETED.boostDay, DELETED.hotSeatDay WHERE userId = @userId";
             using SqlConnection connection = new SqlConnection(_connectionString);
-            using SqlCommand command = new SqlCommand(query, connection);
-
-            command.Parameters.AddWithValue("@userId", id);
-
+            using SqlCommand command1 = new SqlCommand(query1, connection);
+            using SqlCommand command2 = new SqlCommand(query2, connection);
+            using SqlCommand command3 = new SqlCommand(query3, connection);
+            command1.Parameters.AddWithValue("@userId", id);
+            command2.Parameters.AddWithValue("@userId", id);
+            command3.Parameters.AddWithValue("@userId", id);
             connection.Open();
-            command.ExecuteNonQuery();
-
-            DatingProfile? check = FindById(id);
-
-            if (check != null)
-                throw new Exception($"Profile {id} was not deleted successfully.");
-
-            return profile;
+            command1.ExecuteNonQuery();
+            command2.ExecuteNonQuery();
+            using SqlDataReader reader = command3.ExecuteReader();
+            if (reader.Read())
+            {
+                DatingProfile deletedProfile = MapProfile(reader);
+                reader.Close();
+                PopulateLists(deletedProfile, connection);
+                return deletedProfile;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public DatingProfile? FindById(int id)

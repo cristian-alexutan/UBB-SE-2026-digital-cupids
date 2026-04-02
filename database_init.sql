@@ -59,7 +59,7 @@ CREATE TABLE Matches (
 GO
 
 CREATE TABLE ProfilePreferences (
-    userId INT FOREIGN KEY REFERENCES Profiles(userId),
+    userId INT FOREIGN KEY REFERENCES Profiles(userId) ON DELETE CASCADE,
     gender VARCHAR(50),
     PRIMARY KEY(userId, gender)
 );
@@ -67,14 +67,14 @@ GO
 
 CREATE TABLE Bids (
     bidId INT IDENTITY(1, 1) PRIMARY KEY,
-    userId INT FOREIGN KEY REFERENCES Profiles(userId),
+    userId INT FOREIGN KEY REFERENCES Profiles(userId) ON DELETE CASCADE,
     bidSum INT
 );
 GO
 
 CREATE TABLE Photos (
     photoId INT IDENTITY(1, 1) PRIMARY KEY,
-    userId INT FOREIGN KEY REFERENCES Profiles(userId),
+    userId INT FOREIGN KEY REFERENCES Profiles(userId) ON DELETE CASCADE,
     [location] VARCHAR(200),
     profileOrderIndex INT
 );
@@ -93,7 +93,7 @@ CREATE TABLE Notifications (
 GO
 
 CREATE TABLE ProfileInterests (
-    userId INT FOREIGN KEY REFERENCES Profiles(userId),
+    userId INT FOREIGN KEY REFERENCES Profiles(userId) ON DELETE CASCADE,
     interest VARCHAR(50),
     PRIMARY KEY(userId, interest)
 );
@@ -366,23 +366,4 @@ INSERT INTO Photos (userId, location, profileOrderIndex) VALUES
 (19, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1),
 (20, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\placeholder.png', 0),
 (20, 'C:\UBB-SE-2026-digital-cupids\matchmaking\matchmaking\Assets\map.jpg',         1);
-GO
-
-CREATE TRIGGER trg_DeleteProfile
-ON Profiles
-INSTEAD OF DELETE
-AS
-BEGIN
-    DECLARE @id INT = (SELECT userId FROM deleted);
-
-    DELETE FROM Notifications  WHERE recipientId = @id OR fromId   = @id;
-    DELETE FROM Interactions   WHERE fromProfileId = @id OR toProfileId = @id;
-    DELETE FROM Matches        WHERE user1Id = @id OR user2Id = @id;
-    DELETE FROM ProfilePreferences WHERE userId = @id;
-    DELETE FROM ProfileInterests   WHERE userId = @id;
-    DELETE FROM Bids               WHERE userId = @id;
-    DELETE FROM Photos             WHERE userId = @id;
-    DELETE FROM DatingAdmin        WHERE userId = @id;
-    DELETE FROM Profiles           WHERE userId = @id;
-END;
 GO
