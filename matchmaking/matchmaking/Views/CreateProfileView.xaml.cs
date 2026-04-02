@@ -438,8 +438,10 @@ namespace matchmaking.Views
             InterestUtil interestUtil = new InterestUtil();
             SolidColorBrush accent = new SolidColorBrush(ColorHelper.FromArgb(255, 235, 59, 89));
             SolidColorBrush white = new SolidColorBrush(Colors.White);
+            SolidColorBrush pink = new SolidColorBrush(ColorHelper.FromArgb(255, 255, 182, 193));
 
             List<Button> buttons = new List<Button>();
+    
             foreach (string interest in interestUtil.GetAll())
             {
                 Button btn = new Button
@@ -454,6 +456,11 @@ namespace matchmaking.Views
                     Foreground = accent,
                     FontWeight = FontWeights.SemiBold
                 };
+
+                btn.Resources["ButtonBackgroundPointerOver"] = pink;
+                btn.Resources["ButtonForegroundPointerOver"] = accent;
+                btn.Resources["ButtonBorderBrushPointerOver"] = accent;
+
                 btn.Click += HandleInterestClick;
                 buttons.Add(btn);
             }
@@ -469,6 +476,8 @@ namespace matchmaking.Views
 
             SolidColorBrush accent = new SolidColorBrush(ColorHelper.FromArgb(255, 235, 59, 89));
             SolidColorBrush white = new SolidColorBrush(Colors.White);
+            SolidColorBrush pink = new SolidColorBrush(ColorHelper.FromArgb(255, 255, 182, 193));
+
 
             try
             {
@@ -477,14 +486,19 @@ namespace matchmaking.Views
                     ViewModel!.RemoveInterest(interest);
                     btn.Background = white;
                     btn.Foreground = accent;
+                    btn.Resources["ButtonBackgroundPointerOver"] = pink;
+                    btn.Resources["ButtonForegroundPointerOver"] = accent;
                 }
                 else
                 {
                     ViewModel!.AddInterest(interest);
                     btn.Background = accent;
                     btn.Foreground = white;
+                    btn.Resources["ButtonBackgroundPointerOver"] = pink;
+                    btn.Resources["ButtonForegroundPointerOver"] = white;
                 }
                 btn.BorderBrush = accent;
+                btn.Resources["ButtonBorderBrushPointerOver"] = accent;
                 InterestCountText.Text = ViewModel!.ProfileData!.Interests.Count.ToString();
                 UpdateNextButton();
             }
