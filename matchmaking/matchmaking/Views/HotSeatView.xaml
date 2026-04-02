@@ -159,6 +159,7 @@
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="40">
                         <Button
                             Click="SuperLikeHotSeat_Click"
+                            IsEnabled="{Binding CanSuperLike}"
                             Width="80" Height="80"
                             CornerRadius="40"
                             Background="Transparent"
@@ -168,6 +169,7 @@
                         </Button>
                         <Button
                             Click="LikeHotSeat_Click"
+                            IsEnabled="{Binding CanLike}"
                             Width="80" Height="80"
                             CornerRadius="40"
                             Background="Transparent"
@@ -235,6 +237,7 @@
                     Foreground="Gray"/>
                 <Button
                     Content="🚀 Boost for 25 RON"
+                    IsEnabled="{Binding CanBoost}"
                     Click="BoostProfile_Click"/>
 
             </StackPanel>

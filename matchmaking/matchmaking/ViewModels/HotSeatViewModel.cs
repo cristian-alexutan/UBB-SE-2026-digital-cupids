@@ -22,6 +22,14 @@ namespace matchmaking.ViewModels
         private double _bidInput;
         private int _currentPhotoIndex;
 
+        private bool _hasLiked;
+        private bool _hasSuperLiked;
+        private bool _isBoosted;
+
+        public bool CanLike => HotSeatProfile != null && HotSeatProfile.UserId != _userId && !_hasLiked && !_hasSuperLiked;
+        public bool CanSuperLike => HotSeatProfile != null && HotSeatProfile.UserId != _userId && !_hasLiked && !_hasSuperLiked;
+        public bool CanBoost => !_isBoosted;
+
         public string HighestBidDisplay => HighestBid.ToString();
         public string NameDisplay => HotSeatProfile?.Name ?? string.Empty;
         public string AgeDisplay => HotSeatProfile?.Age.ToString() ?? string.Empty;
@@ -183,6 +191,15 @@ namespace matchmaking.ViewModels
                 System.Diagnostics.Debug.WriteLine("[LoadHotSeat] NO HOT SEAT PROFILE FOUND!");
             }
 
+            var userProfile = _profileService.GetProfileById(_userId);
+            _isBoosted = userProfile != null && userProfile.IsBoosted && userProfile.BoostDay == DateTime.Today.Day;
+            OnPropertyChanged(nameof(CanBoost));
+
+            _hasLiked = false;
+            _hasSuperLiked = false;
+            OnPropertyChanged(nameof(CanLike));
+            OnPropertyChanged(nameof(CanSuperLike));
+
             RefreshHighestBid();
         }
 
@@ -216,6 +233,8 @@ namespace matchmaking.ViewModels
             profile.IsBoosted = true;
             profile.BoostDay = DateTime.Today.Day;
             _profileService.UpdateBoost(_userId);
+            _isBoosted = true;
+            OnPropertyChanged(nameof(CanBoost));
         }
 
         public void LikeHotSeat()
@@ -225,6 +244,9 @@ namespace matchmaking.ViewModels
 
             Interaction inter = new Interaction(_userId, HotSeatProfile.UserId, InteractionType.LIKE);
             _registerInteractionUseCase.RegisterInteraction(inter);
+            _hasLiked = true;
+            OnPropertyChanged(nameof(CanLike));
+            OnPropertyChanged(nameof(CanSuperLike));
         }
 
         public void SuperLikeHotSeat()
@@ -234,6 +256,9 @@ namespace matchmaking.ViewModels
 
             Interaction inter = new Interaction(_userId, HotSeatProfile.UserId, InteractionType.SUPER_LIKE);
             _registerInteractionUseCase.RegisterInteraction(inter);
+            _hasSuperLiked = true;
+            OnPropertyChanged(nameof(CanLike));
+            OnPropertyChanged(nameof(CanSuperLike));
         }
 
         public void NextPhoto()
