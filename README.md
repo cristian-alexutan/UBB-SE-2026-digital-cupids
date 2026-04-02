@@ -1,4 +1,8 @@
 
+<img src="placeholder_user_photos/red.png"></img>
+<img src="placeholder_user_photos/green.png"></img>
+<img src="placeholder_user_photos/pink.png"></img>
+
 ## Git Commands
 | Command | Description | 
 |---|---|
