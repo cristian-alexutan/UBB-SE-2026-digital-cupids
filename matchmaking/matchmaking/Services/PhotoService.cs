@@ -78,7 +78,6 @@ namespace matchmaking.Services
                 }
                 catch (Exception)
                 {
-                    // Ignore file deletion errors — the DB record will still be removed
                 }
             }
 

@@ -18,6 +18,24 @@
         <Grid Grid.Row="0" Background="#eb3b59">
         </Grid>
 
+        <Border Grid.RowSpan="2"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Margin="40,20,40,0"
+                Padding="16,12"
+                CornerRadius="10"
+                Background="#CCB00020"
+                BorderBrush="#FFFF6B6B"
+                BorderThickness="1"
+                Visibility="{x:Bind ViewModel.ErrorMessageVisibility, Mode=OneWay}"
+                Canvas.ZIndex="400">
+            <TextBlock Text="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
+                       Foreground="White"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       TextWrapping="Wrap"/>
+        </Border>
+
         <Grid Grid.Row="0" Visibility="{x:Bind ViewModel.CandidatesVisibility, Mode=OneWay}" Margin="40,20,40,20" CornerRadius="12" Background="#2B2B2B" BorderBrush="#2B2B2B" BorderThickness="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5*"/>

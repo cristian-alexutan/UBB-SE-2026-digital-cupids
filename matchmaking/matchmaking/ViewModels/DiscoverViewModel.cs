@@ -23,8 +23,7 @@ namespace matchmaking.ViewModels
         private string _commonCommunitiesText;
         private string _matchPopupMessage;
         private bool _isCurrentProfileArchived;
-
-        public event Action<string>? ErrorOccurred;
+        private string _errorMessage;
 
         public DiscoverViewModel(int userId, DiscoverService discoverService, RegisterInteractionUseCase registerInteractionUseCase, bool firstLoad = false)
         {
@@ -41,6 +40,7 @@ namespace matchmaking.ViewModels
             _statusMessage = string.Empty;
             _commonCommunitiesText = "No communities in common";
             _matchPopupMessage = string.Empty;
+            _errorMessage = string.Empty;
 
             PassCommand = new RelayCommand(PassCurrent, () => HasCandidates);
             LikeCommand = new RelayCommand(LikeCurrent, () => HasCandidates);
@@ -212,6 +212,23 @@ namespace matchmaking.ViewModels
             private set => SetProperty(ref _matchPopupMessage, value);
         }
 
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            private set
+            {
+                if (SetProperty(ref _errorMessage, value))
+                {
+                    OnPropertyChanged(nameof(HasErrorMessage));
+                    OnPropertyChanged(nameof(ErrorMessageVisibility));
+                }
+            }
+        }
+
+        public bool HasErrorMessage => !string.IsNullOrWhiteSpace(ErrorMessage);
+
+        public Visibility ErrorMessageVisibility => HasErrorMessage ? Visibility.Visible : Visibility.Collapsed;
+
         public void LoadCandidates()
         {
             try
@@ -225,6 +242,7 @@ namespace matchmaking.ViewModels
                     CurrentPhotoIndex = 0;
                     StatusMessage = "Your profile needs to be unarchived in order to see the Discover section.";
                     CommonCommunitiesText = "No communities in common";
+                    ErrorMessage = string.Empty;
                     NotifyCandidateChanged();
                     return;
                 }
@@ -244,6 +262,7 @@ namespace matchmaking.ViewModels
                     UpdateCommonCommunitiesText();
                 }
 
+                ErrorMessage = string.Empty;
                 NotifyCandidateChanged();
             }
             catch (Exception ex)
@@ -253,8 +272,8 @@ namespace matchmaking.ViewModels
                 CurrentPhotoIndex = 0;
                 StatusMessage = "Could not load discover profiles.";
                 CommonCommunitiesText = "No communities in common";
+                SetErrorMessage("Could not load discover profiles", ex);
                 NotifyCandidateChanged();
-                ReportError("Could not load discover profiles", ex);
             }
         }
 
@@ -299,7 +318,7 @@ namespace matchmaking.ViewModels
             }
             catch (Exception ex)
             {
-                ReportError("Could not register Like interaction", ex);
+                SetErrorMessage("Could not register Like interaction", ex);
             }
         }
 
@@ -333,7 +352,7 @@ namespace matchmaking.ViewModels
             }
             catch (Exception ex)
             {
-                ReportError("Could not register Super-Like interaction", ex);
+                SetErrorMessage("Could not register Super-Like interaction", ex);
             }
         }
 
@@ -358,7 +377,7 @@ namespace matchmaking.ViewModels
             }
             catch (Exception ex)
             {
-                ReportError("Could not register Pass interaction", ex);
+                SetErrorMessage("Could not register Pass interaction", ex);
             }
         }
 
@@ -396,7 +415,7 @@ namespace matchmaking.ViewModels
             }
             catch (Exception ex)
             {
-                ReportError("Could not move to next candidate", ex);
+                SetErrorMessage("Could not move to next candidate", ex);
             }
         }
 
@@ -414,7 +433,7 @@ namespace matchmaking.ViewModels
             }
             catch (Exception ex)
             {
-                ReportError("Could not move to next photo", ex);
+                SetErrorMessage("Could not move to next photo", ex);
             }
         }
 
@@ -439,7 +458,7 @@ namespace matchmaking.ViewModels
             }
             catch (Exception ex)
             {
-                ReportError("Could not move to previous photo", ex);
+                SetErrorMessage("Could not move to previous photo", ex);
             }
         }
 
@@ -456,7 +475,7 @@ namespace matchmaking.ViewModels
             }
             catch (Exception ex)
             {
-                ReportError("Could not open guide", ex);
+                SetErrorMessage("Could not open guide", ex);
             }
         }
 
@@ -468,7 +487,7 @@ namespace matchmaking.ViewModels
             }
             catch (Exception ex)
             {
-                ReportError("Could not close guide", ex);
+                SetErrorMessage("Could not close guide", ex);
             }
         }
 
@@ -481,7 +500,7 @@ namespace matchmaking.ViewModels
             }
             catch (Exception ex)
             {
-                ReportError("Could not close match popup", ex);
+                SetErrorMessage("Could not close match popup", ex);
             }
         }
 
@@ -504,7 +523,7 @@ namespace matchmaking.ViewModels
             catch (Exception ex)
             {
                 CommonCommunitiesText = "No communities in common";
-                ReportError("Could not load shared communities", ex);
+                SetErrorMessage("Could not load shared communities", ex);
             }
         }
 
@@ -534,9 +553,9 @@ namespace matchmaking.ViewModels
             CloseMatchPopupCommand.NotifyCanExecuteChanged();
         }
 
-        private void ReportError(string message, Exception ex)
+        private void SetErrorMessage(string message, Exception ex)
         {
-            ErrorOccurred?.Invoke($"{message}: {ex.Message}");
+            ErrorMessage = $"{message}: {ex.Message}";
         }
     }
 }
