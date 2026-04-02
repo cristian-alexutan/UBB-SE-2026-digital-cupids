@@ -12,7 +12,6 @@ namespace matchmaking.Repositories
     internal class DatingAdminRepository
     {
         private readonly string _connectionString;
-        private List<DatingAdmin> Admins;
 
         public DatingAdminRepository(string connectionString)
         {
