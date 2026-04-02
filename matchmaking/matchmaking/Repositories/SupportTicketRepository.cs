@@ -12,7 +12,6 @@ namespace matchmaking.Repositories
     internal class SupportTicketRepository
     {
         private readonly string _connectionString;
-        private List<SupportTicket> Tickets;
 
         public SupportTicketRepository(string connectionString)
         {

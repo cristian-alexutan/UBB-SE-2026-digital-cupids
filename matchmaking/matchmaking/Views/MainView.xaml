@@ -4,16 +4,22 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:matchmaking.Views"
+    xmlns:utils="using:matchmaking.Utils"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <utils:BoolToVisibilityConverter x:Key="BoolToVis"/>
+    </Page.Resources>
+
     <Grid>
         <NavigationView
-        x:Name="NavView"
-        IsBackButtonVisible="Collapsed"
-        IsSettingsVisible="False"
-        PaneDisplayMode="Top"
-        SelectionChanged="NavView_SelectionChanged">
+            x:Name="NavView"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            PaneDisplayMode="Top"
+            SelectionChanged="NavView_SelectionChanged">
 
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Discover" Tag="Discover">
@@ -28,20 +34,21 @@
                     <NavigationViewItem.Content>
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Text="Notifications"/>
-                            <Border x:Name="NotificationBadge"
-                    Background="Red"
-                    CornerRadius="10"
-                    MinWidth="20"
-                    Height="20"
-                    Padding="4,0"
-                    Visibility="Collapsed"
-                    VerticalAlignment="Center">
-                                <TextBlock x:Name="NotificationBadgeText"
-                           Foreground="White"
-                           FontSize="11"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
+                            <Border
+                                Background="Red"
+                                CornerRadius="10"
+                                MinWidth="20"
+                                Height="20"
+                                Padding="4,0"
+                                Visibility="{Binding HasUnread, Converter={StaticResource BoolToVis}}"
+                                VerticalAlignment="Center">
+                                <TextBlock
+                                    Text="{Binding UnreadCount}"
+                                    Foreground="White"
+                                    FontSize="11"
+                                    FontWeight="Bold"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"/>
                             </Border>
                         </StackPanel>
                     </NavigationViewItem.Content>
@@ -62,23 +69,25 @@
         </NavigationView>
 
         <!-- Pop-up banner -->
-        <Border x:Name="NotificationPopup"
+        <Border
             Background="#FF5A5F"
             CornerRadius="12"
             Padding="16,12"
             Margin="20"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
-            Visibility="Collapsed"
+            Visibility="{Binding IsPopupVisible, Converter={StaticResource BoolToVis}}"
             Canvas.ZIndex="100">
             <StackPanel Spacing="4">
-                <TextBlock x:Name="PopupTitle"
-                       Foreground="White"
-                       FontWeight="Bold"
-                       FontSize="14"/>
-                <TextBlock x:Name="PopupDescription"
-                       Foreground="White"
-                       FontSize="12"/>
+                <TextBlock
+                    Text="{Binding PopupTitle}"
+                    Foreground="White"
+                    FontWeight="Bold"
+                    FontSize="14"/>
+                <TextBlock
+                    Text="{Binding PopupDescription}"
+                    Foreground="White"
+                    FontSize="12"/>
             </StackPanel>
         </Border>
     </Grid>
