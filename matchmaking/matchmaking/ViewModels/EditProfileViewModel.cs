@@ -1,4 +1,4 @@
-﻿using matchmaking.Domain;
+using matchmaking.Domain;
 using matchmaking.Services;
 using matchmaking.Utils;
 using System;
@@ -17,50 +17,36 @@ namespace matchmaking.ViewModels
         private readonly QuestionaireUtil _questionaireUtil;
         private readonly InterestUtil _interestUtil;
 
-        private string _name = string.Empty;
-        private int _age;
-        private StarSign _starSign;
-        private LoverType? _loverType;
-        private string _bio = string.Empty;
-        private string _location = string.Empty;
-        private string _nationality = string.Empty;
-        private int _maxDistance;
-        private int _minPreferredAge;
-        private int _maxPreferredAge;
-        private Gender _gender;
-        private bool _displayStarSign;
-        private bool _isArchived;
-        private List<Gender> _preferredGenders = new();
-        private ObservableCollection<Photo> _photos = new();
-        private ObservableCollection<string> _interests = new();
+        private DatingProfile _profile = null!;
         private ObservableCollection<string> _shuffledQuestions = new();
         private ObservableCollection<int> _answers = new();
 
         public string Name
         {
-            get => _name;
-            set => SetProperty(ref _name, value);
+            get => _profile.Name;
+            set
+            {
+                if (_profile.Name != value)
+                {
+                    _profile.Name = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
-        public int Age
-        {
-            get => _age;
-            private set => SetProperty(ref _age, value);
-        }
+        public int Age => _profile.Age;
 
-        public StarSign StarSign
-        {
-            get => _starSign;
-            private set => SetProperty(ref _starSign, value);
-        }
+        public StarSign StarSign => _profile.GetStarSign();
 
         public LoverType? LoverType
         {
-            get => _loverType;
-            private set
+            get => _profile.LoverType;
+            set
             {
-                if (SetProperty(ref _loverType, value))
+                if (_profile.LoverType != value)
                 {
+                    _profile.LoverType = value;
+                    OnPropertyChanged();
                     OnPropertyChanged(nameof(HasLoverType));
                     OnPropertyChanged(nameof(LoverTypeResultText));
                 }
@@ -69,47 +55,91 @@ namespace matchmaking.ViewModels
 
         public string Bio
         {
-            get => _bio;
-            set => SetProperty(ref _bio, value);
+            get => _profile.Bio;
+            set
+            {
+                if (_profile.Bio != value)
+                {
+                    _profile.Bio = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public string Location
         {
-            get => _location;
-            set => SetProperty(ref _location, value);
+            get => _profile.Location;
+            set
+            {
+                if (_profile.Location != value)
+                {
+                    _profile.Location = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public string Nationality
         {
-            get => _nationality;
-            set => SetProperty(ref _nationality, value);
+            get => _profile.Nationality;
+            set
+            {
+                if (_profile.Nationality != value)
+                {
+                    _profile.Nationality = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public int MaxDistance
         {
-            get => _maxDistance;
-            set => SetProperty(ref _maxDistance, value);
+            get => _profile.MaxDistance;
+            set
+            {
+                if (_profile.MaxDistance != value)
+                {
+                    _profile.MaxDistance = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public int MinPreferredAge
         {
-            get => _minPreferredAge;
-            set => SetProperty(ref _minPreferredAge, value);
+            get => _profile.MinPreferredAge;
+            set
+            {
+                if (_profile.MinPreferredAge != value)
+                {
+                    _profile.MinPreferredAge = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public int MaxPreferredAge
         {
-            get => _maxPreferredAge;
-            set => SetProperty(ref _maxPreferredAge, value);
+            get => _profile.MaxPreferredAge;
+            set
+            {
+                if (_profile.MaxPreferredAge != value)
+                {
+                    _profile.MaxPreferredAge = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public Gender Gender
         {
-            get => _gender;
+            get => _profile.Gender;
             set
             {
-                if (SetProperty(ref _gender, value))
+                if (_profile.Gender != value)
                 {
+                    _profile.Gender = value;
+                    OnPropertyChanged();
                     OnPropertyChanged(nameof(SelectedGender));
                 }
             }
@@ -119,7 +149,7 @@ namespace matchmaking.ViewModels
 
         public string SelectedGender
         {
-            get => _gender switch
+            get => _profile.Gender switch
             {
                 Gender.MALE => "Male",
                 Gender.FEMALE => "Female",
@@ -136,9 +166,9 @@ namespace matchmaking.ViewModels
                     "Other" => Gender.OTHER,
                     _ => Gender.MALE
                 };
-                if (_gender != newGender)
+                if (_profile.Gender != newGender)
                 {
-                    _gender = newGender;
+                    _profile.Gender = newGender;
                     OnPropertyChanged(nameof(Gender));
                     OnPropertyChanged(nameof(SelectedGender));
                 }
@@ -147,17 +177,26 @@ namespace matchmaking.ViewModels
 
         public bool DisplayStarSign
         {
-            get => _displayStarSign;
-            set => SetProperty(ref _displayStarSign, value);
+            get => _profile.DisplayStarSign;
+            set
+            {
+                if (_profile.DisplayStarSign != value)
+                {
+                    _profile.DisplayStarSign = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public bool IsArchived
         {
-            get => _isArchived;
+            get => _profile.IsArchived;
             set
             {
-                if (SetProperty(ref _isArchived, value))
+                if (_profile.IsArchived != value)
                 {
+                    _profile.IsArchived = value;
+                    OnPropertyChanged();
                     OnPropertyChanged(nameof(IsNotArchived));
                     ArchiveProfileCommand.NotifyCanExecuteChanged();
                     UnarchiveProfileCommand.NotifyCanExecuteChanged();
@@ -169,35 +208,33 @@ namespace matchmaking.ViewModels
 
         public List<Gender> PreferredGenders
         {
-            get => _preferredGenders;
-            set => SetProperty(ref _preferredGenders, value);
+            get => _profile.PreferredGenders;
+            set
+            {
+                _profile.PreferredGenders = value ?? new List<Gender>();
+                OnPropertyChanged();
+            }
         }
 
         public List<Photo> Photos
         {
-            get => _photos.ToList();
+            get => _profile.Photos;
             private set
             {
-                if (!_photos.SequenceEqual(value ?? new()))
-                {
-                    _photos = new(value ?? new());
-                    OnPropertyChanged(nameof(Photos));
-                    OnPropertyChanged(nameof(CurrentPhotoCount));
-                }
+                _profile.Photos = value ?? new List<Photo>();
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentPhotoCount));
             }
         }
 
         public List<string> Interests
         {
-            get => _interests.ToList();
+            get => _profile.Interests;
             private set
             {
-                if (!_interests.SequenceEqual(value ?? new()))
-                {
-                    _interests = new(value ?? new());
-                    OnPropertyChanged(nameof(Interests));
-                    OnPropertyChanged(nameof(CurrentInterestCount));
-                }
+                _profile.Interests = value ?? new List<string>();
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentInterestCount));
             }
         }
 
@@ -205,9 +242,9 @@ namespace matchmaking.ViewModels
 
         public bool HasLoverType => LoverType != null;
 
-        public int CurrentInterestCount => _interests.Count;
+        public int CurrentInterestCount => _profile.Interests.Count;
 
-        public int CurrentPhotoCount => _photos.Count;
+        public int CurrentPhotoCount => _profile.Photos.Count;
 
         public string LoverTypeResultText => LoverType switch
         {
@@ -275,39 +312,48 @@ namespace matchmaking.ViewModels
             LoadProfile();
         }
 
-        private void PopulateFromProfile(DatingProfile profile)
+        private void NotifyAllProperties()
         {
-            Name = profile.Name;
-            Age = profile.Age;
-            StarSign = profile.GetStarSign();
-            LoverType = profile.LoverType;
-            Bio = profile.Bio;
-            Location = profile.Location;
-            Nationality = profile.Nationality;
-            MaxDistance = profile.MaxDistance;
-            MinPreferredAge = profile.MinPreferredAge;
-            MaxPreferredAge = profile.MaxPreferredAge;
-            Gender = profile.Gender;
-            DisplayStarSign = profile.DisplayStarSign;
-            IsArchived = profile.IsArchived;
-            PreferredGenders = profile.PreferredGenders ?? new List<Gender>();
-            Photos = new List<Photo>(profile.Photos ?? new List<Photo>());
-            Interests = new List<string>(profile.Interests ?? new List<string>());
+            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged(nameof(Age));
+            OnPropertyChanged(nameof(StarSign));
+            OnPropertyChanged(nameof(LoverType));
+            OnPropertyChanged(nameof(HasLoverType));
+            OnPropertyChanged(nameof(LoverTypeResultText));
+            OnPropertyChanged(nameof(Bio));
+            OnPropertyChanged(nameof(Location));
+            OnPropertyChanged(nameof(Nationality));
+            OnPropertyChanged(nameof(MaxDistance));
+            OnPropertyChanged(nameof(MinPreferredAge));
+            OnPropertyChanged(nameof(MaxPreferredAge));
+            OnPropertyChanged(nameof(Gender));
+            OnPropertyChanged(nameof(SelectedGender));
+            OnPropertyChanged(nameof(DisplayStarSign));
+            OnPropertyChanged(nameof(IsArchived));
+            OnPropertyChanged(nameof(IsNotArchived));
+            OnPropertyChanged(nameof(PreferredGenders));
+            OnPropertyChanged(nameof(Photos));
+            OnPropertyChanged(nameof(CurrentPhotoCount));
+            OnPropertyChanged(nameof(Interests));
+            OnPropertyChanged(nameof(CurrentInterestCount));
+            ArchiveProfileCommand.NotifyCanExecuteChanged();
+            UnarchiveProfileCommand.NotifyCanExecuteChanged();
         }
 
-        private ProfileData BuildProfileData() => new ProfileData(Name,
-            Gender, PreferredGenders, Location, Nationality,
-            MaxDistance, MinPreferredAge, MaxPreferredAge,
-            Bio, DisplayStarSign,
-            new List<Photo>(Photos),
-            new List<string>(Interests),
-            LoverType
+        private ProfileData BuildProfileData() => new ProfileData(
+            _profile.Name, _profile.Gender, _profile.PreferredGenders,
+            _profile.Location, _profile.Nationality, _profile.MaxDistance,
+            _profile.MinPreferredAge, _profile.MaxPreferredAge,
+            _profile.Bio, _profile.DisplayStarSign,
+            new List<Photo>(_profile.Photos),
+            new List<string>(_profile.Interests),
+            _profile.LoverType
         );
 
         public void LoadProfile()
         {
-            DatingProfile profile = _profileService.GetProfileById(_userId);
-            PopulateFromProfile(profile);
+            _profile = _profileService.GetProfileById(_userId);
+            NotifyAllProperties();
         }
 
         public void SaveChanges()
@@ -322,57 +368,54 @@ namespace matchmaking.ViewModels
 
         public void ArchiveProfile()
         {
-            DatingProfile profile = _profileService.GetProfileById(_userId);
-            _profileService.ArchiveProfile(profile);
+            _profileService.ArchiveProfile(_profile);
             IsArchived = true;
         }
 
         public void UnarchiveProfile()
         {
-            DatingProfile profile = _profileService.GetProfileById(_userId);
-            _profileService.UnarchiveProfile(profile);
+            _profileService.UnarchiveProfile(_profile);
             IsArchived = false;
         }
 
         public void DeleteProfile()
         {
-            DatingProfile profile = _profileService.GetProfileById(_userId);
-            _profileService.DeleteProfile(profile);
+            _profileService.DeleteProfile(_profile);
         }
 
         public void AddPhoto(Photo photo)
         {
             _photoService.AddPhoto(photo);
-            _photos.Add(photo);
+            _profile.Photos.Add(photo);
             OnPropertyChanged(nameof(Photos));
             OnPropertyChanged(nameof(CurrentPhotoCount));
         }
 
         public void RemovePhoto(int photoId)
         {
-            if (_photos.Count <= 2)
+            if (_profile.Photos.Count <= 2)
                 return;
 
             _photoService.DeleteById(photoId);
-            Photo? toRemove = _photos.FirstOrDefault(p => p.PhotoId == photoId);
-            if (toRemove != null) _photos.Remove(toRemove);
+            Photo? toRemove = _profile.Photos.FirstOrDefault(p => p.PhotoId == photoId);
+            if (toRemove != null) _profile.Photos.Remove(toRemove);
             OnPropertyChanged(nameof(Photos));
             OnPropertyChanged(nameof(CurrentPhotoCount));
         }
 
-        public bool CanRemovePhoto() => _photos.Count > 2;
+        public bool CanRemovePhoto() => _profile.Photos.Count > 2;
 
         public void ReorderPhotos(List<int> newPhotoIdOrder)
         {
             _photoService.ReorderPhotos(_userId, newPhotoIdOrder);
             var reorderedPhotos = newPhotoIdOrder
-                .Select(id => _photos.FirstOrDefault(p => p.PhotoId == id))
+                .Select(id => _profile.Photos.FirstOrDefault(p => p.PhotoId == id))
                 .Where(p => p != null)
                 .ToList()!;
-            _photos.Clear();
+            _profile.Photos.Clear();
             foreach (var photo in reorderedPhotos)
             {
-                _photos.Add(photo);
+                _profile.Photos.Add(photo);
             }
             OnPropertyChanged(nameof(Photos));
             OnPropertyChanged(nameof(CurrentPhotoCount));
@@ -380,29 +423,29 @@ namespace matchmaking.ViewModels
 
         public void AddInterest(string interest)
         {
-            if (_interests.Count >= 15 || _interests.Contains(interest))
+            if (_profile.Interests.Count >= 15 || _profile.Interests.Contains(interest))
                 return;
 
-            _interests.Add(interest);
+            _profile.Interests.Add(interest);
             OnPropertyChanged(nameof(Interests));
             OnPropertyChanged(nameof(CurrentInterestCount));
         }
 
         public void RemoveInterest(string interest)
         {
-            if (_interests.Count <= 3)
+            if (_profile.Interests.Count <= 3)
                 return;
 
-            _interests.Remove(interest);
+            _profile.Interests.Remove(interest);
             OnPropertyChanged(nameof(Interests));
             OnPropertyChanged(nameof(CurrentInterestCount));
         }
 
-        public bool CanAddInterest() => _interests.Count < 15;
+        public bool CanAddInterest() => _profile.Interests.Count < 15;
 
-        public bool CanRemoveInterest() => _interests.Count > 3;
+        public bool CanRemoveInterest() => _profile.Interests.Count > 3;
 
-        public bool CanRemoveInterest(string interest) => _interests.Contains(interest) && _interests.Count > 3;
+        public bool CanRemoveInterest(string interest) => _profile.Interests.Contains(interest) && _profile.Interests.Count > 3;
 
         public void PrepareQuestionnaire()
         {

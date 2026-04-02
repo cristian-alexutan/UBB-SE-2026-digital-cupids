@@ -96,11 +96,11 @@ GO
 --FROM Profiles
 
 --INSERT INTO Notifications (recipientId, fromId, [type], isRead, [timestamp], title, [description]) VALUES
---(21, 12, 'SUPER_LIKE', 0, '20260402 10:30:00 PM', 'SUPERLIKE', 'Wowowowow superlike')
+--(25, 12, 'SUPER_LIKE', 0, '20260402 10:30:00 PM', 'SUPERLIKE', 'Wowowowow superlike')
 --GO
 
 --INSERT INTO Interactions (fromProfileId, toProfileId, [type]) VALUES
---(10, 21, 'LIKE')
+--(10, 25, 'LIKE')
 --GO
 
 CREATE TABLE ProfileInterests (
@@ -154,6 +154,10 @@ VALUES
 (19, 'Simona Rus',         'FEMALE',     'Cluj-Napoca', 'Romanian', 60,  35, 28, 43, 'Accountant with her life in order. I meal prep, water my plants and want someone consistent and kind. Drama-free, please.',                              1, 0, '1989-06-15', 'STABILITY_LOVER',      0, 0, NULL, NULL),
 (20, 'Ionut Dragomir',     'MALE',       'Dej',         'Romanian', 80,  26, 21, 33, 'Motorsport fan, traveller, eats everything. Watches every F1 race live. Easygoing until you insult Senna — then we have a problem.',                    0, 0, '1998-02-20', NULL,                   0, 0, NULL, NULL);
 GO
+
+UPDATE Profiles
+SET isHotSeat = 1, hotSeatDay = 3
+WHERE userId = 10
 
 INSERT INTO ProfileInterests (userId, interest) VALUES
 (1, 'Travel'),
