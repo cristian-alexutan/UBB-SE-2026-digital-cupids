@@ -190,22 +190,22 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Column="0" x:Name="PhotoSlot0" Height="120"
+                            <Border Grid.Column="0" x:Name="PhotoSlot0" Height="240"
                                     BorderBrush="#ddd" BorderThickness="2"
                                     Background="#FAFAFA" CornerRadius="10" Margin="4"/>
-                            <Border Grid.Column="1" x:Name="PhotoSlot1" Height="120"
+                            <Border Grid.Column="1" x:Name="PhotoSlot1" Height="240"
                                     BorderBrush="#ddd" BorderThickness="2"
                                     Background="#FAFAFA" CornerRadius="10" Margin="4"/>
-                            <Border Grid.Column="2" x:Name="PhotoSlot2" Height="120"
+                            <Border Grid.Column="2" x:Name="PhotoSlot2" Height="240"
                                     BorderBrush="#ddd" BorderThickness="2"
                                     Background="#FAFAFA" CornerRadius="10" Margin="4"/>
-                            <Border Grid.Column="3" x:Name="PhotoSlot3" Height="120"
+                            <Border Grid.Column="3" x:Name="PhotoSlot3" Height="240"
                                     BorderBrush="#ddd" BorderThickness="2"
                                     Background="#FAFAFA" CornerRadius="10" Margin="4"/>
-                            <Border Grid.Column="4" x:Name="PhotoSlot4" Height="120"
+                            <Border Grid.Column="4" x:Name="PhotoSlot4" Height="240"
                                     BorderBrush="#ddd" BorderThickness="2"
                                     Background="#FAFAFA" CornerRadius="10" Margin="4"/>
-                            <Border Grid.Column="5" x:Name="PhotoSlot5" Height="120"
+                            <Border Grid.Column="5" x:Name="PhotoSlot5" Height="240"
                                     BorderBrush="#ddd" BorderThickness="2"
                                     Background="#FAFAFA" CornerRadius="10" Margin="4"/>
                         </Grid>
