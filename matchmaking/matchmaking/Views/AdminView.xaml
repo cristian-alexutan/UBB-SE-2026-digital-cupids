@@ -36,9 +36,11 @@
                                     </StackPanel>
                                 </Expander.Header>
                                 <Expander.Content>
-                                    <StackPanel Orientation="Horizontal" Spacing="8" Padding="0,8,0,8">
-                                        <Button Content="FOUND" Tag="{x:Bind}" Click="Found_Click"/>
-                                        <Button Content="NOT FOUND" Tag="{x:Bind}" Click="NotFound_Click"/>
+                                    <StackPanel Orientation="Vertical" Spacing="3" Padding="0,2,0,2">
+                                        <StackPanel Orientation="Horizontal" Spacing="8" Padding="0,2,0,2">
+                                            <Button Content="FOUND" Tag="{x:Bind}" Click="Found_Click"/>
+                                            <Button Content="NOT FOUND" Tag="{x:Bind}" Click="NotFound_Click"/>
+                                        </StackPanel>
                                         <Button Content="Open Certificate" Tag="{x:Bind}" Click="OpenCertificate_Click"/>
                                     </StackPanel>
                                 </Expander.Content>
