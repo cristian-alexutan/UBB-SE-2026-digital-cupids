@@ -6,8 +6,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    KeyDown="Page_KeyDown">
+    Loaded="Page_Loaded"
+    KeyDown="Page_KeyDown"
+    IsTabStop="True"
+    mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -44,8 +46,8 @@
 
             <Grid Grid.Column="0" CornerRadius="12,0,0,12" Background="Black">
                 <Image Source="{x:Bind ViewModel.CurrentPhoto.Location, Mode=OneWay, TargetNullValue='ms-appx:///Assets/placeholder.png'}" Stretch="UniformToFill"/>
-                <Button Click="PreviousPhotoButton_Click" Content="&#xE76B;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#AA000000" Foreground="White" Margin="10" Height="50" Width="50" CornerRadius="25"/>
-                <Button Click="NextPhotoButton_Click" Content="&#xE76C;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#AA000000" Foreground="White" Margin="10" Height="50" Width="50" CornerRadius="25"/>
+                <Button Command="{x:Bind ViewModel.PreviousPhotoCommand, Mode=OneWay}" Content="&#xE76B;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#AA000000" Foreground="White" Margin="10" Height="50" Width="50" CornerRadius="25"/>
+                <Button Command="{x:Bind ViewModel.NextPhotoCommand, Mode=OneWay}" Content="&#xE76C;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" VerticalAlignment="Center" Background="#AA000000" Foreground="White" Margin="10" Height="50" Width="50" CornerRadius="25"/>
             </Grid>
 
             <ScrollViewer Grid.Column="1" Padding="30">
@@ -119,61 +121,66 @@
 
         <Grid Grid.Row="1" Margin="0,20,0,20" Visibility="{x:Bind ViewModel.DiscoverActionsVisibility, Mode=OneWay}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="40" VerticalAlignment="Center">
-                <Button Click="PassButton_Click" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#eb3b59" BorderThickness="4" IsEnabled="{x:Bind ViewModel.HasCandidates, Mode=OneWay}">
+                <Button Command="{x:Bind ViewModel.PassCommand, Mode=OneWay}" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#eb3b59" BorderThickness="4">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;" Foreground="#eb3b59" FontSize="44"/>
                 </Button>
-                <Button Click="SuperLikeButton_Click" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#00A4FF" BorderThickness="4" IsEnabled="{x:Bind ViewModel.HasCandidates, Mode=OneWay}">
+                <Button Command="{x:Bind ViewModel.SuperLikeCommand, Mode=OneWay}" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#00A4FF" BorderThickness="4">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE735;" Foreground="#00A4FF" FontSize="44"/>
                 </Button>
-                <Button Click="LikeButton_Click" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#1CEE91" BorderThickness="4" IsEnabled="{x:Bind ViewModel.HasCandidates, Mode=OneWay}">
+                <Button Command="{x:Bind ViewModel.LikeCommand, Mode=OneWay}" Width="80" Height="80" CornerRadius="40" Background="Transparent" BorderBrush="#1CEE91" BorderThickness="4">
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB51;" Foreground="#1CEE91" FontSize="44"/>
                 </Button>
             </StackPanel>
-            <Button Click="HelpButton_Click" Width="60" Height="60" CornerRadius="35" Background="Transparent" BorderBrush="#9370DB" BorderThickness="4" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
+            <Button Command="{x:Bind ViewModel.OpenGuideCommand, Mode=OneWay}" Width="60" Height="60" CornerRadius="35" Background="Transparent" BorderBrush="#9370DB" BorderThickness="4" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE897;" Foreground="#9370DB" FontSize="24"/>
             </Button>
         </Grid>
 
-        <Grid Visibility="{x:Bind ViewModel.GuideVisibility, Mode=OneWay}" Background="#DD000000" Grid.RowSpan="2" Canvas.ZIndex="100" Tapped="Guide_Tapped">
+        <Grid Visibility="{x:Bind ViewModel.GuideVisibility, Mode=OneWay}" Grid.RowSpan="2" Canvas.ZIndex="100">
+            <Rectangle Fill="#DD000000"/>
 
-            <TextBlock Text="Tutorial for Discover" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,120,0,0"/>
+            <Grid>
+                <Button Command="{x:Bind ViewModel.CloseGuideCommand, Mode=OneWay}" Background="Transparent" BorderThickness="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
-            <TextBlock Text="Press ESC or click anywhere to exit the guide." Foreground="LightGray" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20"/>
+                <TextBlock Text="Tutorial for Discover" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,120,0,0"/>
 
-            <Grid VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,20">
-                <StackPanel Orientation="Horizontal" Spacing="40" VerticalAlignment="Center">
+                <TextBlock Text="Press ESC or click anywhere to exit the guide." Foreground="LightGray" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20"/>
 
-                    <Canvas Width="80" Height="80">
-                        <Ellipse Canvas.Left="-10" Canvas.Top="-10" Width="100" Height="100" Stroke="White" StrokeThickness="3" StrokeDashArray="3 3"/>
-                        <TextBlock Canvas.Left="-30" Canvas.Top="-50" Text="&#x2196;" FontSize="40" Foreground="White" />
-                        <TextBlock Canvas.Left="-160" Canvas.Top="-120" Text="Skip if you are not interested in this profile" Width="150" TextWrapping="Wrap" TextAlignment="Right" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+                <Grid VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,20">
+                    <StackPanel Orientation="Horizontal" Spacing="40" VerticalAlignment="Center">
 
-                        <Button Width="80" Height="80" CornerRadius="40" Background="Black" BorderBrush="#eb3b59" BorderThickness="4" IsEnabled="False">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;" Foreground="#eb3b59" FontSize="44"/>
-                        </Button>
-                    </Canvas>
+                        <Canvas Width="80" Height="80">
+                            <Ellipse Canvas.Left="-10" Canvas.Top="-10" Width="100" Height="100" Stroke="White" StrokeThickness="3" StrokeDashArray="3 3"/>
+                            <TextBlock Canvas.Left="-30" Canvas.Top="-50" Text="&#x2196;" FontSize="40" Foreground="White" />
+                            <TextBlock Canvas.Left="-160" Canvas.Top="-120" Text="Skip if you are not interested in this profile" Width="150" TextWrapping="Wrap" TextAlignment="Right" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
 
-                    <Canvas Width="80" Height="80">
-                        <Ellipse Canvas.Left="-10" Canvas.Top="-10" Width="100" Height="100" Stroke="White" StrokeThickness="3" StrokeDashArray="3 3"/>
-                        <TextBlock Canvas.Left="25" Canvas.Top="-55" Text="&#x2191;" FontSize="40" Foreground="White" />
-                        <TextBlock Canvas.Left="-50" Canvas.Top="-140" Text="Super-like this profile, this will send them a notification" Width="180" TextWrapping="Wrap" TextAlignment="Center" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+                            <Button Width="80" Height="80" CornerRadius="40" Background="Black" BorderBrush="#eb3b59" BorderThickness="4" IsEnabled="False">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;" Foreground="#eb3b59" FontSize="44"/>
+                            </Button>
+                        </Canvas>
 
-                        <Button Width="80" Height="80" CornerRadius="40" Background="Black" BorderBrush="#00A4FF" BorderThickness="4" IsEnabled="False">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE735;" Foreground="#00A4FF" FontSize="44"/>
-                        </Button>
-                    </Canvas>
+                        <Canvas Width="80" Height="80">
+                            <Ellipse Canvas.Left="-10" Canvas.Top="-10" Width="100" Height="100" Stroke="White" StrokeThickness="3" StrokeDashArray="3 3"/>
+                            <TextBlock Canvas.Left="25" Canvas.Top="-55" Text="&#x2191;" FontSize="40" Foreground="White" />
+                            <TextBlock Canvas.Left="-50" Canvas.Top="-140" Text="Super-like this profile, this will send them a notification" Width="180" TextWrapping="Wrap" TextAlignment="Center" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
 
-                    <Canvas Width="80" Height="80">
-                        <Ellipse Canvas.Left="-10" Canvas.Top="-10" Width="100" Height="100" Stroke="White" StrokeThickness="3" StrokeDashArray="3 3"/>
-                        <TextBlock Canvas.Left="75" Canvas.Top="-50" Text="&#x2197;" FontSize="40" Foreground="White" />
-                        <TextBlock Canvas.Left="90" Canvas.Top="-120" Text="Like if you are interested in this profile" Width="150" TextWrapping="Wrap" TextAlignment="Left" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+                            <Button Width="80" Height="80" CornerRadius="40" Background="Black" BorderBrush="#00A4FF" BorderThickness="4" IsEnabled="False">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE735;" Foreground="#00A4FF" FontSize="44"/>
+                            </Button>
+                        </Canvas>
 
-                        <Button Width="80" Height="80" CornerRadius="40" Background="Black" BorderBrush="#1CEE91" BorderThickness="4" IsEnabled="False">
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB51;" Foreground="#1CEE91" FontSize="44"/>
-                        </Button>
-                    </Canvas>
+                        <Canvas Width="80" Height="80">
+                            <Ellipse Canvas.Left="-10" Canvas.Top="-10" Width="100" Height="100" Stroke="White" StrokeThickness="3" StrokeDashArray="3 3"/>
+                            <TextBlock Canvas.Left="75" Canvas.Top="-50" Text="&#x2197;" FontSize="40" Foreground="White" />
+                            <TextBlock Canvas.Left="90" Canvas.Top="-120" Text="Like if you are interested in this profile" Width="150" TextWrapping="Wrap" TextAlignment="Left" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
 
-                </StackPanel>
+                            <Button Width="80" Height="80" CornerRadius="40" Background="Black" BorderBrush="#1CEE91" BorderThickness="4" IsEnabled="False">
+                                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB51;" Foreground="#1CEE91" FontSize="44"/>
+                            </Button>
+                        </Canvas>
+
+                    </StackPanel>
+                </Grid>
             </Grid>
         </Grid>
 
@@ -186,7 +193,7 @@
                     <TextBlock Text="{x:Bind ViewModel.MatchPopupMessage, Mode=OneWay}" FontSize="22" FontWeight="SemiBold" TextWrapping="WrapWholeWords" MaxWidth="320" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
                 </Grid>
 
-                <Button Content="Keep Swiping" Click="CloseMatchPopupButton_Click" HorizontalAlignment="Center" Background="HotPink" Foreground="White" FontSize="18" Padding="20,10"/>
+                <Button Content="Keep Swiping" Command="{x:Bind ViewModel.CloseMatchPopupCommand, Mode=OneWay}" HorizontalAlignment="Center" Background="HotPink" Foreground="White" FontSize="18" Padding="20,10"/>
             </StackPanel>
         </Grid>
     </Grid>

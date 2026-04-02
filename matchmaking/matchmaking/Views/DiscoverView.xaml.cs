@@ -2,8 +2,6 @@ using matchmaking.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using System;
-using System.Threading.Tasks;
 
 namespace matchmaking.Views
 {
@@ -20,130 +18,21 @@ namespace matchmaking.Views
         {
             ViewModel = viewModel;
             DataContext = viewModel;
+            Bindings.Update();
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            Focus(FocusState.Programmatic);
         }
 
         private void Page_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            try
+            if (e.Key == Windows.System.VirtualKey.Escape && ViewModel?.IsGuideVisible == true)
             {
-                if (e.Key == Windows.System.VirtualKey.Escape)
-                {
-                    ViewModel?.CloseGuide();
-                }
+                ViewModel.CloseGuideCommand.Execute(null);
+                e.Handled = true;
             }
-            catch (Exception ex)
-            {
-                _ = ShowErrorAsync(ex.Message);
-            }
-        }
-
-        private void Guide_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            try
-            {
-                ViewModel?.CloseGuide();
-            }
-            catch (Exception ex)
-            {
-                _ = ShowErrorAsync(ex.Message);
-            }
-        }
-
-        private void PreviousPhotoButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ViewModel?.PreviousPhoto();
-            }
-            catch (Exception ex)
-            {
-                _ = ShowErrorAsync(ex.Message);
-            }
-        }
-
-        private void NextPhotoButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ViewModel?.NextPhoto();
-            }
-            catch (Exception ex)
-            {
-                _ = ShowErrorAsync(ex.Message);
-            }
-        }
-
-        private void PassButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ViewModel?.PassCurrent();
-            }
-            catch (Exception ex)
-            {
-                _ = ShowErrorAsync(ex.Message);
-            }
-        }
-
-        private void SuperLikeButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ViewModel?.SuperLikeCurrent();
-            }
-            catch (Exception ex)
-            {
-                _ = ShowErrorAsync(ex.Message);
-            }
-        }
-
-        private void LikeButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ViewModel?.LikeCurrent();
-            }
-            catch (Exception ex)
-            {
-                _ = ShowErrorAsync(ex.Message);
-            }
-        }
-
-        private void HelpButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ViewModel?.OpenGuide();
-            }
-            catch (Exception ex)
-            {
-                _ = ShowErrorAsync(ex.Message);
-            }
-        }
-
-        private void CloseMatchPopupButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ViewModel?.CloseMatchPopup();
-            }
-            catch (Exception ex)
-            {
-                _ = ShowErrorAsync(ex.Message);
-            }
-        }
-
-        private async Task ShowErrorAsync(string message)
-        {
-            ContentDialog dialog = new ContentDialog
-            {
-                Title = "Error",
-                Content = message,
-                CloseButtonText = "OK",
-                XamlRoot = XamlRoot
-            };
-
-            await dialog.ShowAsync();
         }
     }
 }
