@@ -1,0 +1,75 @@
+using matchmaking.ViewModels;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using System;
+using Windows.Storage.Pickers;
+
+namespace matchmaking.Views
+{
+    public sealed partial class SpouseCheckerView : Page
+    {
+        internal SpouseCheckerViewModel ViewModel { get; private set; }
+
+        public SpouseCheckerView()
+        {
+            InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            ViewModel = (SpouseCheckerViewModel)e.Parameter;
+            Bindings.Update();
+        }
+
+        private async void BrowseMarriageCertificate_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = new FileOpenPicker();
+            picker.FileTypeFilter.Add(".pdf");
+            picker.FileTypeFilter.Add(".png");
+            picker.FileTypeFilter.Add(".jpg");
+
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+            var file = await picker.PickSingleFileAsync();
+            if (file != null)
+                ViewModel.MarriageCertificatePath = file.Path;
+        }
+
+        private async void BrowsePartnerPhoto_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = new FileOpenPicker();
+            picker.FileTypeFilter.Add(".png");
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".jpeg");
+
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+            var file = await picker.PickSingleFileAsync();
+            if (file != null)
+                ViewModel.PartnerPhotoPath = file.Path;
+        }
+
+        private void SubmitButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.SubmitCommand.CanExecute(null))
+            {
+                ViewModel.SubmitCommand.Execute(null);
+            }
+
+            Application.Current.Exit();
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.CancelCommand.CanExecute(null))
+            {
+                ViewModel.CancelCommand.Execute(null);
+            }
+
+            Application.Current.Exit();
+        }
+    }
+}

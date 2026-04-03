@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="matchmaking.Views.CreateProfileView"
+    x:Name="CreateProfileViewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="TextBox">
+                <Setter Property="PlaceholderForeground" Value="#999"/>
+                <Setter Property="Foreground" Value="#333"/>
+                <Setter Property="BorderBrush" Value="#c0143c"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Background" Value="#FFF5F5"/>
+                <Setter Property="Padding" Value="8,6"/>
+            </Style>
+            <Style TargetType="ComboBox">
+                <Setter Property="PlaceholderForeground" Value="#999"/>
+                <Setter Property="Foreground" Value="#333"/>
+                <Setter Property="BorderBrush" Value="#c0143c"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Background" Value="#FFF5F5"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            </Style>
+        </Grid.Resources>
+
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#eb3b59" Offset="0.0"/>
+                <GradientStop Color="#c0143c" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid Margin="60,40" RowSpacing="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Text="Create Your Profile"
+                       FontSize="36" FontWeight="Bold"
+                       Foreground="White"
+                       HorizontalAlignment="Center"
+                       CharacterSpacing="200"/>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal"
+                        HorizontalAlignment="Center" Spacing="12">
+                <Ellipse x:Name="Step1Dot" Width="14" Height="14" Fill="White"/>
+                <Ellipse x:Name="Step2Dot" Width="14" Height="14" Fill="#80FFFFFF"/>
+                <Ellipse x:Name="Step3Dot" Width="14" Height="14" Fill="#80FFFFFF"/>
+                <Ellipse x:Name="Step4Dot" Width="14" Height="14" Fill="#80FFFFFF"/>
+            </StackPanel>
+
+            <Grid Grid.Row="2" Background="White" CornerRadius="20">
+
+                <ScrollViewer x:Name="Step1Panel" Padding="40" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="20">
+                        <TextBlock Text="Details &amp; Preferences"
+                                   FontSize="24" FontWeight="Bold"
+                                   Foreground="#c0143c"/>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Name" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
+                            <TextBox x:Name="NameTextBox"
+                                    PlaceholderText="Enter your display name"
+                                    Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Age" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="AgeText" Foreground="#555" FontSize="14"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Location (city)" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
+                            <ComboBox x:Name="LocationComboBox"
+                                      PlaceholderText="Select your city"
+                                      SelectedItem="{x:Bind ViewModel.Location, Mode=TwoWay}"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Nationality" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
+                            <TextBox x:Name="NationalityTextBox"
+                                     PlaceholderText="Enter your nationality"
+                                     Text="{x:Bind ViewModel.Nationality, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Gender" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
+                            <ComboBox x:Name="GenderComboBox"
+                                      PlaceholderText="Select your gender"
+                                      SelectedIndex="{x:Bind ViewModel.GenderIndex, Mode=TwoWay}">
+                                <ComboBoxItem Content="Male" Tag="MALE"/>
+                                <ComboBoxItem Content="Female" Tag="FEMALE"/>
+                                <ComboBoxItem Content="Non-Binary" Tag="NON_BINARY"/>
+                                <ComboBoxItem Content="Other" Tag="OTHER"/>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Preferred Genders" Foreground="#333" FontSize="14" FontWeight="SemiBold"/>
+                            <Border BorderBrush="#c0143c" BorderThickness="1" CornerRadius="4"
+                                    Background="#FFF5F5" Padding="12,8">
+                                <StackPanel Orientation="Horizontal" Spacing="16">
+                                    <CheckBox x:Name="PrefMaleCheckBox" Content="Male" Foreground="#333"
+                                              Checked="HandlePreferredGenderChanged"
+                                              Unchecked="HandlePreferredGenderChanged"/>
+                                    <CheckBox x:Name="PrefFemaleCheckBox" Content="Female" Foreground="#333"
+                                              Checked="HandlePreferredGenderChanged"
+                                              Unchecked="HandlePreferredGenderChanged"/>
+                                    <CheckBox x:Name="PrefNonBinaryCheckBox" Content="Non-Binary" Foreground="#333"
+                                              Checked="HandlePreferredGenderChanged"
+                                              Unchecked="HandlePreferredGenderChanged"/>
+                                    <CheckBox x:Name="PrefOtherCheckBox" Content="Other" Foreground="#333"
+                                              Checked="HandlePreferredGenderChanged"
+                                              Unchecked="HandlePreferredGenderChanged"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Foreground="#333" FontSize="14" FontWeight="SemiBold">
+                                <Run Text="Maximum Distance: "/>
+                                <Run x:Name="MaxDistanceValueText" Text="50"/>
+                                <Run Text=" km"/>
+                            </TextBlock>
+                            <Slider x:Name="MaxDistanceSlider"
+                                    Minimum="1" Maximum="500"
+                                    Foreground="#c0143c"
+                                    Value="{x:Bind ViewModel.MaxDistance, Mode=TwoWay}"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Foreground="#333" FontSize="14" FontWeight="SemiBold">
+                                <Run Text="Preferred Age Range: "/>
+                                <Run x:Name="MinAgeValueText" Text="18"/>
+                                <Run Text=" - "/>
+                                <Run x:Name="MaxAgeValueText" Text="99"/>
+                            </TextBlock>
+                            <Border BorderBrush="#c0143c" BorderThickness="1" CornerRadius="4"
+                                    Background="#FFF5F5" Padding="16">
+                                <controls:RangeSelector
+                                    x:Name="AgeRangeSelector"
+                                    Minimum="18"
+                                    Maximum="99"
+                                    StepFrequency="1"
+                                    RangeStart="{x:Bind ViewModel.MinPreferredAge, Mode=TwoWay}"
+                                    RangeEnd="{x:Bind ViewModel.MaxPreferredAge, Mode=TwoWay}"/>
+                            </Border>
+                        </StackPanel>
+
+                        <Border BorderBrush="#c0143c" BorderThickness="1" CornerRadius="4"
+                                Background="#FFF5F5" Padding="12,8">
+                            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                                <TextBlock Text="Display Star Sign" Foreground="#333"
+                                           FontSize="14" FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
+                                <ToggleSwitch x:Name="DisplayStarSignToggle"
+                                              IsOn="{x:Bind ViewModel.DisplayStarSign, Mode=TwoWay}"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer x:Name="Step2Panel" Padding="40" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="20">
+                        <TextBlock Text="Photos"
+                                   FontSize="24" FontWeight="Bold"
+                                   Foreground="#c0143c"/>
+
+                        <TextBlock Text="Add between 2 and 6 photos. JPEG and PNG only, max 10MB each."
+                                   Foreground="#555" FontSize="14" TextWrapping="Wrap"/>
+
+                        <Grid x:Name="PhotoSlotsGrid" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" x:Name="PhotoSlot0" Height="240"
+                                    BorderBrush="#ddd" BorderThickness="2"
+                                    Background="#FAFAFA" CornerRadius="10" Margin="4"/>
+                            <Border Grid.Column="1" x:Name="PhotoSlot1" Height="240"
+                                    BorderBrush="#ddd" BorderThickness="2"
+                                    Background="#FAFAFA" CornerRadius="10" Margin="4"/>
+                            <Border Grid.Column="2" x:Name="PhotoSlot2" Height="240"
+                                    BorderBrush="#ddd" BorderThickness="2"
+                                    Background="#FAFAFA" CornerRadius="10" Margin="4"/>
+                            <Border Grid.Column="3" x:Name="PhotoSlot3" Height="240"
+                                    BorderBrush="#ddd" BorderThickness="2"
+                                    Background="#FAFAFA" CornerRadius="10" Margin="4"/>
+                            <Border Grid.Column="4" x:Name="PhotoSlot4" Height="240"
+                                    BorderBrush="#ddd" BorderThickness="2"
+                                    Background="#FAFAFA" CornerRadius="10" Margin="4"/>
+                            <Border Grid.Column="5" x:Name="PhotoSlot5" Height="240"
+                                    BorderBrush="#ddd" BorderThickness="2"
+                                    Background="#FAFAFA" CornerRadius="10" Margin="4"/>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer x:Name="Step3Panel" Padding="40" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="20">
+                        <TextBlock Text="About You"
+                                   FontSize="24" FontWeight="Bold"
+                                   Foreground="#c0143c"/>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Foreground="#555" FontSize="14">
+                                <Run Text="Bio ("/>
+                                <Run x:Name="BioLengthText" Text="0"/>
+                                <Run Text="/250)"/>
+                            </TextBlock>
+                            <TextBox x:Name="BioTextBox"
+                                     PlaceholderText="Tell others about yourself (20-250 characters)"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     Height="120"
+                                     MaxLength="250"
+                                     Text="{x:Bind ViewModel.Bio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Foreground="#555" FontSize="14">
+                                <Run Text="Interests ("/>
+                                <Run x:Name="InterestCountText" Text="0"/>
+                                <Run Text="/15) — pick at least 3"/>
+                            </TextBlock>
+                            <ItemsRepeater x:Name="InterestsRepeater">
+                                <ItemsRepeater.Layout>
+                                    <UniformGridLayout MinItemWidth="140" MinRowSpacing="8" MinColumnSpacing="8"/>
+                                </ItemsRepeater.Layout>
+                            </ItemsRepeater>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer x:Name="Step4Panel" Padding="40" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="20">
+                        <TextBlock Text="Preview"
+                                   FontSize="24" FontWeight="Bold"
+                                   Foreground="#c0143c"/>
+
+                        <Border CornerRadius="12" Background="#2B2B2B" BorderBrush="#2B2B2B" BorderThickness="2">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0" CornerRadius="12,0,0,12" Background="Black">
+                                    <Image x:Name="PreviewPhotoImage"
+                                           Stretch="UniformToFill"/>
+                                    <Button x:Name="PrevPhotoButton"
+                                            Content="&#xE76B;"
+                                            FontFamily="Segoe MDL2 Assets"
+                                            Command="{x:Bind ViewModel.PreviousPhotoCommand, Mode=OneWay}"
+                                            HorizontalAlignment="Left" VerticalAlignment="Center"
+                                            Background="#AA000000" Foreground="White"
+                                            Height="50" Width="50" CornerRadius="25" Margin="10,0,0,0"/>
+                                    <Button x:Name="NextPhotoButton"
+                                            Content="&#xE76C;"
+                                            FontFamily="Segoe MDL2 Assets"
+                                            Command="{x:Bind ViewModel.NextPhotoCommand, Mode=OneWay}"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                                            Background="#AA000000" Foreground="White"
+                                            Height="50" Width="50" CornerRadius="25" Margin="0,0,10,0"/>
+                                </Grid>
+
+                                <ScrollViewer Grid.Column="1" Padding="30">
+                                    <StackPanel Spacing="15">
+                                        <TextBlock x:Name="PreviewNameAge"
+                                                   FontSize="36" FontWeight="Bold"
+                                                   Foreground="White"/>
+
+                                        <StackPanel Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                                            <TextBlock x:Name="PreviewAge"
+                                                       FontSize="20" FontWeight="SemiBold"
+                                                       Foreground="White"/>
+                                            <TextBlock x:Name="PreviewGender"
+                                                       FontSize="20"
+                                                       Foreground="White"/>
+                                        </StackPanel>
+
+                                        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE139;" Foreground="White" FontSize="18"/>
+                                            <TextBlock x:Name="PreviewLocation"
+                                                       FontSize="18"
+                                                       Foreground="White"/>
+                                        </StackPanel>
+
+                                        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE12B;" Foreground="White" FontSize="18"/>
+                                            <TextBlock x:Name="PreviewNationality"
+                                                       FontSize="18"
+                                                       Foreground="White"/>
+                                        </StackPanel>
+
+                                        <StackPanel x:Name="PreviewStarSignPanel"
+                                                    Orientation="Horizontal" Spacing="10" VerticalAlignment="Center"
+                                                    Visibility="Collapsed">
+                                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE728;" Foreground="White" FontSize="18"/>
+                                            <TextBlock x:Name="PreviewStarSign"
+                                                       FontSize="18"
+                                                       Foreground="White"/>
+                                        </StackPanel>
+
+                                        <MenuFlyoutSeparator Margin="0,10,0,10" Background="White" Opacity="0.5"/>
+
+                                        <TextBlock Text="Description" FontWeight="SemiBold" FontSize="20" Foreground="White"/>
+                                        <TextBlock x:Name="PreviewBio"
+                                                   TextWrapping="Wrap" FontSize="16"
+                                                   Foreground="White"/>
+
+                                        <MenuFlyoutSeparator Margin="0,10,0,10" Background="White" Opacity="0.5"/>
+
+                                        <TextBlock Text="Interests" FontWeight="SemiBold" FontSize="20" Foreground="White" Margin="0,0,0,10"/>
+                                        <ItemsControl x:Name="PreviewInterestsControl">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,8,0,0"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border CornerRadius="6" Padding="12,8" BorderThickness="2" BorderBrush="White" Background="Transparent">
+                                                        <TextBlock Text="{Binding}" Foreground="White" FontSize="13" FontWeight="SemiBold"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+
+                        <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <CheckBox x:Name="TermsCheckBox"
+                                      VerticalAlignment="Center"
+                                      IsChecked="{x:Bind ViewModel.TermsAccepted, Mode=TwoWay}"/>
+                            <TextBlock VerticalAlignment="Center" FontSize="14" Foreground="#333">
+                                <Run Text="I agree to the "/>
+                                <Hyperlink NavigateUri="https://example.com/terms" Foreground="#c0143c">
+                                    <Run Text="terms and conditions"/>
+                                </Hyperlink>
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+
+            </Grid>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal"
+                        HorizontalAlignment="Center" Spacing="20">
+                <Button x:Name="PreviousStepButton"
+                        Content="Previous"
+                        Command="{x:Bind ViewModel.PreviousStepCommand, Mode=OneWay}"
+                        Background="White" Foreground="#eb3b59"
+                        FontSize="16" FontWeight="Bold"
+                        Padding="40,12" CornerRadius="30"/>
+                <Button x:Name="NextStepButton"
+                        Content="Next"
+                        Command="{x:Bind ViewModel.NextStepCommand, Mode=OneWay}"
+                        Background="White" Foreground="#eb3b59"
+                        FontSize="16" FontWeight="Bold"
+                        Padding="40,12" CornerRadius="30"/>
+                <Button x:Name="CreateProfileButton"
+                        Content="Create Profile"
+                        Command="{x:Bind ViewModel.CreateProfileCommand, Mode=OneWay}"
+                        Visibility="Collapsed"
+                        Background="White" Foreground="#eb3b59"
+                        FontSize="16" FontWeight="Bold"
+                        Padding="40,12" CornerRadius="30"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

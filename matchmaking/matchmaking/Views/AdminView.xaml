@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="matchmaking.Views.AdminView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:matchmaking.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:domain="using:matchmaking.Domain"
+    mc:Ignorable="d">
+
+    <Grid Padding="24" ColumnSpacing="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- LEFT: Unresolved Tickets -->
+        <StackPanel Grid.Column="0" Spacing="12">
+            <TextBlock Text="Unresolved Tickets" Style="{StaticResource TitleTextBlockStyle}"/>
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{x:Bind ViewModel.UnresolvedTickets, Mode=OneWay}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="domain:SupportTicket">
+                            <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                      Tag="{x:Bind}"
+                                      Expanding="Ticket_Expanding"
+                                      Collapsed="Ticket_Collapsed">
+                                <Expander.Header>
+                                    <StackPanel>
+                                        <TextBlock Text="{x:Bind Email}"/>
+                                        <TextBlock Text="{x:Bind PartnerName}" 
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <Expander.Content>
+                                    <StackPanel Orientation="Vertical" Spacing="3" Padding="0,2,0,2">
+                                        <StackPanel Orientation="Horizontal" Spacing="8" Padding="0,2,0,2">
+                                            <Button Content="FOUND" Tag="{x:Bind}" Click="Found_Click"/>
+                                            <Button Content="NOT FOUND" Tag="{x:Bind}" Click="NotFound_Click"/>
+                                        </StackPanel>
+                                        <Button Content="Open Certificate" Tag="{x:Bind}" Click="OpenCertificate_Click"/>
+                                    </StackPanel>
+                                </Expander.Content>
+                            </Expander>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <TextBlock Text="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}" Foreground="Red"/>
+        </StackPanel>
+
+        <!-- MIDDLE: Selected Ticket Detail -->
+        <StackPanel Grid.Column="1" Spacing="12" HorizontalAlignment="Center">
+            <TextBlock Text="Selected Ticket" Style="{StaticResource TitleTextBlockStyle}"/>
+
+            <StackPanel Spacing="12">
+                <TextBlock x:Name="SelectedPartnerName"
+                           Text="{x:Bind ViewModel.SelectedTicket.PartnerName, Mode=OneWay}"
+                           Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <Image x:Name="SelectedPartnerPhoto" MaxHeight="300" MaxWidth="300"/>
+            </StackPanel>
+
+            <TextBlock x:Name="NoTicketText" Text="No ticket selected."/>
+        </StackPanel>
+
+        <!-- RIGHT: Search -->
+        <Grid Grid.Column="2" RowSpacing="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Search Profiles" Style="{StaticResource TitleTextBlockStyle}"/>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
+                <TextBox PlaceholderText="Search by name..."
+                 Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay}"
+                 Width="240"/>
+                <Button Content="Search" Command="{x:Bind ViewModel.SearchCommand}"/>
+            </StackPanel>
+
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                <ListView x:Name="SearchResultsList" ItemsSource="{x:Bind ViewModel.SearchResults, Mode=OneWay}"
+                  ContainerContentChanging="SearchResultsList_ContainerContentChanging">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="domain:DatingProfile">
+                            <StackPanel Orientation="Vertical" Spacing="8" Padding="0,12,0,12">
+                                <Image x:Name="ProfilePhoto" MaxHeight="200" MaxWidth="200"/>
+                                <TextBlock Text="{x:Bind Name}" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollViewer>
+        </Grid>
+
+    </Grid>
+</Page>

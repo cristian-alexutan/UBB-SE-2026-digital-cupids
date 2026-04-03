@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="matchmaking.Views.QuestionnaireView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:matchmaking.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="#FFF8FA">
+
+    <Page.Resources>
+        <SolidColorBrush x:Key="PageBackgroundBrush" Color="#FFF8FA"/>
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#FFE5D6DE"/>
+        <SolidColorBrush x:Key="PrimaryPinkBrush" Color="#FFE8B7C8"/>
+        <SolidColorBrush x:Key="DarkPinkBrush" Color="#FFC97F9D"/>
+        <SolidColorBrush x:Key="SoftPinkBrush" Color="#FFFBEAF1"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FF4A4A4A"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#FF7A7A7A"/>
+
+        <Style x:Key="SectionBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="32"/>
+        </Style>
+
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource DarkPinkBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource DarkPinkBrush}"/>
+            <Setter Property="Padding" Value="18,10"/>
+        </Style>
+
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource SoftPinkBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
+            <Setter Property="Padding" Value="18,10"/>
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer Padding="50">
+        <StackPanel Spacing="18" MaxWidth="900" HorizontalAlignment="Center">
+
+            <StackPanel Margin="0,0,0,6">
+                <TextBlock Text="Personality Questionnaire"
+                           FontSize="34"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock Text="How much do you relate to the following statements?"
+                           FontSize="14"
+                           Foreground="{StaticResource TextSecondaryBrush}"
+                           Margin="0,6,0,0"/>
+            </StackPanel>
+
+            <Border Style="{StaticResource SectionBorderStyle}">
+                <StackPanel Spacing="24">
+
+                    <TextBlock Text="Answer each statement honestly to discover your personality type."
+                               FontSize="15"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               TextWrapping="Wrap"/>
+
+                    <Border Background="{StaticResource SoftPinkBrush}"
+                            BorderBrush="{StaticResource CardBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Padding="20">
+                        <StackPanel x:Name="QuestionsPanel" Spacing="24"/>
+                    </Border>
+
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="12"
+                                HorizontalAlignment="Right"
+                                Margin="0,8,0,0">
+                        <Button Content="Cancel"
+                                Click="Cancel_Click"
+                                Style="{StaticResource SecondaryButtonStyle}"/>
+
+                        <Button x:Name="SubmitButton"
+                                Content="Submit"
+                                IsEnabled="False"
+                                Click="Submit_Click"
+                                Style="{StaticResource PrimaryButtonStyle}"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="matchmaking.Views.EditProfileView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:matchmaking.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d"
+    Background="#FFF8FA">
+
+    <Page.Resources>
+        <SolidColorBrush x:Key="PageBackgroundBrush" Color="#FFF8FA"/>
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#FFE5D6DE"/>
+        <SolidColorBrush x:Key="PrimaryPinkBrush" Color="#FFE8B7C8"/>
+        <SolidColorBrush x:Key="DarkPinkBrush" Color="#FFC97F9D"/>
+        <SolidColorBrush x:Key="SoftPinkBrush" Color="#FFFBEAF1"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FF4A4A4A"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#FF7A7A7A"/>
+        <SolidColorBrush x:Key="SoftGrayBrush" Color="#FFF4F4F6"/>
+        <SolidColorBrush x:Key="MediumGrayBrush" Color="#FFD8D8DD"/>
+
+        <Style x:Key="SectionBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="28"/>
+            <Setter Property="Margin" Value="40,16,40,0"/>
+        </Style>
+
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+
+        <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+
+        <Style x:Key="ValueTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        </Style>
+
+        <Style x:Key="SoftTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#FFFDFDFD"/>
+            <Setter Property="BorderBrush" Value="{StaticResource MediumGrayBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="Padding" Value="10,8"/>
+        </Style>
+
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource DarkPinkBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource DarkPinkBrush}"/>
+            <Setter Property="Padding" Value="18,10"/>
+        </Style>
+
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource SoftPinkBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}"/>
+            <Setter Property="Padding" Value="18,10"/>
+        </Style>
+
+        <Style x:Key="DangerButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FFFDECEE"/>
+            <Setter Property="Foreground" Value="#FFB14B68"/>
+            <Setter Property="BorderBrush" Value="#FFF3C5D0"/>
+            <Setter Property="Padding" Value="18,10"/>
+        </Style>
+
+        <Style x:Key="UnselectedInterestButtonStyle" TargetType="Button">
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="Padding" Value="16,8,16,8"/>
+            <Setter Property="Margin" Value="0,0,8,8"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="RootGrid" CornerRadius="{TemplateBinding CornerRadius}">
+                            <Grid.Background>
+                                <SolidColorBrush x:Name="BackgroundBrush" Color="#00FFFFFF"/>
+                            </Grid.Background>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="BackgroundBrush" Storyboard.TargetProperty="Color" To="#00FFFFFF" Duration="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="BackgroundBrush" Storyboard.TargetProperty="Color" To="#FFE8B7C8" Duration="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="BackgroundBrush" Storyboard.TargetProperty="Color" To="#FFE8B7C8" Duration="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Padding="{TemplateBinding Padding}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SelectedInterestButtonStyle" TargetType="Button">
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="Padding" Value="16,8,16,8"/>
+            <Setter Property="Margin" Value="0,0,8,8"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="RootGrid" CornerRadius="{TemplateBinding CornerRadius}">
+                            <Grid.Background>
+                                <SolidColorBrush x:Name="BackgroundBrush" Color="Black"/>
+                            </Grid.Background>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="BackgroundBrush" Storyboard.TargetProperty="Color" To="Black" Duration="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="BackgroundBrush" Storyboard.TargetProperty="Color" To="#FFC97F9D" Duration="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="BackgroundBrush" Storyboard.TargetProperty="Color" To="#FFC97F9D" Duration="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Padding="{TemplateBinding Padding}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer Padding="50">
+        <StackPanel Orientation="Vertical" Spacing="14">
+
+            <StackPanel Margin="40,0,40,10">
+                <TextBlock Text="Edit Profile"
+                           FontSize="34"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock Text="Update your details, preferences, and profile presentation."
+                           FontSize="14"
+                           Foreground="{StaticResource TextSecondaryBrush}"
+                           Margin="0,6,0,0"/>
+            </StackPanel>
+
+            <Border x:Name="ArchivedBanner"
+                    Background="#FFFFF2F6"
+                    BorderBrush="#FFE8B7C8"
+                    BorderThickness="1"
+                    CornerRadius="14"
+                    Padding="16"
+                    Margin="40,0,40,0"
+                    Visibility="Collapsed">
+                <TextBlock Text="Your profile is archived. You are not visible to other users."
+                           Foreground="#FF9A5C73"
+                           FontSize="14"
+                           FontWeight="SemiBold"/>
+            </Border>
+
+            <Border Style="{StaticResource SectionBorderStyle}">
+                <StackPanel Spacing="20">
+
+                    <TextBlock Text="Personal Data" Style="{StaticResource SectionTitleStyle}"/>
+
+                    <Grid ColumnSpacing="30">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Name" Style="{StaticResource FieldLabelStyle}"/>
+                            
+                            <TextBox Text="{Binding Name, Mode=TwoWay}"
+                                     PlaceholderText="Enter your name"
+                                     HorizontalAlignment="Stretch"
+                                     Style="{StaticResource SoftTextBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Age" Style="{StaticResource FieldLabelStyle}"/>
+                            <TextBlock Text="{Binding Age}" Style="{StaticResource ValueTextStyle}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnSpacing="30">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Location" Style="{StaticResource FieldLabelStyle}"/>
+                            <ComboBox x:Name="LocationComboBox"
+                                      PlaceholderText="Select your city"
+                                      HorizontalAlignment="Stretch"
+                                      SelectionChanged="HandleLocationChanged"
+                                      Background="{StaticResource CardBackgroundBrush}"
+                                      BorderBrush="{StaticResource MediumGrayBrush}"
+                                      Foreground="{StaticResource TextPrimaryBrush}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Nationality" Style="{StaticResource FieldLabelStyle}"/>
+                            <TextBox Text="{Binding Nationality, Mode=TwoWay}"
+                                     PlaceholderText="Enter your nationality"
+                                     HorizontalAlignment="Stretch"
+                                     Style="{StaticResource SoftTextBoxStyle}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnSpacing="30">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Star Sign" Style="{StaticResource FieldLabelStyle}"/>
+                            <TextBlock Text="{Binding StarSign}" Style="{StaticResource ValueTextStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <CheckBox Content="Display star sign on profile"
+                                      IsChecked="{Binding DisplayStarSign, Mode=TwoWay}"
+                                      Foreground="{StaticResource TextPrimaryBrush}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Gender" Style="{StaticResource FieldLabelStyle}"/>
+                        <Border Background="{StaticResource SoftPinkBrush}"
+                                BorderBrush="{StaticResource CardBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                Padding="12">
+                            <RadioButtons ItemsSource="{Binding GenderOptions}"
+                                          SelectedItem="{Binding SelectedGender, Mode=TwoWay}"
+                                          MaxColumns="4"/>
+                        </Border>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionBorderStyle}">
+                <StackPanel Spacing="20">
+                    <TextBlock Text="Photos" Style="{StaticResource SectionTitleStyle}"/>
+
+                    <Border Background="{StaticResource SoftGrayBrush}"
+                            BorderBrush="{StaticResource CardBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="14"
+                            Padding="12">
+                        <ListView x:Name="PhotosListView"
+                                  SelectionMode="None"
+                                  CanReorderItems="True"
+                                  AllowDrop="True"
+                                  CanDragItems="True"
+                                  Height="140"
+                                  Background="Transparent">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                        </ListView>
+                    </Border>
+
+                    <TextBlock Text="You must have 2-6 photos. JPEG/PNG files up to 10 MB."
+                               FontSize="12"
+                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionBorderStyle}">
+                <StackPanel Spacing="20">
+
+                    <TextBlock Text="Preferences" Style="{StaticResource SectionTitleStyle}"/>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Preferred Genders" Style="{StaticResource FieldLabelStyle}"/>
+                        <Border Background="{StaticResource SoftPinkBrush}"
+                                BorderBrush="{StaticResource CardBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                Padding="12">
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="8"
+                                        x:Name="PreferredGendersPanel"/>
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Preferred Age Range"
+                                   Style="{StaticResource FieldLabelStyle}"/>
+
+                        <TextBlock FontSize="14"
+                                   Foreground="{StaticResource TextPrimaryBrush}">
+                            <Run Text="{Binding MinPreferredAge}"/>
+                            <Run Text=" - "/>
+                            <Run Text="{Binding MaxPreferredAge}"/>
+                            <Run Text=" years"/>
+                        </TextBlock>
+
+                        <Border Background="{StaticResource SoftGrayBrush}"
+                                BorderBrush="{StaticResource CardBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                Padding="16">
+
+                            <controls:RangeSelector
+                                Minimum="18"
+                                Maximum="99"
+                                RangeStart="{Binding MinPreferredAge, Mode=TwoWay}"
+                                RangeEnd="{Binding MaxPreferredAge, Mode=TwoWay}"
+                                StepFrequency="1"/>
+                        </Border>
+                    </StackPanel>
+
+
+
+                    <StackPanel Spacing="4">
+                        <TextBlock x:Name="DistanceHeader"
+               Text="Maximum Distance"
+               Style="{StaticResource FieldLabelStyle}"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0"
+                Background="{StaticResource SoftGrayBrush}"
+                BorderBrush="{StaticResource CardBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="12"
+                Padding="8"
+                HorizontalAlignment="Stretch">
+                                <Slider x:Name="DistanceSlider"
+                    Minimum="1"
+                    Maximum="500"
+                    Value="{Binding MaxDistance, Mode=TwoWay}"
+                    Orientation="Vertical"
+                    Height="280"
+                    HorizontalAlignment="Center"/>
+                            </Border>
+
+                            <Border Grid.Column="1"
+                BorderBrush="{StaticResource CardBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="14"
+                Height="400" Width="600"
+                                 
+                Margin="8,0,0,0"
+                Background="{StaticResource SoftGrayBrush}">
+                                <Grid>
+                                    <Image Source="ms-appx:///Assets/map.jpg"
+                       Stretch="Fill"/>
+                                    <Canvas x:Name="MapCanvas"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"/>
+                                </Grid>
+                            </Border>
+
+                        </Grid>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource SectionBorderStyle}">
+                <StackPanel Spacing="20">
+
+                    <TextBlock Text="About You" Style="{StaticResource SectionTitleStyle}"/>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock x:Name="BioHeader"
+                                   Text="Bio (0/250)"
+                                   Style="{StaticResource FieldLabelStyle}"/>
+
+                        <TextBox x:Name="BioBox"
+                                 Text="{Binding Bio, Mode=TwoWay}"
+                                 PlaceholderText="Write about yourself..."
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 Height="110"
+                                 HorizontalAlignment="Stretch"
+                                 Style="{StaticResource SoftTextBoxStyle}"/>
+                        <TextBlock Text="Must be between 20 and 250 characters"
+                                   FontSize="12"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Name="InterestsHeader"
+                                   Text="Interests (0/15)"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextPrimaryBrush}"/>
+                        <TextBlock Text="Select 3-15 interests"
+                                   FontSize="12"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <Border Background="{StaticResource SoftPinkBrush}"
+                                BorderBrush="{StaticResource CardBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                Padding="12">
+                            <VariableSizedWrapGrid Name="InterestsPanel"
+                                                   Orientation="Horizontal"
+                                                   ItemWidth="130"
+                                                   ItemHeight="60"/>
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Personality Type" Style="{StaticResource FieldLabelStyle}"/>
+                        <TextBlock Text="{Binding LoverTypeResultText}"
+                                   FontSize="15"
+                                   Foreground="{StaticResource TextPrimaryBrush}"/>
+                        <Button Name="QuestionnaireButton"
+                                Content="Take Personality Questionnaire"
+                                Command="{Binding PrepareQuestionnaireCommand}"
+                                Click="QuestionnaireButton_Click"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                HorizontalAlignment="Left"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+
+            <StackPanel Orientation="Horizontal"
+                        Spacing="12"
+                        HorizontalAlignment="Right"
+                        Margin="40,24,40,20">
+                <Button Content="Save changes"
+                        Click="SaveChanges_Click"
+                        Style="{StaticResource PrimaryButtonStyle}"/>
+
+<Button Content="Archive profile"
+                        Command="{Binding ArchiveProfileCommand}"
+                        Click="ArchiveProfile_Click"
+                        Style="{StaticResource SecondaryButtonStyle}"/>
+
+                <Button Content="Unarchive profile"
+                        Command="{Binding UnarchiveProfileCommand}"
+                        Click="UnarchiveProfile_Click"
+                        Style="{StaticResource SecondaryButtonStyle}"/>
+
+                <Button Content="Delete profile"
+                        Click="DeleteProfile_Click"
+                        Style="{StaticResource DangerButtonStyle}"/>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>
